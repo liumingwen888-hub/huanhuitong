@@ -1,5 +1,17 @@
 # 最近验证
 
+## 2026-08-05 — 中文 AI 第一接手提示词（发布前）
+
+- 范围：根目录 `AI接手提示词.md`、批准设计、实施计划和七份导航/状态 Markdown；工程代码、测试、依赖与锁文件修改 0。
+- GitHub 路径预检：从 `origin/main` 回读 170 个文件；提示词要求读取的九个既有入口全部存在，意外缺失 0。
+- 提示词命名：用户最终指定 `AI接手提示词.md`；旧英文计划名的文件和引用均保持 0。
+- build、typecheck、unit、database、Docker、PostgreSQL、Flyway、Testcontainers：本轮文档任务 `NOT_RERUN`。
+- 发布前项目集合：173 files = 114 Markdown + 59 non-Markdown；源项目与独立上传目录 173/173 byte-and-hash identical，missing/extra/changed 均为 0。
+- 严格 UTF-8 失败 0、BOM 0、Markdown fence 失衡 0、相对链接 595、断链 0、项目根越界 0、强特征 Secret 0、TEMP 0。
+- 提示词合同要求的九个读取入口、固定“换汇通 AI 接手确认报告”、唯一下一步、授权停止语句和 Git 只读命令全部存在；缺失 0。
+- 锁文件保持：`package.json` `CEEC06149084C641415F988C88EC958B1582290C4A7D92CE927013D2A5B367CD`；`pnpm-lock.yaml` `EE1F63DBFC72897F3483E9D6E96545801873988EA3E7EE15FCFB27C1E42AD9BC`；`pnpm-workspace.yaml` `A8F3EDA77957EF021BC956D726C034EF152F04709ECDCA7636000BDA6E5B7FD7`；`toolchain-lock.json` `3B9EDDD018DFA04819FFCA9F728B4066FC602F7BC92DFAF7EA7168F808D7C8D0`。
+- Git 提交、push 与 `origin/main` 回读结果在真实执行后另行登记；本条不预写通过结论。
+
 ## 2026-08-05 — 私有 GitHub 首发前静态与本地验证
 
 - 目标发布状态：PRIVATE `liumingwen888-hub/huanhuitong`；独立上传目录目标为 `C:\Users\Administrator\Desktop\Codex\huanhuitong`。本节记录推送前最终内容验证，不把仓库创建或 push 写成已经完成。

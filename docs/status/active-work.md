@@ -1,5 +1,14 @@
 # 当前工作
 
+## 2026-08-05 中文 AI 第一接手提示词
+
+- 用户批准方案 A 及书面规格，并将根入口文件名最终确定为 `AI接手提示词.md`。
+- 本轮只增强跨设备/跨 AI 的上下文恢复入口：创建根提示词、设计规格和实施计划，并同步 README、Copilot 指令、总索引、完整交接协议、进展与验证记录。
+- 提示词不硬编码第 9/48 步等易变事实；它从 `docs/status/current.md`、`docs/status/next.md` 和活动计划读取实时状态。
+- Task 5 计划和代码状态不变：第 9/48 步继续 `WAITING_EXTERNAL_REVIEW`，Task 5 v1.3 继续等待复审，Task 5 代码和第 10/48 步继续 `NOT_STARTED`。
+- 工程代码、测试、SQL、依赖、锁文件、Docker、数据库、外部服务和部署变化均为 0。
+- 发布前源项目与独立上传目录均为 173 files / 114 Markdown / 59 non-Markdown，达到 173/173 byte-and-hash identical；提示词合同缺失 0，旧英文计划名文件与引用 0。
+
 ## 2026-08-05 私有 GitHub 首发与 AI 开发交接
 
 - 用户明确授权把完整当前项目发布到私有 GitHub 仓库 `liumingwen888-hub/huanhuitong`，并指定独立上传目录 `C:\Users\Administrator\Desktop\Codex\huanhuitong`；公开仓库授权为 0。

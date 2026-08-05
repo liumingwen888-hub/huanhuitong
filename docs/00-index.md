@@ -6,6 +6,7 @@
 
 - [AGENTS.md](../AGENTS.md)：长期行为、授权、资金、安全和验证底线。
 - [README.md](../README.md)：项目入口。
+- [AI接手提示词.md](../AI接手提示词.md)：其他电脑、其他设备或新 AI 会话的一键只读接手入口。
 
 ## 产品
 
@@ -99,6 +100,8 @@
 
 - [roadmap.md](plans/roadmap.md)：阶段 0 至 11。
 - [active-plan-index.md](plans/active-plan-index.md)：活动计划索引。
+- [AI 第一接手提示词设计](superpowers/specs/2026-08-05-ai-first-step-handoff-prompt-design.md)：根目录中文接手提示词的批准规格。
+- [AI 第一接手提示词实施计划](superpowers/plans/2026-08-05-ai-first-step-handoff-prompt.md)：创建、验证与私有 GitHub 发布步骤。
 - [foundation-plan.md](plans/foundation-plan.md)：阶段 0 基线计划。
 - [2026-07-20-stage-1-foundation-identity-implementation-plan.md](plans/2026-07-20-stage-1-foundation-identity-implementation-plan.md)：阶段 1 总体实施计划 v1.2.6 READY；阶段 1 代码 BUILDING，Tasks 1–4 VERIFIED，Tasks 5–14 NOT_STARTED。
 - [2026-07-21-stage-1-task-2-config-observability-implementation-plan.md](plans/2026-07-21-stage-1-task-2-config-observability-implementation-plan.md)：Task 2 配置、结构化日志和 OpenTelemetry 基础独立详细计划 v1.2.6；用户最终复审 PASS、R5-01 ACCEPT，代码与测试 VERIFIED。

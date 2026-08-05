@@ -1,5 +1,7 @@
 # 换汇通仓库级 AI 指令
 
+首次接手本仓库时先读取根目录 [`AI接手提示词.md`](../AI接手提示词.md)，按其中的只读恢复步骤输出“换汇通 AI 接手确认报告”；随后继续遵守 `AGENTS.md` 和仓库权威文档。该提示词是便捷入口，不取代 `AGENTS.md`。
+
 开始任何任务前，先读取根目录 `AGENTS.md`，再按其上下文恢复顺序读取 `docs/00-index.md`、`docs/status/current.md`、`docs/status/next.md`、`docs/status/active-work.md`、`docs/product/open-decisions.md`、`docs/plans/active-plan-index.md` 和当前计划。
 
 当前断点（2026-08-05）：第 9/48 步 `WAITING_EXTERNAL_REVIEW`；Tasks 1–4 `VERIFIED`；Task 5 详细计划 `READY v1.3 / WAITING_EXTERNAL_REVIEW`；Task 5 代码和第 10/48 步 `NOT_STARTED`。唯一下一步是等待用户外部复审 Task 5 v1.3。未获新的复审结论和明确实施授权时，不实施 Task 5。

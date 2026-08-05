@@ -1,5 +1,14 @@
 # 进度日志
 
+## 2026-08-05 — 增加跨设备中文 AI 第一接手提示词
+
+- 用户批准根目录独立入口方案，并最终指定中文文件名 `AI接手提示词.md`。
+- 从 GitHub `origin/main` 回读 170 个文件并核对现有交接路径；修复设计规格中脱离目录的文件名简称，所有既有引用均能在远端定位。
+- 创建可直接复制的中文第一步提示词，要求接手 AI 完整读取权威入口、执行 Git/工具链只读核对、输出固定“换汇通 AI 接手确认报告”并等待新授权。
+- README、`.github/copilot-instructions.md`、`docs/00-index.md` 与 `docs/governance/ai-handoff.md` 建立四个发现入口。
+- 本轮不实施 Task 5，不进入第 10/48 步，不修改任何工程代码、测试、依赖或锁文件。
+- 发布前门禁：173 files / 114 Markdown / 59 non-Markdown；源项目与独立上传目录 173/173 byte-and-hash identical；UTF-8、BOM、fence、595 个相对链接、断链、越界、强特征 Secret、TEMP 和提示词合同均通过。
+
 ## 2026-08-05 — 私有 GitHub 首发准备与 AI 交接增强
 
 - 用户授权创建 PRIVATE 仓库 `liumingwen888-hub/huanhuitong`，并指定 `C:\Users\Administrator\Desktop\Codex\huanhuitong` 为独立上传目录；公开可见性、Task 5 实施、第 10/48 步和生产部署授权均为 0。

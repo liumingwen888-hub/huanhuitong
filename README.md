@@ -4,6 +4,12 @@
 
 > 本仓库必须保持 **PRIVATE**。禁止提交真实 Secret、Bot Token、私钥、验证码、支付密码、生产凭据、生产数据、用户数据或项目外交付物。
 
+## 其他 AI 一键接手
+
+在其他电脑、其他设备或新的 AI 会话中打开本仓库后，首先使用根目录的 [`AI接手提示词.md`](AI接手提示词.md)。复制其中完整的“第一步提示词”交给接手 AI；它会按权威顺序恢复项目目标、当前断点、活动计划、允许范围、验证事实和唯一下一步，并在获得新授权前保持只读。
+
+该提示词是启动器，不复制实时状态。项目事实仍以 `AGENTS.md`、[`docs/00-index.md`](docs/00-index.md)、[`docs/status/current.md`](docs/status/current.md)、[`docs/status/next.md`](docs/status/next.md) 和当前活动计划为准。
+
 ## 当前进度（2026-08-05）
 
 | 项目 | 当前状态 |
