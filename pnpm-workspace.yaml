@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - packages/*
+
+savePrefix: ''
+nodeVersion: 24.18.0
+engineStrict: true
+strictDepBuilds: true
+dangerouslyAllowAllBuilds: false
+allowBuilds: {}
+blockExoticSubdeps: true

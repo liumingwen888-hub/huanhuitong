@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+**/node_modules/
+.pnpm-store/
+
+# Build, coverage, test and cache output
+dist/
+**/dist/
+coverage/
+**/coverage/
+.cache/
+**/.cache/
+.turbo/
+.vite/
+.vitest/
+test-results/
+playwright-report/
+*.tsbuildinfo
+
+# Temporary files
+TEMP/
+**/TEMP/
+temp/
+tmp/
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Logs and diagnostics
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Secrets and local environment overrides
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+secrets/
+**/secrets/
+
+# IDE and OS metadata
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project-external delivery artifacts
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+*.rar

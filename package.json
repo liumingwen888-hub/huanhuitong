@@ -1,0 +1,26 @@
+{
+  "name": "xht",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.15.1",
+  "engines": {
+    "node": "24.18.0"
+  },
+  "scripts": {
+    "build": "pnpm -r --sort run build",
+    "typecheck": "pnpm build && pnpm -r --sort run typecheck",
+    "test": "pnpm test:all",
+    "test:all": "pnpm build && pnpm -r --sort run typecheck && pnpm architecture:check && vitest run --project unit && vitest run --project database && vitest run --project integration",
+    "test:unit": "pnpm build && vitest run --project unit",
+    "test:db": "pnpm build && vitest run --project database",
+    "test:integration": "pnpm build && vitest run --project integration",
+    "architecture:check": "depcruise apps packages --config .dependency-cruiser.cjs"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "dependency-cruiser": "18.1.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
+  }
+}

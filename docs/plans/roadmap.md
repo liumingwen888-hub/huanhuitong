@@ -1,0 +1,31 @@
+# 开发路线图
+
+需求状态：APPROVED（阶段顺序）；阶段细节 DRAFT。交付状态：DESIGNING。
+
+| 阶段 | 目标 | 当前状态 | 进入下一阶段的主要证据 |
+|---|---|---|---|
+| 0 | 项目规则、产品基线、架构和索引层 | VERIFIED（用户验收通过） | 已完成；阶段 1 另行授权 |
+| 1 | 工程骨架、最小可靠性基础、身份、自动注册和 Telegram 绑定 | BUILDING（[阶段计划](2026-07-20-stage-1-foundation-identity-implementation-plan.md) READY v1.2.6；Tasks 1–4 VERIFIED；Task 4 IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS；[Task 5 计划](task-5-inbox-dedup/00-index.md) READY v1.3 / WAITING_EXTERNAL_REVIEW、代码 NOT_STARTED；Tasks 6–14 NOT_STARTED） | 第 8/48 步 COMPLETED / EXTERNAL REVIEW PASS；第 9/48 步 WAITING_EXTERNAL_REVIEW。等待用户复审 Task 5 v1.3；未经新授权不得实施 Task 5、进入第 10/48 步或推定 Git、外部连接与部署授权 |
+| 2 | 支付密码、账户安全和恢复框架 | NOT_STARTED | 凭证策略、恢复威胁模型与冷静期测试 |
+| 3 | 最小横切资金合同、复式账本、余额和账单 | NOT_STARTED | 费用/风险/限额、审计/授权/配置、订单到账本、对账接口，以及借贷平衡、防负余额、并发与属性测试 |
+| 4 | 充值、确认、归集和链上对账 | NOT_STARTED | 每链确认/重组、幂等入账和对账 |
+| 5 | 内部转账、领取链接和红包 | NOT_STARTED | 一次性领取、总额守恒、并发退款 |
+| 6 | 提现、Signer、广播和确认 | NOT_STARTED | 独立管理员身份、Maker-Checker、重新认证、Signer 策略审批、审计证据，以及职责隔离、UNKNOWN、签名/广播/确认验证 |
+| 7 | 换汇报价、订单、资金状态和对账 | NOT_STARTED | 每市场真实模式、精度、异常汇率与结算 |
+| 8 | 法币代付供应商接入 | NOT_STARTED | 真实合同、回调/查询/UNKNOWN 与对账 |
+| 9 | 完整管理后台、风险/费用运营、配置发布和审计查询 | NOT_STARTED | 完整 UI、角色矩阵、范围、自审拒绝、运营策略、配置发布与审计查询 |
+| 10 | 生产级监控、备份、恢复演练和发布加固 | NOT_STARTED | 生产容量、完整告警、恢复演练、无重复副作用、发布门禁 |
+| 11 | Android 与 iOS 原生 App | NOT_STARTED / LATER | 跨渠道身份、安全和兼容设计批准 |
+
+每个开发阶段依次经过：需求确认 → 设计 → 威胁模型 → 书面实施计划 → TDD 实现 → 代码审查 → 安全审查 → 验证 → 文档同步 → 用户验收。任何阶段不得因前一阶段“有文档”而自动获得代码或部署授权。
+
+## 渐进式横切能力
+
+fees-and-risk、admin-and-audit、platform-operations 以及 bills-and-reconciliation 从早期按最小可用边界逐步建设，不是到阶段 9 或 10 才首次出现：
+
+1. 阶段 1 工程基础必须包含 PostgreSQL 事务边界、Unit of Work、Inbox、Outbox、持久任务框架、结构化日志、OpenTelemetry 接口、配置校验和敏感字段日志过滤。
+2. 任何资金功能进入阶段 3 前，必须具备最小费用计算、风险决策、限额、追加式审计、配置版本、管理操作服务端授权、资金订单到账本关联和对账接口。这些是稳定合同与拒绝路径，不要求阶段 9 的完整运营 UI。
+3. 提现进入阶段 6 前，必须具备独立管理员身份、Maker-Checker、高风险重新认证、Signer 策略审批和可核验审计证据。
+4. 阶段 9 完成横切领域的完整 UI、角色矩阵、配置发布、风险/费用运营和审计查询；阶段 10 完成生产容量、完整告警、备份恢复、灾难演练、发布门禁和生产运维加固。
+
+手机充值、商户和理财未列为当前实施阶段；需独立批准后再更新路线。理财保持 LATER。

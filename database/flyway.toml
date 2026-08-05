@@ -1,0 +1,11 @@
+[flyway]
+environment = "default"
+locations = ["filesystem:/flyway/sql"]
+callbackLocations = ["filesystem:/flyway/callbacks"]
+validateMigrationNaming = true
+createSchemas = false
+cleanDisabled = true
+table = "flyway_schema_history"
+
+[environments.default]
+schemas = ["public"]
