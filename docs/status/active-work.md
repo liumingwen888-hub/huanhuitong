@@ -8,6 +8,7 @@
 - Task 5 计划和代码状态不变：第 9/48 步继续 `WAITING_EXTERNAL_REVIEW`，Task 5 v1.3 继续等待复审，Task 5 代码和第 10/48 步继续 `NOT_STARTED`。
 - 工程代码、测试、SQL、依赖、锁文件、Docker、数据库、外部服务和部署变化均为 0。
 - 发布前源项目与独立上传目录均为 173 files / 114 Markdown / 59 non-Markdown，达到 173/173 byte-and-hash identical；提示词合同缺失 0，旧英文计划名文件与引用 0。
+- 中文根提示词实施提交 `30f60a5beda6e5b98b8ff544819b6ce7bafa3e8b` 已推送私有 GitHub `main`；远端回读确认 `AI接手提示词.md` 存在、173 文件树一致、内容合同字段 6/6 命中。
 
 ## 2026-08-05 私有 GitHub 首发与 AI 开发交接
 

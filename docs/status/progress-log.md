@@ -8,6 +8,8 @@
 - README、`.github/copilot-instructions.md`、`docs/00-index.md` 与 `docs/governance/ai-handoff.md` 建立四个发现入口。
 - 本轮不实施 Task 5，不进入第 10/48 步，不修改任何工程代码、测试、依赖或锁文件。
 - 发布前门禁：173 files / 114 Markdown / 59 non-Markdown；源项目与独立上传目录 173/173 byte-and-hash identical；UTF-8、BOM、fence、595 个相对链接、断链、越界、强特征 Secret、TEMP 和提示词合同均通过。
+- `docs: add one-step AI handoff prompt` 提交 `30f60a5beda6e5b98b8ff544819b6ce7bafa3e8b` 已推送 `origin/main`；fetch 后 local/remote SHA 相同、两侧树均 173、diff 0、worktree clean。
+- 远端 `AI接手提示词.md` 经 `cat-file -e` exit 0 和解码文件树确认；blob `8a058fc740dd6b721dbe467199cb5ad31536b3f0`、6728 bytes，标题、报告格式、current/next 路径和授权停止语句 6/6 命中。
 
 ## 2026-08-05 — 私有 GitHub 首发准备与 AI 交接增强
 

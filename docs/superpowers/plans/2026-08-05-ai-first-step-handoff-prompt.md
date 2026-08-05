@@ -119,14 +119,14 @@
 
 运行 `git status --short`、`git diff --name-only` 和 staged path 白名单检查；白名单外路径为 0。
 
-- [ ] **Step 2: 提交并推送**
+- [x] **Step 2: 提交并推送**
 
 使用提交信息 `docs: add one-step AI handoff prompt`，推送 `origin main`。
 
-- [ ] **Step 3: 从远端回读**
+- [x] **Step 3: 从远端回读**
 
 运行 `git fetch --prune origin main`，证明本地 SHA 等于 `origin/main`、远端树文件数等于本地树、diff 0、worktree clean，并从 `origin/main:AI接手提示词.md` 回读关键标题和提示词字段。
 
-- [ ] **Step 4: 停止**
+- [x] **Step 4: 停止**
 
 报告 GitHub URL、最终 SHA、文件数量、提示词路径和验证结果；不实施 Task 5，不进入第 10/48 步。

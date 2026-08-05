@@ -10,7 +10,10 @@
 - 严格 UTF-8 失败 0、BOM 0、Markdown fence 失衡 0、相对链接 595、断链 0、项目根越界 0、强特征 Secret 0、TEMP 0。
 - 提示词合同要求的九个读取入口、固定“换汇通 AI 接手确认报告”、唯一下一步、授权停止语句和 Git 只读命令全部存在；缺失 0。
 - 锁文件保持：`package.json` `CEEC06149084C641415F988C88EC958B1582290C4A7D92CE927013D2A5B367CD`；`pnpm-lock.yaml` `EE1F63DBFC72897F3483E9D6E96545801873988EA3E7EE15FCFB27C1E42AD9BC`；`pnpm-workspace.yaml` `A8F3EDA77957EF021BC956D726C034EF152F04709ECDCA7636000BDA6E5B7FD7`；`toolchain-lock.json` `3B9EDDD018DFA04819FFCA9F728B4066FC602F7BC92DFAF7EA7168F808D7C8D0`。
-- Git 提交、push 与 `origin/main` 回读结果在真实执行后另行登记；本条不预写通过结论。
+- 实施提交：`30f60a5beda6e5b98b8ff544819b6ce7bafa3e8b`，提交消息 `docs: add one-step AI handoff prompt`；10 个 Markdown、410 insertions、Delete 0，树文件 173。
+- `git push origin main` exit 0：`7f4eff1..30f60a5 main -> main`。随后 fetch 证明 local SHA = remote SHA = `30f60a5beda6e5b98b8ff544819b6ce7bafa3e8b`，local/remote tree 173/173，diff 0，worktree changes 0。
+- 远端提示词：`git cat-file -e origin/main:AI接手提示词.md` exit 0；解码文件树存在数 1；blob `8a058fc740dd6b721dbe467199cb5ad31536b3f0`、6728 bytes；标题、可复制提示词、接手报告、current/next 和授权停止语句 6/6 命中。
+- 首次用默认 `core.quotepath` 比较中文显示名得到 false，但同一次回读中的 `git show`、blob 和 6/6 内容检查成功；改用 `core.quotepath=false` 后 decoded tree 存在为 true。该问题仅是 Git 中文路径显示转义，不是远端缺失。
 
 ## 2026-08-05 — 私有 GitHub 首发前静态与本地验证
 
