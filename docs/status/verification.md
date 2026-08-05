@@ -12,6 +12,10 @@
 - 初次 `pnpm build` 在 TypeScript 编译前触发自动依赖物化，386 个包完成下载/物化，但因 `strictDepBuilds` 检出 `cpu-features@0.0.10`、`protobufjs@7.6.5`、`ssh2@1.17.0` 三个 pending script 而报 `ERR_PNPM_IGNORED_BUILDS`、exit 1；工具自动把 `allowBuilds` 写成占位值。该行随后精确恢复为 `{}`，三锁无差异，三个 script 执行数 0。
 - 纠正命令 `pnpm install --offline --frozen-lockfile --ignore-scripts`：exit 0、Already up to date、下载 0、lifecycle 0。随后用进程级 `npm_config_ignore_scripts=true` 保持同一物化策略：`pnpm build` exit 0；`pnpm typecheck` exit 0；`pnpm test:unit` exit 0，Test Files 9/9、Tests 132/132。
 - Docker、PostgreSQL、Flyway、Testcontainers、database/integration、Telegram、其他业务外部服务和生产部署均 NOT_RERUN / 0。`pnpm test:all` NOT_RERUN；不得提前创建未来 Task 12 的 `.dependency-cruiser.cjs`。
+- 独立发布目录创建前目标不存在；复制后 source files 170、destination files 170、byte-and-hash identical 170、missing/extra/changed 均为 0。Git 初始提交 `95f8ed666f86b8209a2c17d2f2d1d1a5a98dd5ba` 的 tree 为 170 文件，提交后工作树状态 0。
+- `git push -u origin main` exit 0；认证后 `git fetch --prune origin main` exit 0，local SHA 与 remote SHA 均为 `95f8ed666f86b8209a2c17d2f2d1d1a5a98dd5ba`，local files 170、remote files 170、tree diff 0、跟踪状态 `main...origin/main`。
+- GitHub 已登录页面回读：仓库 `liumingwen888-hub/huanhuitong` 标记 `Private`，分支 `main`，History 1 Commit，`.github/apps/database/docs/packages` 与根文件可见，README 正确呈现第 9/48 步和 Task 5 v1.3 断点。
+- GitHub App 连接器对此新私有仓库的 `fetch_file/search_commits/search_branches` 返回 404，说明 App 安装范围尚未包含该仓库；Git HTTPS push/fetch 与浏览器回读均已独立证明上传完成。
 
 ## 2026-08-05 — Task 5 v1.3 第三次外部复审聚焦修订最终验证
 

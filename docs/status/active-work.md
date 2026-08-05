@@ -8,6 +8,8 @@
 - 发布前项目为 170 files / 111 Markdown / 59 non-Markdown；UTF-8、BOM、Markdown fence、584 个围栏外相对链接、断链、越界、强特征 Secret、TEMP 和 Task 5 未来工程目标检查均通过。
 - Node `v24.18.0`、pnpm `11.15.1`；离线 frozen/ignore-scripts 安装 exit 0、下载 0、lifecycle 0；在同一 ignore-scripts 进程配置下 build、typecheck exit 0，unit 为 9/9 files、132/132 tests PASS。
 - Docker、PostgreSQL、Flyway、Testcontainers、Telegram、其他业务外部服务和生产部署均 NOT_RERUN / 0；项目当前唯一业务下一步仍为等待用户外部复审 Task 5 v1.3。
+- 独立上传目录已建立并与权威源达到 170/170 byte-and-hash identical；PRIVATE GitHub 仓库已通过官方 Git Credential Manager 推送。发布载荷根提交为 `95f8ed666f86b8209a2c17d2f2d1d1a5a98dd5ba`；认证后重新 fetch 证明 `main == origin/main`、两侧树均 170 文件、diff 0，GitHub 页面回读 `Private`、`main` 和 README 成功。
+- GitHub App 连接器尚未安装到这个新私有仓库，因此 connector 文件回读返回 404；这不影响 Git HTTPS push/fetch 或浏览器访问。未来需要由连接器读写时，应先在 GitHub App 安装范围中加入该私有仓库。
 
 ## 第 9/48 步 Task 5 v1.3 第三次外部复审聚焦修订
 

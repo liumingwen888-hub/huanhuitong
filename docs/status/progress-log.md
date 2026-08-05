@@ -8,6 +8,8 @@
 - 首次 `pnpm build` 在编译前因依赖物化触发 `ERR_PNPM_IGNORED_BUILDS` 并 exit 1；pnpm 自动把 `pnpm-workspace.yaml` 的 `allowBuilds` 改为三个占位值。已立即精确恢复为 `{}`，package/lock/toolchain 三锁未漂移，没有批准或运行任何 lifecycle。
 - 根因确认后执行 `pnpm install --offline --frozen-lockfile --ignore-scripts` exit 0、下载 0、lifecycle 0；使用同一进程级 ignore-scripts 配置运行 build 和 typecheck 均 exit 0，unit 9/9 files、132/132 tests PASS。
 - 本轮未运行 Docker、PostgreSQL、Flyway、Testcontainers 或 `pnpm test:all`；后者仍保留未来 Task 12 `.dependency-cruiser.cjs` 缺失的已知边界。业务断点保持第 9/48 步等待 Task 5 v1.3 外部复审。
+- `C:\Users\Administrator\Desktop\Codex\huanhuitong` 已建立为独立发布仓库；创建 `.git` 前与权威源 170/170 字节和 SHA-256 一致。初始 `main` 提交 `95f8ed666f86b8209a2c17d2f2d1d1a5a98dd5ba` 包含 170 文件，工作树干净。
+- GitHub 页面确认 `liumingwen888-hub/huanhuitong` 为 Private；Git Credential Manager 官方浏览器登录后 `git push -u origin main` 成功。重新 `git fetch --prune origin main` 后 local/remote SHA 相同、两侧 tree 170、diff 0；README 和目录已在 GitHub 页面回读。
 
 ## 2026-08-05 — 第 9/48 步 Task 5 v1.3 第三次外部复审聚焦修订完成
 
