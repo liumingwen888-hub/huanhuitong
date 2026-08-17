@@ -56,15 +56,39 @@ const eventPolicies = {
   process_stopped: {
     required: ['route', 'outcome'], optional: ['correlation_id', 'duration_ms'],
     route: 'bootstrap', outcome: 'stopped'
+  },
+  telegram_webhook_processed: {
+    required: ['route', 'outcome', 'update_id'],
+    optional: [
+      'correlation_id', 'uid', 'telegram_user_ref', 'inbox_id', 'outbox_id',
+      'duration_ms'
+    ],
+    route: 'telegram.start', outcome: 'processed'
+  },
+  telegram_webhook_rejected: {
+    required: [
+      'route', 'outcome', 'error_category', 'correlation_id', 'update_id'
+    ],
+    optional: ['inbox_id', 'retry_count'],
+    route: 'telegram.start', outcome: 'rejected'
   }
 } as const satisfies Record<SafeLogEvent, EventPolicy>;
 
-const routes = new Set(['bootstrap', 'configuration', 'telemetry']);
-const outcomes = new Set(['success', 'rejected', 'disabled', 'configured', 'stopped']);
+const routes = new Set([
+  'bootstrap', 'configuration', 'telemetry', 'telegram.start'
+]);
+const outcomes = new Set([
+  'success', 'rejected', 'disabled', 'configured', 'stopped', 'processed'
+]);
 const errorCategories = new Set([
   'configuration_invalid', 'secret_reference_invalid', 'secret_resolution_failed',
-  'telemetry_initialization_failed', 'invalid_log_entry'
+  'telemetry_initialization_failed', 'telegram_update_invalid', 'invalid_log_entry'
 ]);
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+const TELEGRAM_USER_REF_PATTERN = /^tgur-v[1-9][0-9]{0,8}:[A-Za-z0-9_-]{43}$/;
+const NUMERIC_KEYS = new Set(['duration_ms', 'retry_count']);
+
 const controlCharacters = /[\u0000-\u001f\u007f-\u009f]/;
 
 function validateString(key: string, value: string): void {
@@ -78,6 +102,21 @@ function validateString(key: string, value: string): void {
   if (key === 'error_category' && !errorCategories.has(value)) {
     throw new SafeLoggingError('VALUE_NOT_ALLOWED');
   }
+  if (key === 'update_id' && !/^[0-9]{1,20}$/.test(value)) {
+    throw new SafeLoggingError('VALUE_NOT_ALLOWED');
+  }
+  if (
+    (key === 'uid' || key === 'inbox_id' || key === 'outbox_id') &&
+    !UUID_PATTERN.test(value)
+  ) {
+    throw new SafeLoggingError('VALUE_NOT_ALLOWED');
+  }
+  if (
+    key === 'telegram_user_ref' &&
+    !TELEGRAM_USER_REF_PATTERN.test(value)
+  ) {
+    throw new SafeLoggingError('VALUE_NOT_ALLOWED');
+  }
 }
 
 function validateNumber(key: string, value: number): void {
@@ -85,6 +124,9 @@ function validateNumber(key: string, value: number): void {
     throw new SafeLoggingError('VALUE_TYPE_NOT_ALLOWED');
   }
   if (key === 'duration_ms' && (value < 0 || value > 600_000)) {
+    throw new SafeLoggingError('VALUE_NOT_ALLOWED');
+  }
+  if (key === 'retry_count' && (value < 0 || value > 1000)) {
     throw new SafeLoggingError('VALUE_NOT_ALLOWED');
   }
 }
@@ -111,6 +153,9 @@ export function validateSafeLogEntry(event: unknown, context: unknown = {}): Saf
       throw new SafeLoggingError('VALUE_TYPE_NOT_ALLOWED');
     }
     const value = descriptor.value as unknown;
+    if (NUMERIC_KEYS.has(key) && typeof value !== 'number') {
+      throw new SafeLoggingError('VALUE_TYPE_NOT_ALLOWED');
+    }
     if (typeof value === 'object' && value !== null) throw new SafeLoggingError('NESTED_VALUE');
     if (typeof value === 'string') validateString(key, value);
     else if (typeof value === 'number') validateNumber(key, value);

@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — 第 22/48 步 Task 11 实施完成，等待用户外部复审
+
+- Create 3、Modify 5、Delete 0；build/typecheck exit 0；unit 188/188（security 9/9）；全量 database 267/268（仅 M14 平台边界）。
+- 日志白名单全链路失败关闭；tgur-v1 版本化独立密钥 HMAC 伪名落地；Pino redact 第二层；trace 无隐性 attribute 出口。
+- 状态收敛：第 22/48 步 `COMPLETED`；Task 11 代码 `IMPLEMENTED`，等待用户外部复审；Tasks 12–14 与第 23/48 步 NOT_STARTED。
+
 ## 2026-08-17 — 第 21/48 步 Task 11 详细计划 v1.0 完成
 
 - 完成 Task 11"日志字段白名单与敏感数据泄露测试"独立详细计划 v1.0：`docs/plans/task-11-safe-logging/` 5 份拆分 Markdown。

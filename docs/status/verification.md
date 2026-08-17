@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — 第 22/48 步 Task 11 实施（macOS/arm64 本地）
+
+- 前置门禁：3 个 Create 目标不存在、5 个 Modify 输入一致；基线 ZIP SHA-256 `0EC28241FA03FC703EC4B4FFA1F3D9F280093D228486157E744C24B917133D00`（源提交 `d4c1250`）；三锁无漂移。
+- 写入：Create 3、Modify 5、Delete 0：contracts observability 扩展（+2 事件、+6 上下文字段、route telegram.start、outcome processed、error_category telegram_update_invalid）、logging-policy 八事件 matrix 与值级扩展、telegram-user-reference（tgur-v1 独立 HMAC 伪名、static/reference 双密钥源、withResolvedSecret 借用清零）、config index、双 logger Pino redact 第二层、双 security spec。
+- 验证：build/typecheck exit 0；unit 16 文件 188/188（含 security 9/9）；database 268 中 267 PASS（仅 M14 平台边界）。
+- 关键证据：批准字段单行 JSON（T11C01）；未知事件/字段/Secret 值 SafeLoggingError 且 destination 零新增字节（T11C02/11–13）；嵌套/数组/Error/控制字符/超长/非法格式全失败关闭（T11C03–05）；事件-route/outcome 组合不符拒绝（T11C06）；伪名确定性、按用户/按密钥区分、与手工 HMAC 一致（T11C14/15）；源码敏感标识静态搜索仅允许 redact 防御声明（T11C16）。
+- 实施期发现与修正（如实申报）：① 测试抓到 policy 真实缺口——duration_ms/retry_count 数值键接受字符串值，补 NUMERIC_KEYS 类型强制；② telegram_webhook_rejected 的 correlation_id/update_id 由 optional 改 required（总计划 Step 1 语义对齐）；③ T11C16 静态搜索需剥离 Pino redact 防御声明块后断言。
+
 ## 2026-08-17 — 第 20/48 步 Task 10 实施（macOS/arm64 本地）
 
 - 前置门禁：8 个 Create 目标不存在、4 个 Modify 输入一致；基线 ZIP SHA-256 `68F05698B25FEA2C9D01C43F8235C841B294A95129E13EAA4C0B3E5ECE4B44AC`（源提交 `bf5e9a8`）；三锁与方案 A 后基线一致（lockfile `59D72A2A…3C73B`）。

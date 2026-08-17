@@ -6,21 +6,40 @@ export type SafeLogEvent =
   | 'telemetry_disabled'
   | 'telemetry_configured'
   | 'process_started'
-  | 'process_stopped';
+  | 'process_stopped'
+  | 'telegram_webhook_processed'
+  | 'telegram_webhook_rejected';
 
 export type SafeLogErrorCategory =
   | 'configuration_invalid'
   | 'secret_reference_invalid'
   | 'secret_resolution_failed'
   | 'telemetry_initialization_failed'
+  | 'telegram_update_invalid'
   | 'invalid_log_entry';
 
 export interface SafeLogContext {
   readonly correlation_id?: string;
-  readonly route?: 'bootstrap' | 'configuration' | 'telemetry';
-  readonly outcome?: 'success' | 'rejected' | 'disabled' | 'configured' | 'stopped';
+  readonly update_id?: string;
+  readonly uid?: string;
+  readonly telegram_user_ref?: string;
+  readonly inbox_id?: string;
+  readonly outbox_id?: string;
+  readonly route?:
+    | 'bootstrap'
+    | 'configuration'
+    | 'telemetry'
+    | 'telegram.start';
+  readonly outcome?:
+    | 'success'
+    | 'rejected'
+    | 'disabled'
+    | 'configured'
+    | 'stopped'
+    | 'processed';
   readonly error_category?: SafeLogErrorCategory;
   readonly duration_ms?: number;
+  readonly retry_count?: number;
 }
 
 export interface SafeLogger {
