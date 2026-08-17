@@ -1,5 +1,5 @@
 # 下一步
 
-第 18/48 步已于 2026-08-17 完成并通过用户外部复审：Task 9 代码 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`（提交 `7a4dc6c` 已推送）；Tasks 1–9 全部 VERIFIED。
+第 19/48 步：Task 10“/start 自动注册、原子编排和主菜单任务”独立详细计划 v1.0 已完成（`docs/plans/task-10-telegram-start/`，5 份拆分 Markdown、T10C01–T10C15 测试合同、冻结 Create 8 / Modify 4 / Delete 0），状态 `READY v1.0 / WAITING_EXTERNAL_REVIEW`；Task 10 代码与第 20/48 步 `NOT_STARTED`。
 
-唯一当前动作：第 19/48 步——制定 Task 10“/start 自动注册、原子编排和主菜单任务”独立详细技术计划（依据阶段 1 总计划 Task 10 节：单事务写入 Inbox、身份状态与 Outbox；主菜单发送提交后由 Outbox 驱动；失败不回滚已提交 UID）。计划外部复审通过前不实施 Task 10、不进入第 20/48 步。
+复审重点：① 02 文件四结果语义表（duplicate/conflict 零副作用、key-unavailable 503、markProcessed 失败整回滚）；② 03 文件菜单事件字段最小化与禁用网关 F-06 路径。未经用户复审结论与实施授权，不实施 Task 10、不进入第 20/48 步。

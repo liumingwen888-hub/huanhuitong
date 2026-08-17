@@ -14,7 +14,7 @@
 
 | 项目 | 当前状态 |
 |---|---|
-| 总进度 | 第 19/48 步 `IN_PROGRESS`（Task 10 计划制定中） |
+| 总进度 | 第 19/48 步 `IN_PROGRESS`（Task 10 计划 READY v1.0 待复审） |
 | 阶段 0 | `VERIFIED` |
 | 阶段 1 总计划 | `READY v1.2.6` |
 | 阶段 1 代码 | `BUILDING` |
@@ -26,7 +26,7 @@
 | Tasks 7–14 | `NOT_STARTED` |
 | 生产部署 | `NOT_STARTED` |
 
-当前唯一下一步是：**第 19/48 步——制定 Task 10“/start 自动注册、原子编排和主菜单任务”详细计划**。计划外部复审通过前不实施 Task 10、不进入第 20/48 步、不连接真实 Telegram。
+当前唯一下一步是：**等待用户外部复审 Task 10 计划 v1.0**（`docs/plans/task-10-telegram-start/`）。复审通过并授权前不实施 Task 10、不进入第 20/48 步、不连接真实 Telegram。
 
 准确状态以 [`docs/status/current.md`](docs/status/current.md) 和 [`docs/status/next.md`](docs/status/next.md) 为准；本 README 只提供入口摘要。
 
