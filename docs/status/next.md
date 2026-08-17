@@ -1,5 +1,3 @@
 # 下一步
 
-阶段 2 S2-3"设置与验证会话"已实施（Create 4；spec 12/12；unit 211/211、db 290/292 已知边界）。S2-3 代码 `IMPLEMENTED`，等待用户外部复审实施结果（含两项实施期修正：hashAlgorithm 标签 scrypt、operationType 注册表元数据）。
-
-复审通过前不实施 S2-4。
+阶段 2 S2-4"锁定、计数与速率限制"详细计划 v1.0 已完成（`docs/plans/s2-4-locks-rate/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：范围重估的诚实基线（S2-2/3 已落地部分）、单 OPEN 会话约束的用户体验影响、重哈希透明升级语义。复审通过后实施。

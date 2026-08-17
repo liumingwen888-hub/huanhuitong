@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S2-4 详细计划 v1.0 完成，等待外部复审
+
+- 范围重估：失败计数/阶梯锁定已在 S2-2 落地；S2-4 增量 = security_locks 审计行、会话创建速率限制（单 OPEN + 令牌桶）、scrypt param_version 透明重哈希。
+- 冻结 Create 5 / Modify 3。
+- 唯一下一步：等待用户外部复审 S2-4 v1.0。
+
+## 2026-08-17 — S2-3 复审通过与 VERIFIED 收敛，进入 S2-4 规划
+
+- 用户裁决：S2-3 EXTERNAL REVIEW PASS；两项修正 ACCEPT。S2-3 转 VERIFIED；提交 `4c9243e` 已推送。
+- S2-4"锁定、计数与速率限制"详细计划 DESIGNING（范围评估：失败计数/阶梯锁定已随 S2-2 验证编排落地，S2-4 聚焦 security_locks 审计行、会话级速率限制与哈希参数升级路径）。
+
 ## 2026-08-17 — S2-3 实施完成，等待外部复审
 
 - Create 4；会话状态机全链路可证（setup/authorize/cancel/过期/nonce 幂等/重启安全）。
