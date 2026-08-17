@@ -8,7 +8,7 @@ export interface GrammyWebhookAdapterOptions {
 }
 
 export type UpdateDispatch = (update: object) => Promise<void>;
-export type UpdateErrorSink = (error: unknown) => void;
+export type UpdateErrorSink = (error: unknown) => boolean | void;
 
 type Middleware = (
   request: unknown,
@@ -50,7 +50,11 @@ export class GrammyWebhookAdapter {
         const dispatch = this.#dispatch;
         if (dispatch === undefined) return Promise.resolve();
         return dispatch(context.update as object).catch((error: unknown) => {
-          this.#errorSink?.(error);
+          if (this.#errorSink?.(error) === true) {
+            // The sink already wrote the HTTP response; rethrow so the
+            // grammY callback does not attempt a second (200) response.
+            throw error;
+          }
         });
       });
     }

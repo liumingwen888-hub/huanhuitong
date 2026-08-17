@@ -61,14 +61,15 @@ export async function createPlatformApp(
     controller.dispatchUpdate(update)
   );
   const webhookRoute: RequestHandler = (request, response, next) => {
-    grammyAdapter.setErrorSink((error: unknown) => {
+    grammyAdapter.setErrorSink((error: unknown): boolean => {
       if (error instanceof DigestUnavailableError) {
         response
           .status(503)
           .json({ code: 'WEBHOOK_DIGEST_KEY_UNAVAILABLE' });
-        return;
+        return true;
       }
       next(error);
+      return false;
     });
     controller.receive(
       request as unknown as ControllerRequestShape,

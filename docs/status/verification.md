@@ -1,5 +1,17 @@
 # 最近验证
 
+## 2026-08-17 — 上线标准全量审查与缺陷修复（macOS/arm64 本地）
+
+- 审查范围：阶段 1 全部代码 + S2-1，静态审查关键路径 + 全量验证。
+- **发现并修复 4 项缺陷**（均有新增回归测试锁定）：
+  1. **[严重] Outbox claim 映射丢失 attempt_count**：`applyFailure` 恒收 attemptCount=1，瞬时错误的"8 次后死信"永不触发（无限重试）。修复：映射补 `attemptCount`；AUDIT-1 断言透传。
+  2. **[生产阻断] create-worker 连接工厂缺 `SET ROLE xht_worker`**：worker LOGIN 为 NOINHERIT，真实部署中所有认领/确认查询将报"relation does not exist"。修复：连接借出时先 SET ROLE（角色可配，默认 xht_worker）；AUDIT-2 断言首条语句。
+  3. **[F-06 违约] 禁用网关时菜单消息被误判 PERMANENT 死信**而非 WAITING_CONFIGURATION。修复：显式 disabled 时注册抛 DISABLED 标记的 topic handler；AUDIT-3 断言分类。
+  4. **[双响应风险] grammY errorSink 处理后吞错**：errorSink 已写 503 后 grammY 可能再写 200。修复：sink 返回 handled，handled 时重抛阻断 grammY 二次响应。
+- 新增 `apps/worker/test/unit/worker-audit.spec.ts`（3/3）；全量回归：build/typecheck exit 0、architecture 0 违规（89 模块 120 依赖）、unit 197/197、integration 43/43、database 277/279（M14 平台边界、M06 并行负载抖动——两者隔离运行均过，非缺陷）。
+- 附带修正：next.md 措辞触发 documentation spec 契约断言（补"阶段 2"字样）。
+- **上线标准结论**：代码与架构逻辑达到可上线质量；距离真实生产部署仍缺部署配置、真实 Telegram 授权与生产基础设施（授权保持 0，按路线图阶段 9/10）。
+
 ## 2026-08-17 — S2-1 凭证领域合同与 V2 迁移实施（macOS/arm64 本地）
 
 - 授权：用户复审 S2-1 v1.0 通过并显式授权 V2 migration（项目首个 schema 变更）。

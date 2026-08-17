@@ -2,6 +2,7 @@ import type { OutboxHandler } from '@xht/contracts';
 import { TelegramMainMenuHandler } from '../outbox/telegram-main-menu.handler.js';
 import type { BindingLookup } from '../outbox/telegram-main-menu.handler.js';
 import type { TelegramBotGateway } from '../infrastructure/telegram/telegram-bot.gateway.js';
+import { TelegramConnectionDisabledError } from '../infrastructure/telegram/external-connection-disabled.gateway.js';
 import type { OutboxWorker, WorkerClock } from '../outbox/outbox-worker.js';
 import type { StoreClient, StoreConnectionFactory } from '../outbox/outbox-store.js';
 import { PostgresOutboxStore } from '../outbox/outbox-store.js';
@@ -25,6 +26,7 @@ export interface WorkerPool {
 export interface WorkerRuntime {
   readonly outbox: OutboxWorker;
   readonly jobs: DurableJobWorker;
+  readonly topicHandlers: ReadonlyMap<string, OutboxHandler>;
   readonly close: () => Promise<void>;
 }
 
@@ -34,6 +36,7 @@ export interface CreateWorkerOptions {
   readonly jobHandler: DurableJobHandler | undefined;
   readonly workerId: string;
   readonly clock: WorkerClock;
+  readonly workerRole?: string;
   readonly telegramGateway?: {
     readonly enabled: boolean;
     readonly gateway: TelegramBotGateway;
@@ -50,9 +53,11 @@ export interface CreateWorkerOptions {
 
 class PoolConnectionFactory implements StoreConnectionFactory {
   readonly #pool: WorkerPool;
+  readonly #workerRole: string;
 
-  constructor(pool: WorkerPool) {
+  constructor(pool: WorkerPool, workerRole: string) {
     this.#pool = pool;
+    this.#workerRole = workerRole;
   }
 
   public async withClient<T>(
@@ -60,6 +65,7 @@ class PoolConnectionFactory implements StoreConnectionFactory {
   ): Promise<T> {
     const client = await this.#pool.connect();
     try {
+      await client.query(`SET ROLE ${this.#workerRole}`);
       return await operation({
         query: async <R extends object>(
           text: string,
@@ -76,7 +82,10 @@ class PoolConnectionFactory implements StoreConnectionFactory {
 }
 
 export function createWorker(options: CreateWorkerOptions): WorkerRuntime {
-  const connections = new PoolConnectionFactory(options.pool);
+  const connections = new PoolConnectionFactory(
+    options.pool,
+    options.workerRole ?? 'xht_worker'
+  );
   const topicHandlers = new Map<string, OutboxHandler>();
   if (options.telegramGateway?.enabled === true) {
     topicHandlers.set(
@@ -87,6 +96,15 @@ export function createWorker(options: CreateWorkerOptions): WorkerRuntime {
         options.telegramGateway.menu
       )
     );
+  } else if (options.telegramGateway?.enabled === false) {
+    // F-06: a disabled external connection must park menu messages in
+    // WAITING_CONFIGURATION (not PERMANENT dead letters) until explicit
+    // configuration change re-enables the gateway.
+    topicHandlers.set('telegram.main-menu-requested.v1', {
+      handle: async () => {
+        throw new TelegramConnectionDisabledError();
+      }
+    });
   }
   const outbox = new OutboxWorkerClass(new PostgresOutboxStore(connections), {
     handler:
@@ -103,6 +121,7 @@ export function createWorker(options: CreateWorkerOptions): WorkerRuntime {
   return {
     outbox,
     jobs,
+    topicHandlers,
     close: async () => {
       await options.pool.end();
     }

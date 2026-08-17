@@ -121,6 +121,7 @@ export class PostgresOutboxStore implements OutboxStore {
         workerId: row.locked_by,
         leaseToken: row.lease_token,
         lockGeneration: Number(row.lock_generation),
+        attemptCount: Number(row.attempt_count),
         lockedUntil: new Date(row.locked_until).toISOString()
       })
     );
