@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 16/48 步 Task 8 实施完成，等待用户外部复审
+
+- 用户授权第 16/48 步；完成 Create 3、Modify 0、Delete 0：事件工厂、ResolveOrCreateUid 三分支编排（绑定命中→seen；acquired→五件套+UidCreated；PROCESSING→零写入退出）、database spec。
+- 验证：build/typecheck exit 0；unit 162/162；Task 8 spec 9/9；全量 database 259/261（M06 抖动、M14 边界）。
+- Telegram 身份→UID 核心链路打通：同主体并发恰一个 UID/会员/绑定/注册/UidCreated；Outbox 失败整事务回滚有数据库证据。
+- 状态收敛：第 16/48 步 `COMPLETED`；Task 8 代码 `IMPLEMENTED`，等待用户外部复审；Tasks 9–14 与第 17/48 步 NOT_STARTED。
+
 ## 2026-08-17 — 第 15/48 步 Task 8 详细计划 v1.0 完成
 
 - 完成 Task 8“ResolveOrCreateUid 并发幂等”独立详细计划 v1.0：`docs/plans/task-8-resolve-create-uid/` 5 份拆分 Markdown。

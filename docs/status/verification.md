@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — 第 16/48 步 Task 8 实施（macOS/arm64 本地）
+
+- 前置门禁：3 个 Create 目标不存在、三锁无漂移；基线 ZIP SHA-256 `63E1715096AFC4A884619DA9BD4610D19F80DE8241E19259BEC330EFCE9CD87A`（源提交 `82301f8`）。
+- 写入：Create 3、Modify 0、Delete 0：identity-event-factory（冻结事件 + 注入 id factory）、resolve-or-create-uid（三分支编排）、database spec。
+- 验证：build/typecheck exit 0；unit 11 文件 162/162；Task 8 spec 9/9（T8C01–T8C10，其中 T8C05/08/10 合并断言）；全量 database 7 文件 261 中 259 PASS（M06 并行负载抖动且隔离 PASS、M14 平台边界，均非 Task 8 缺陷）。
+- 关键证据：五件套恰好一次（T8C01）；重复执行同 UID、uid-created 恰 1 条（T8C02）；username 变化仅更新快照（T8C03）；Outbox enqueue 失败整事务回滚、快照保持旧值（T8C05）；PROCESSING 占位零写入稳定 in_progress（T8C06）、清除后重入成为拥有者（T8C07）；两连接并发恰一个 created=true、同 UID、无跨主体串扰（T8C08/10）；编排源码纯度静态断言（T8C09）。
+- 实施期测试修正（如实申报）：T8C05 由"预占 uid-created 键"改为"预占 telegram-seen 键验证快照回滚"（uid 在创建前不可知）；T8C06/07 预插占位行必须用服务端派生 key 而非随机 UUID（否则撞 uq_registration_channel_external）——该行为本身即唯一约束第二防线的正确反应。
+
 ## 2026-08-17 — 第 14/48 步 Task 7 实施（macOS/arm64 本地）
 
 - 前置门禁：8 个 Create 目标不存在、contracts index Modify 输入一致、三锁无漂移（基线源提交 `9348b57`）。

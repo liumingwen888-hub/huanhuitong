@@ -14,11 +14,12 @@
 
 | 项目 | 当前状态 |
 |---|---|
-| 总进度 | 第 15/48 步 `IN_PROGRESS`（Task 8 计划 READY v1.0 待复审） |
+| 总进度 | 第 16/48 步 `COMPLETED`（Task 8 实施，等待外部复审） |
 | 阶段 0 | `VERIFIED` |
 | 阶段 1 总计划 | `READY v1.2.6` |
 | 阶段 1 代码 | `BUILDING` |
 | Tasks 1–7 | `VERIFIED` |
+| Task 8 代码 | `IMPLEMENTED`（build/typecheck exit 0；T8C01–T8C10 全部 PASS） |
 | Task 4 | `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS` |
 | Task 5 详细计划 | `READY v1.3 / EXTERNAL REVIEW PASS`（T5R-01～08 全部 CLOSED） |
 | Task 5 代码 | `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS` |
@@ -26,7 +27,7 @@
 | Tasks 7–14 | `NOT_STARTED` |
 | 生产部署 | `NOT_STARTED` |
 
-当前唯一下一步是：**等待用户外部复审 Task 8 计划 v1.0**（`docs/plans/task-8-resolve-create-uid/`）。复审通过并授权前不实施 Task 8、不进入第 16/48 步、不运行真实 Telegram 或其他业务外部服务。
+当前唯一下一步是：**等待用户外部复审 Task 8 实施结果**。复审通过前不实施 Task 9、不进入第 17/48 步、不运行真实 Telegram 或其他业务外部服务。
 
 准确状态以 [`docs/status/current.md`](docs/status/current.md) 和 [`docs/status/next.md`](docs/status/next.md) 为准；本 README 只提供入口摘要。
 
