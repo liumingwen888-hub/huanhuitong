@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 17/48 步 Task 9 详细计划 v1.0 完成
+
+- 完成 Task 9“Telegram Webhook 适配器与默认拒绝边界”独立详细计划 v1.0：`docs/plans/task-9-telegram-webhook/` 5 份拆分 Markdown。
+- 冻结合同：五道门禁顺序（HTTPS/代理信任→Secret constant-time→content-type→256KiB→最小 envelope）、F-07 分类表（畸形才 400，合法不支持一律 200 ignored）、完整 parsed Update 同引用直传 Task 5 digest、keyring 失败 503 双路径、grammY 隔离（BotInfo 注入/禁 start/getMe/类型零泄漏）、createPlatformApp trust proxy 与 body limit 固定。
+- 测试合同 T9C01–T9C15（contract 11 + adapter 4，零网络）；冻结 Create 11 / Modify 2 / Delete 0；vitest http glob 已存在无需改配置。
+- 本轮只新增计划 Markdown 与状态同步；工程写入 0。唯一下一步：等待用户外部复审 Task 9 v1.0。
+
 ## 2026-08-17 — 第 16/48 步 Task 8 复审通过与 VERIFIED 收敛
 
 - 用户裁决：Task 8 实施结果 EXTERNAL REVIEW PASS；两处测试修正 ACCEPT。Task 8 代码转 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；Tasks 1–8 全部 VERIFIED；提交 `009d5f0` 已推送。
