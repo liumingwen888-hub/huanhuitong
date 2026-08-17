@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 21/48 步 Task 11 详细计划 v1.0 完成
+
+- 完成 Task 11"日志字段白名单与敏感数据泄露测试"独立详细计划 v1.0：`docs/plans/task-11-safe-logging/` 5 份拆分 Markdown。
+- 冻结合同：八事件 policy matrix、值级防御（类型/长度/控制字符/嵌套全部失败关闭、SafeLoggingError 零写入）、双层控制（logging-policy 先抛 + Pino redact 兜底）、telegram_user_ref 版化独立密钥 HMAC 伪名（tgur-v1、与 Inbox digest keyring 完全分离独立轮换）、trace 无隐性 attribute 出口。
+- 测试合同 T11C01–T11C16（platform 6 + worker 3 + 共同 7）；冻结 Create 3 / Modify 5 / Delete 0。
+- 本轮只新增计划 Markdown 与状态同步；工程写入 0。唯一下一步：等待用户外部复审 Task 11 v1.0。
+
 ## 2026-08-17 — 第 20/48 步 Task 10 复审通过与 VERIFIED 收敛
 
 - 用户裁决：Task 10 实施结果 EXTERNAL REVIEW PASS；三项实施期修正 ACCEPT。Task 10 代码转 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；Tasks 1–10 全部 VERIFIED；提交 `f5a6507` 已推送。
