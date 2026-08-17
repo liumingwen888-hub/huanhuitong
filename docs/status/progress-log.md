@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 15/48 步 Task 8 详细计划 v1.0 完成
+
+- 完成 Task 8“ResolveOrCreateUid 并发幂等”独立详细计划 v1.0：`docs/plans/task-8-resolve-create-uid/` 5 份拆分 Markdown。
+- 冻结合同：三分支编排（绑定命中→seen；幂等 acquired→创建五件套+UidCreated；PROCESSING→零写入稳定退出）、双防线并发论证（幂等 PK ON CONFLICT + 绑定部分唯一索引）、事件工厂（冻结事件、id 注入、快照不进事件流）、Outbox topic/event_key 映射（uid-created:<uid> / telegram-seen:<sourceMessageId>，sourceMessageId=update_id 约定固定）。
+- 测试合同 T8C01–T8C10（含受控并发冒烟与编排纯度静态断言）；冻结 Create 3 / Modify 0 / Delete 0。
+- 本轮只新增计划 Markdown 与状态同步；工程写入 0。唯一下一步：等待用户外部复审 Task 8 v1.0。
+
 ## 2026-08-17 — 第 14/48 步 Task 7 复审通过与 VERIFIED 收敛
 
 - 用户裁决：Task 7 实施结果 EXTERNAL REVIEW PASS。Task 7 代码转 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；Tasks 1–7 全部 VERIFIED；提交 `f966d58` 已推送。

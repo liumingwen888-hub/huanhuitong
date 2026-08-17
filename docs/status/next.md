@@ -1,5 +1,5 @@
 # 下一步
 
-第 14/48 步已于 2026-08-17 完成并通过用户外部复审：Task 7 代码 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`（提交 `f966d58` 已推送）；Tasks 1–7 全部 VERIFIED。
+第 15/48 步：Task 8“ResolveOrCreateUid 并发幂等”独立详细计划 v1.0 已完成（`docs/plans/task-8-resolve-create-uid/`，5 份拆分 Markdown、T8C01–T8C10 测试合同、冻结 Create 3 / Modify 0 / Delete 0），状态 `READY v1.0 / WAITING_EXTERNAL_REVIEW`；Task 8 代码与第 16/48 步 `NOT_STARTED`。
 
-唯一当前动作：第 15/48 步——制定 Task 8“ResolveOrCreateUid 并发幂等”独立详细技术计划（依据阶段 1 总计划 Task 8 节：注册幂等行 ON CONFLICT 竞争 + 唯一绑定约束，同一事务创建或读取 UID；并发请求只产生一个 UID、会员、绑定、注册记录和 UidCreatedV1）。计划外部复审通过前不实施 Task 8、不进入第 16/48 步。
+复审重点：① 02 文件的三分支编排算法（PROCESSING 零写入退出而非等待/抢行）；② 双防线并发论证（幂等 PK 竞争 + 绑定部分唯一索引）；③ Outbox 失败整事务回滚证据。未经用户复审结论与实施授权，不实施 Task 8、不进入第 16/48 步。
