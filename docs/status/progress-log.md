@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 23/48 步 Task 12 详细计划 v1.0 完成
+
+- 完成 Task 12"dependency-cruiser 架构依赖门禁"独立详细计划 v1.0：`docs/plans/task-12-arch-gate/`。
+- 冻结合同：四规则（no-domain-to-telegram / no-packages-to-apps / no-worker-to-platform-internals / no-circular）、故意违规 fixture 证明门禁真实失败、真实图绿灯、pnpm test:all 全链恢复；depcruise 18.1.0 已在锁内。
+- 测试合同 T12C01–T12C04；冻结 Create 4 / Modify 1 / Delete 0。
+- 本轮只新增计划 Markdown 与状态同步；工程写入 0。唯一下一步：等待用户外部复审 Task 12 v1.0。
+
 ## 2026-08-17 — 第 22/48 步 Task 11 复审通过与 VERIFIED 收敛
 
 - 用户裁决：Task 11 实施结果 EXTERNAL REVIEW PASS；三项实施期修正 ACCEPT。Task 11 代码转 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；Tasks 1–11 全部 VERIFIED；提交 `e0400bd` 已推送。
