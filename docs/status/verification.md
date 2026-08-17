@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — 第 24/48 步 Task 12 实施（macOS/arm64 本地）
+
+- 前置门禁：4 个 Create 目标不存在；package.json 现有 architecture:check 脚本无需修改（Modify 实际差异 0）；三锁无漂移。
+- 写入：Create 4（.dependency-cruiser.cjs、fixture 双文件、architecture spec）、Modify 0（package.json 无需变更）。
+- 验证：`pnpm architecture:check` 真实图 exit 0（80 模块 109 依赖、0 违规）；fixture 故意违规 exit 1 且违规报告含规则名 no-domain-to-telegram；架构 spec 3/3（T12C01–T12C03）；**`pnpm test:all` 全链自 Task 3 以来首次完整通过**——build → typecheck → architecture:check → unit 191/191（17 文件）→ database 267/268（仅 M14 平台边界）→ integration。
+- 实施期裁决（如实申报）：① depcruise 18.1.0 不支持 TypeScript 7 编译器（官方提示 >=7 待支持），扫 src 会得到 0 模块虚假绿灯——规则路径扩展为 `(src|dist)`，门禁实际扫描 build 产物的真实依赖图（test:all 先 build 保证 dist 新鲜）；② fixture 用纯 JS（同因 TS 解析缺失）；③ 违规报告在 stdout 而非 stderr，断言相应调整；④ packages 规则限定 `(config|contracts|testing)/(src|dist)` 防止误扫 fixture 自身路径。
+- no-circular 全图无环；Telegram → identity 合法方向未受影响（真实图含该方向且 0 违规）。
+
 ## 2026-08-17 — 第 22/48 步 Task 11 实施（macOS/arm64 本地）
 
 - 前置门禁：3 个 Create 目标不存在、5 个 Modify 输入一致；基线 ZIP SHA-256 `0EC28241FA03FC703EC4B4FFA1F3D9F280093D228486157E744C24B917133D00`（源提交 `d4c1250`）；三锁无漂移。

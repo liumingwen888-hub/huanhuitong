@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 24/48 步 Task 12 实施完成，test:all 全链恢复，等待外部复审
+
+- Create 4（depcruise 配置、故意违规 fixture、架构 spec）、Modify 0；真实图 0 违规、fixture 非零退出可定位规则名。
+- `pnpm test:all` 全链自 Task 3 以来首次完整通过（database 仅 M14 平台边界）。
+- 关键裁决：TS7 编译器不被 depcruise 18.1 支持，门禁扫描 dist 真实产物图（src 路径同规则覆盖，防未来兼容）。
+- 状态收敛：第 24/48 步 `COMPLETED`；Task 12 代码 `IMPLEMENTED`，等待用户外部复审；Tasks 13–14 与第 25/48 步 NOT_STARTED。
+
 ## 2026-08-17 — 第 23/48 步 Task 12 详细计划 v1.0 完成
 
 - 完成 Task 12"dependency-cruiser 架构依赖门禁"独立详细计划 v1.0：`docs/plans/task-12-arch-gate/`。

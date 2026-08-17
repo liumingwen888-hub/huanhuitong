@@ -14,11 +14,12 @@
 
 | 项目 | 当前状态 |
 |---|---|
-| 总进度 | 第 23/48 步 `IN_PROGRESS`（Task 12 计划 READY v1.0 待复审） |
+| 总进度 | 第 24/48 步 `COMPLETED`（Task 12 实施，test:all 全链通过，等待外部复审） |
 | 阶段 0 | `VERIFIED` |
 | 阶段 1 总计划 | `READY v1.2.6` |
 | 阶段 1 代码 | `BUILDING` |
 | Tasks 1–11 | `VERIFIED` |
+| Task 12 代码 | `IMPLEMENTED`（架构门禁 0 违规；test:all 全链通过） |
 | Task 4 | `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS` |
 | Task 5 详细计划 | `READY v1.3 / EXTERNAL REVIEW PASS`（T5R-01～08 全部 CLOSED） |
 | Task 5 代码 | `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS` |
