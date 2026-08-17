@@ -28,3 +28,7 @@
 OpenTelemetry disabled 模式不调用 exporter factory 或网络 API；otlp 只允许注入 factory。register/shutdown 的任意原始异常正文、endpoint、header 或 Secret 不得越过边界，只返回稳定 `TelemetryConfigurationError` code。shutdown 第一次调用即关闭 `startSpan`，并在 exporter shutdown 真正开始前缓存每个 handle 唯一的 Promise；普通并发、同步重入和后续调用共享 pending/fulfilled/rejected 结果，registration shutdown 最多一次，失败持续为 `EXPORTER_SHUTDOWN_FAILED` 且不携带原始正文。Task 2 不实现真实 exporter，不连接 collector。
 
 v1.2.6 聚焦的 platform/worker telemetry 已通过 2/2 文件、14/14；完整 unit 已通过 7/7、108/108。failed/skipped/only/retry 均为 0。disabled 模式 factory、registration 和五类网络 API 调用均保持 0；普通并发与同步重入都共享同一 Promise，成功/失败粘滞、shutdown 最多一次、关闭后 span 拒绝和原始异常正文零泄露均有直接测试及独立运行时证据。Task 2 不包含真实 exporter，collector 仍为 NOT_STARTED。
+
+## 阶段 1 实施事实（2026-08-17）
+
+已实施：八事件日志白名单（值级防御失败关闭、Pino redact 第二层）、tgur-v1 伪名、OTel 接口（disabled 默认零网络）。真实 collector/告警连接 NOT_STARTED（阶段 10）。

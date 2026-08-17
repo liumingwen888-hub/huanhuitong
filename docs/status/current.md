@@ -1,6 +1,6 @@
 # 当前状态
 
-基线日期：2026-07-20。状态更新时间：2026-08-17。
+基线日期：2026-07-20。状态更新时间：2026-08-17（Task 14 终态收敛）。
 
 第 10/48 步为 `COMPLETED / EXTERNAL REVIEW PASS`（2026-08-17 本地 macOS/arm64 实施，同日用户复审通过）；Task 5 代码为 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`，fragment 07 清理连接修订 ACCEPT，未解决阻断 0。第 9/48 步为 `COMPLETED / EXTERNAL REVIEW PASS`（2026-08-17 用户复审 Task 5 v1.3 通过）；Task 5 详细计划为 `READY v1.3 / EXTERNAL REVIEW PASS`，T5R-01～T5R-08 全部 `ACCEPT / CLOSED`。实施验证：build/typecheck exit 0；unit 156/156（含 T5C01–T5C24）；database T5C25–T5C50 26/26 PASS、UOW 138/138、permissions 24/24、migrations 40/41（M14 为 Windows 平台前置断言，macOS 不适用）。第 8/48 步为 `COMPLETED / EXTERNAL REVIEW PASS`，Task 4 代码为 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`，未解决阻断 0。第 7/48 步为 `COMPLETED / EXTERNAL REVIEW PASS`；Task 4 技术计划保持 `READY v1.10 / EXTERNAL REVIEW PASS`，文档布局 `LAYOUT-S1 VERIFIED`，T4R-16～T4R-27 全部 `ACCEPT / CLOSED`。阶段 0 已由用户验收并整体 VERIFIED；阶段 1 总计划 READY v1.2.6、代码保持 BUILDING；Tasks 1–4 的代码和测试均为 VERIFIED。
 
@@ -16,7 +16,7 @@ Task 1 工程和供应链事实未改变：Node.js x64 `v24.18.0`、pnpm `11.15.
 |---|---|
 | 阶段 0 整体 | VERIFIED（用户验收通过） |
 | 阶段 1 总计划 | READY（v1.2.6） |
-| 阶段 1 代码 | BUILDING |
+| 阶段 1 代码 | READY（Tasks 1–13 全部 VERIFIED、23 项验收全 PASS、test:all 全链通过；等待用户验收阶段 1 实现，验收前不得标记 VERIFIED、不得获得部署授权） |
 | Task 1 工程骨架 | VERIFIED |
 | Task 2 详细计划 | VERIFIED（v1.2.6，已实施并通过最终复审） |
 | Task 2 代码与测试 | VERIFIED（v1.2.6 最终复审 PASS；R5-01 ACCEPT；新鲜复核通过） |
@@ -33,7 +33,7 @@ Task 1 工程和供应链事实未改变：Node.js x64 `v24.18.0`、pnpm `11.15.
 | Task 11 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 22/48 步 COMPLETED / EXTERNAL REVIEW PASS） |
 | Task 12 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 24/48 步 COMPLETED / EXTERNAL REVIEW PASS） |
 | Task 13 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 26/48 步 COMPLETED / EXTERNAL REVIEW PASS） |
-| Task 14 | NOT_STARTED |
+| Task 14 | IMPLEMENTED（第 28/48 步 COMPLETED，2026-08-17；文档同步完成，docs:check 156 文件通过） |
 | 本地 Task 3 PostgreSQL/Flyway/Testcontainers 验证 | VERIFIED（第 6 步已执行，资源已清理；本轮 NOT_RERUN） |
 | 共享/生产数据库、Telegram、collector、其他业务外部连接 | NOT_STARTED |
 | 部署 | NOT_STARTED |
@@ -41,3 +41,5 @@ Task 1 工程和供应链事实未改变：Node.js x64 `v24.18.0`、pnpm `11.15.
 第 6/48 步临时授权保持已消费并归零。第 8 步 Task 4 与第 10 步 Task 5 的本地隔离 Docker/PostgreSQL/Flyway/Testcontainers 授权均已消费并闭环。第 9/48 步复审与第 10/48 步实施已于 2026-08-17 完成；Git 提交、worktree、代理、Telegram、其他业务外部服务、生产/共享数据库、生产部署、真实 Secret、依赖与锁文件修改授权均为 0。第 11/48 步为 `COMPLETED`（Task 6 计划 v1.0 复审通过）；第 12/48 步为 `COMPLETED`（2026-08-17 Task 6 实施：Create 8、Modify 2、Delete 0；build/typecheck exit 0、unit 156/156、Task 6 database spec 13/13）；Task 6 代码为 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`（同日用户复审通过，含四项实施期修订 ACCEPT）。第 13/48 步 `COMPLETED`（Task 7 计划 v1.0 复审通过）；第 14/48 步 `COMPLETED`（2026-08-17 Task 7 实施：Create 8、Modify 1、Delete 0；build/typecheck exit 0、unit 162/162、identity database 10/10、全量 database 251/252）；Task 7 代码为 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`（同日用户复审通过）。第 15/48 步 `COMPLETED`（Task 8 计划 v1.0 复审通过）；第 16/48 步 `COMPLETED`（2026-08-17 Task 8 实施：Create 3、Modify 0、Delete 0；build/typecheck exit 0、unit 162/162、Task 8 spec 9/9）；Task 8 代码为 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`（同日用户复审通过，含两处测试修正 ACCEPT）。第 17/48 步 `IN_PROGRESS`：Task 9 详细计划制定中。
 
 验证证据见 [verification.md](verification.md)；唯一下一步见 [next.md](next.md)。
+
+当前生产部署授权：0；生产/共享数据库、真实 Telegram 连接、外部业务服务与部署授权均为 0，须按路线图在后续阶段另行申请。

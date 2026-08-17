@@ -31,3 +31,7 @@ Task 5 v1.3 的不可信命令门禁还要求：Proxy 在任何观察前拒绝�
 高危告警可暂停新订单，但不得凭告警直接篡改账本。Break-Glass 限时、最小权限并强制事后复核。未知外部结果只查询与对账，不自动重付。
 
 Task 3 v1.5 数据库门禁已实施并通过：会抛错的 Kysely reserve hook 使用 0；取得 client 后五类角色门禁失败 `release(true)` 恰好一次；wrapper/handle 关闭失败统一 `DATABASE_CLOSE_FAILED`、底层正文命中 0且 Promise 粘滞；独立 QueryCreator facade 本体/链式结果的关闭能力在 runtime 和 TypeScript 均为 0。两个容器显式平台覆盖 2/2，Flyway telemetry 固定关闭。raw request 的 5 秒 timeout/abort/race、后续 5 秒 stream timeout、strict parser、三路聚合、late settle、Secret 净化、非零退出 inspect 与唯一 owner 回收由 scenario 01–24 通过。真实 LOGIN/NOLOGIN 权限矩阵还证明 JDBC connection-level Flyway role 不给 LOGIN 直接 schema/table/history 权限。完成状态是 READY v1.5 等待用户复审；共享/生产数据库、真实 Secret 与部署门禁仍未满足。
+
+## 阶段 1 实施事实（2026-08-17）
+
+已运行门禁：`pnpm test:all`（build→typecheck→architecture:check→unit 191→database 272→integration 43）、`pnpm docs:check`（156 文件零断链零逃逸）、depcruise 四规则。合并/发布门禁待 Git 流程建立后启用。

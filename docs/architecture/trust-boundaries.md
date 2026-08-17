@@ -27,3 +27,7 @@
 阶段 1 v1.2.2 计划还要求：合法但暂不支持的 Telegram Update 以 200 ignored 结束，只有畸形最小 envelope 返回 400；反向代理仅允许固定 hop 或受信 CIDR，伪造 `X-Forwarded-Proto` 不能绕过 HTTPS。HTTP 适配器把完整 parsed Update 直接交给 Task 5 `digestTelegramUpdate(update, keyring)`；canonicalization、HMAC 与临时 bytes 生命周期完全封装在 Task 5，同步返回后 raw object、bytes、正文和 callback 不跨越至身份、Outbox、日志、trace 或审计。current/retained Inbox digest key 与 logger HMAC、Bot Token、Webhook Secret、支付密码密钥和数据库凭证分离，旧 key 至少保留 Inbox 保留期加 Telegram 重试窗口。日志只接受允许事件名和标量字段，并做值、长度、控制字符和嵌套对象检查；可关联 Telegram 标识用独立版本化 HMAC 伪名或直接省略。
 
 Task 3 v1.5 已实现并验证数据库边界：真实 client 只有在 `session_user`、固定 `SET ROLE` 与 `current_user` 全部通过后才交给 Kysely；取得 client 后的五类失败均销毁释放一次。真实 Kysely 只在 factory 闭包；公开 runtime facade 及其 plugin/schema 链没有关闭或 connection 逃逸能力。三个测试 LOGIN 只有 CONNECT 与唯一 SET-only 成员资格；Flyway 在 JDBC 连接建立时切换 `xht_flyway` 并保留 callback 二次证明，platform/worker 在 pool wrapper 内切换自己的 NOLOGIN 角色。Flyway telemetry、双阶段 raw 日志限制、严格 parser、三路 Secret 扫描、非零退出 inspect 和唯一 owner 清理均由 scenario 01–24 与真实容器验证；公开错误未携带底层正文或 Secret。该证据只覆盖本地隔离数据库，不授权共享/生产凭据或迁移。
+
+## 阶段 1 实施事实（2026-08-17）
+
+已实证边界：Webhook HTTPS/代理信任/Secret(constant-time)/content-type/256KiB/envelope 五道门禁；Inbox 零 raw Update 持久化（information_schema 实证）；日志白名单零敏感值（SafeLoggingError 零写入）；tgur-v1 独立密钥 HMAC 伪名；架构依赖门禁四规则（depcruise，0 违规）。

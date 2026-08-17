@@ -4,7 +4,7 @@
 
 计划版本：`v1.2.6`。Task 1 外部复审修订日期：`2026-07-21`；Task 2 外部复审修订日期：`2026-07-23`。
 
-计划状态：`READY`。阶段 1 代码为 `BUILDING`；Task 1、[Task 2 v1.2.6](2026-07-21-stage-1-task-2-config-observability-implementation-plan.md)、[Task 3 v1.5](2026-07-23-stage-1-task-3-database-foundation-implementation-plan.md) 与 [Task 4 v1.10 / LAYOUT-S1](task-4-unit-of-work/00-index.md) 均为 `VERIFIED`。第 8/48 步与 Task 4 实施结果已 `COMPLETED / IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`。Task 5 [独立详细计划 v1.3](task-5-inbox-dedup/00-index.md) 为 `READY v1.3 / WAITING_EXTERNAL_REVIEW`，代码 NOT_STARTED；第 9/48 步 WAITING_EXTERNAL_REVIEW，第 10/48 步与 Tasks 6–14 NOT_STARTED。
+计划状态：`READY`。阶段 1 代码为 `READY`（2026-08-17：Tasks 1–13 VERIFIED、23 项验收全 PASS、Task 14 文档同步完成；等待用户验收实现）。历史执行期间阶段 1 代码为 `BUILDING`；Task 1、[Task 2 v1.2.6](2026-07-21-stage-1-task-2-config-observability-implementation-plan.md)、[Task 3 v1.5](2026-07-23-stage-1-task-3-database-foundation-implementation-plan.md) 与 [Task 4 v1.10 / LAYOUT-S1](task-4-unit-of-work/00-index.md) 均为 `VERIFIED`。第 8/48 步与 Task 4 实施结果已 `COMPLETED / IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`。Task 5 [独立详细计划 v1.3](task-5-inbox-dedup/00-index.md) 为 `READY v1.3 / WAITING_EXTERNAL_REVIEW`，代码 NOT_STARTED；第 9/48 步 WAITING_EXTERNAL_REVIEW，第 10/48 步与 Tasks 6–14 NOT_STARTED。
 
 **Goal:** 在不引入资金能力和真实外部连接的前提下，建立可验证的 pnpm Monorepo、platform/worker 进程、PostgreSQL 可靠性底座，以及并发安全的 Telegram `/start` 自动注册、UID 解析、绑定和主菜单任务链路。
 

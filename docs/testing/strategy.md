@@ -35,3 +35,7 @@ Task 3 v1.5 的 platform/worker 两个 database unit spec 已各自覆盖 U01–
 Task 3 已由用户最终复审并为 VERIFIED v1.5。Task 4 第 7 步外部复审 PASS；[Task 4 v1.10 / LAYOUT-S1](../plans/task-4-unit-of-work/00-index.md) 为 READY v1.10 / EXTERNAL REVIEW PASS，T4R-16～T4R-27 ACCEPT / CLOSED。第 8 步 canonical T4R-27 RED 已证明预期 delegate 0→1 缺陷；冻结 `^LEX01:` 的 EMPTY MATCH 经用户裁决后仅把运行时过滤器修正为 `LEX01:`，不改测试或实现语义。最终 LEX 23/23、SQLPOL 57/57、SQLPOL51～57 真实专项 7/7、Task 4 integration 138/138、完整 database 203/203、unit 132/132、build/typecheck、5/5 canonical 与真实 PostgreSQL/Testcontainers 资源清理全部通过；Task 4 代码为 IMPLEMENTED / VERIFIED，第 8/48 步 COMPLETED。
 
 Task 4 实施结果外部复审现已 PASS。Task 5 的 [v1.3 详细计划](../plans/task-5-inbox-dedup/00-index.md) 冻结 T5C01～T5C50：unit 24 个覆盖完整 Update canonical/HMAC、array own-property 与 Proxy 观察前拒绝、轮换、清零和错误边界；database 26 个覆盖唯一约束、并发、PostgreSQL 微秒 lease/数据库内 `<=`、独立 claimant/generation/inbox CAS、candidate accessor/Proxy 与 claim/mark Date 自有 accessor/method/Date subclass 零触达、普通 Date intrinsic 成功、同 UoW 回滚、完整 runtime sentinel/allowlist、精确 Task 4 连接故障/destroy/normal-release/new-PID、schema 和权限。本轮系统 TEMP 取得 TypeScript 7.0.2 strict/noEmit exit 0、unit 24/24 与 database 26-title collection；没有运行 PostgreSQL，因此 database 不是 PASS，Task 5 项目测试、数据库和代码仍 NOT_STARTED。
+
+## 阶段 1 实施事实（2026-08-17）
+
+四层测试项目落地：unit（191）、database（272，真实 Testcontainers）、integration（43，真实 HTTP server/子进程/屏障并发）、architecture（depcruise + 故意违规 fixture）。已知边界：M14（Windows 前置）、M06/M16（并行负载清理抖动，隔离 PASS）。

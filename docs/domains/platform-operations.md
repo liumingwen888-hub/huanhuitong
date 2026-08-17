@@ -79,3 +79,7 @@ NOT_STARTED。
 ## 待确认问题
 
 具体生产环境与法律数据要求受 [P0 第 9 项](../product/open-decisions.md) 影响；没有新增 P0。
+
+## 阶段 1 实施事实（2026-08-17）
+
+已实施：UoW 单连接事务边界、Inbox（RECEIVED/CLAIMED/PROCESSED/CONFLICT/FAILED + 30s 数据库时钟租约 + CAS）、Outbox at-least-once（FOR UPDATE SKIP LOCKED + 四元组 CAS + 七态）、持久任务、有界全抖动退避、F-06 禁用 WAITING_CONFIGURATION 零写库零日志。生产容量/告警/备份属阶段 10。

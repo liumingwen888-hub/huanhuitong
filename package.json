@@ -15,7 +15,8 @@
     "test:unit": "pnpm build && vitest run --project unit",
     "test:db": "pnpm build && vitest run --project database",
     "test:integration": "pnpm build && vitest run --project integration",
-    "architecture:check": "depcruise apps packages --config .dependency-cruiser.cjs"
+    "architecture:check": "depcruise apps packages --config .dependency-cruiser.cjs",
+    "docs:check": "node scripts/check-docs.mjs"
   },
   "devDependencies": {
     "@types/node": "24.13.3",

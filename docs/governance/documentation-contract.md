@@ -43,3 +43,6 @@
 - 后续新计划从创建时执行本规则，不再形成万行单文件。
 
 计划作者负责职责拆分、单一权威和 manifest；实施者只从 canonical fragment 重建目标；复审者按索引和 manifest 核验覆盖与字节等价；完成者在交付前验证尺寸、链接、UTF-8、fence、Secret、TEMP 和范围。
+## 阶段 1 实施事实（2026-08-17）
+
+`pnpm docs:check`（scripts/check-docs.mjs）落地：156 份 Markdown 零断链零工作区逃逸；documentation spec 固化状态契约断言。

@@ -5,7 +5,7 @@
 | 阶段 | 目标 | 当前状态 | 进入下一阶段的主要证据 |
 |---|---|---|---|
 | 0 | 项目规则、产品基线、架构和索引层 | VERIFIED（用户验收通过） | 已完成；阶段 1 另行授权 |
-| 1 | 工程骨架、最小可靠性基础、身份、自动注册和 Telegram 绑定 | BUILDING（[阶段计划](2026-07-20-stage-1-foundation-identity-implementation-plan.md) READY v1.2.6；Tasks 1–4 VERIFIED；Task 4 IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS；[Task 5 计划](task-5-inbox-dedup/00-index.md) READY v1.3 / WAITING_EXTERNAL_REVIEW、代码 NOT_STARTED；Tasks 6–14 NOT_STARTED） | 第 8/48 步 COMPLETED / EXTERNAL REVIEW PASS；第 9/48 步 WAITING_EXTERNAL_REVIEW。等待用户复审 Task 5 v1.3；未经新授权不得实施 Task 5、进入第 10/48 步或推定 Git、外部连接与部署授权 |
+| 1 | 工程骨架、最小可靠性基础、身份、自动注册和 Telegram 绑定 | READY（Tasks 1–13 VERIFIED；23 项验收全 PASS；test:all/docs:check 通过；等待用户验收阶段 1 实现） | 第 28/48 步 COMPLETED。等待用户验收；验收不产生部署授权 |
 | 2 | 支付密码、账户安全和恢复框架 | NOT_STARTED | 凭证策略、恢复威胁模型与冷静期测试 |
 | 3 | 最小横切资金合同、复式账本、余额和账单 | NOT_STARTED | 费用/风险/限额、审计/授权/配置、订单到账本、对账接口，以及借贷平衡、防负余额、并发与属性测试 |
 | 4 | 充值、确认、归集和链上对账 | NOT_STARTED | 每链确认/重组、幂等入账和对账 |

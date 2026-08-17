@@ -26,3 +26,7 @@
 跨领域协作使用同进程显式应用服务或版本化事件；禁止读取别的领域私有表来绕过接口。同步调用只用于必须在同一事务确认的资格、授权与记账；通知、扫描、外部查询和对账走 Outbox/Inbox/持久任务。领域清单和所有权见 [domains/README.md](../domains/README.md)。
 
 横切领域采用“早期最小合同、随资金阶段扩展、后期运营成熟化”的交付方式。领域依赖表示调用方向，不表示被依赖领域要等到路线图后期才首次实现。
+
+## 阶段 1 实施事实（2026-08-17）
+
+identity-and-membership、ledger 边界前的 reliability 平台层与 telegram-experience 适配层已实施；`no-domain-to-telegram` 等四规则由 depcruise 机器强制（`pnpm architecture:check`，84 模块 0 违规）。资金领域（阶段 3+）未开始。

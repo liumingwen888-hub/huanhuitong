@@ -179,3 +179,6 @@ pnpm test:db
 8. Secret/TEMP/资源残留检查。
 
 状态摘要不得替代权威文档，历史记录不得被改写成当前事实。
+## 阶段 1 实施事实（2026-08-17）
+
+阶段 1 代码 READY 等待用户验收；恢复会话按 current/next 读取终态。工程命令：`pnpm test:all`、`pnpm docs:check`。

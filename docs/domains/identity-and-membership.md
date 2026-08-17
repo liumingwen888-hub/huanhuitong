@@ -77,3 +77,7 @@ NOT_STARTED。
 ## 待确认问题
 
 账号恢复因素由 [P0 第 8 项](../product/open-decisions.md) 决定；不得用临时默认值实现资金账户接管。
+
+## 阶段 1 实施事实（2026-08-17）
+
+已实施：Uid 品牌 string、ChannelType、ResolveOrCreateUid 三分支编排（绑定命中/幂等 acquired/PROCESSING 零写入退出）、registrationKey 服务端 SHA-1 UUIDv5 派生（命令对象无注入面）、五件套同事务创建、双有效绑定被部分唯一索引拒绝（真并发验收恰一 UID）。username 仅快照；UidCreatedV1 无资金效果（23 项验收之 18 实证零资金对象）。

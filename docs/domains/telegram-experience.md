@@ -79,3 +79,7 @@ Task 5 v1.3 进一步规定：有效 `/start` 的完整 parsed Update 由 HTTP �
 ## 待确认问题
 
 Telegram Bot 不是端到端加密的独立安全设备；在 Telegram 内输入的支付密码不能视为独立于该渠道的强认证因素。高风险增强认证见 [P0 第 7、8 项](../product/open-decisions.md)，领取和查询密码门槛见第 10 项；Telegram 官方能力结论见 [研究记录](../research/telegram-feasibility.md)。
+
+## 阶段 1 实施事实（2026-08-17）
+
+已实施：grammY webhookCallback 适配（BotInfo 注入、零网络、零 bot.start）、mainMenuV1（account/help 两按钮、无资金信息）、/start 原子编排、主菜单 Outbox at-least-once 投递（event-ID 幂等 + duplicate-risk 审计）。真实 Telegram 连接授权为 0；Gateway 为注入接口（Recording/Disabled 实现）。

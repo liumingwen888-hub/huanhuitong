@@ -135,3 +135,7 @@ v1.3 精确收集器的四项无 Docker 复现为：4-byte incomplete header 返
 本节不增加外部网络来源，只登记已安装精确版本源码与无 Docker TEMP 复现。Dockerode `5.0.1` 的 `Container.prototype.logs()` 把 `args.opts.abortSignal` 写入交给 modem 的 options；docker-modem `5.0.7` 的 `dial()` 把该值赋给底层 Node request 的 `signal`，并为非 stream response 添加 abort signal。`@types/dockerode@4.0.1` 的 `ContainerLogsOptions` 明确公开 `abortSignal?: AbortSignal`。Testcontainers `12.0.4` 的 `DockerContainerClient.logs()` 仍固定 `follow: true` 且 catch raw rejection 后结束代理流；因此 Task 3 runner 继续绕过该 wrapper，直接使用 raw Dockerode。
 
 逐字提取的 v1.4 最终 `readLogs()` 在 fake `container.logs()` 返回永久 pending Promise 时，400ms 后仍为 `TIMEOUT`；options 不含 `abortSignal`；模拟外层 `finally` 的 `cleanupCalls=0`；`collectDockerLogs()` 未进入且 `LOG_READ_TIMEOUT_MILLIS` 计时器未启动。T3R-12 因而 `ACCEPT`。v1.5 在调用 raw `logs()` 前创建独立 `LOG_REQUEST_TIMEOUT_MILLIS=5_000` 计时器与 AbortController，把 signal 传入并用显式 Promise race 保证即使请求忽略 abort 也会 settle reject；request 成功后才进入 v1.4 parser/stream timeout。以上只证明未来计划代码块的本地可执行性，不表示 Docker、容器、数据库或 Task 3 已运行。
+
+## 阶段 1 实施事实（2026-08-17）
+
+新增实施期来源事实：grammY 1.45.1 webhookCallback 独立导出与 BotInfo 注入；depcruise 18.1.0 暂不支持 TypeScript 7 编译器（门禁扫描 dist 产物图）；@types/express 5.0.6 / @types/node-fetch 2.6.13（方案 A 授权 devDeps）。

@@ -1,5 +1,12 @@
 # 最近验证
 
+## 2026-08-17 — 第 28/48 步 Task 14 实施：阶段 1 终态收敛（macOS/arm64 本地）
+
+- 写入：Create 2（scripts/check-docs.mjs、documentation spec）、Modify 27（package.json docs:check 脚本 + 25 份权威文档/索引/状态 + 总计划头部）。
+- **阶段 1 全部 14 个 Task、48 步流程完成**：Tasks 1–13 VERIFIED、23 项具名验收全 PASS；阶段 1 代码收敛 `READY`，唯一剩余动作是用户验收阶段 1 实现（验收不产生部署授权——生产部署/共享数据库/真实 Telegram 连接授权均为 0）。
+- 最终验证：build/typecheck exit 0；architecture 0 违规（84 模块）；unit 18 文件 194/194（含 documentation spec 3/3）；database 269/272（M14 平台边界、M06/M16 并行负载清理抖动且隔离 PASS）；integration 43/43；`pnpm docs:check` 156 份 Markdown 零断链零工作区逃逸。
+- 实施期修正（如实申报）：① check-docs 剥离围栏代码块后扫描（计划代码片段中的 `{ ... }` 被链接正则误判）；② 生产部署授权显式行补入 current.md（spec 契约断言）；③ 27 份文件中 25 份为事实追加（每份文件保持唯一权威职责），未改写任何历史记录。
+
 ## 2026-08-17 — 第 26/48 步 Task 13 实施（macOS/arm64 本地）
 
 - 前置门禁：11 个 Create 目标不存在、testing index 一致；基线 ZIP SHA-256 `7F0FEE6A00F0C37EED4A82FDF98E6E9F45FC1E353C8EA233F35CBD44B5828B7D`（源提交 `e65448a`）；三锁无漂移。

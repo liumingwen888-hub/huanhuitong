@@ -44,3 +44,7 @@ Task 2 v1.2.6 已实现以下控制：file Secret reference 在 URL 规范化前
 Task 3 v1.5 已把 T3R-01–T3R-12 转化为真实工程控制并通过本地验证：pre-return pool wrapper 阻断角色门禁失败后 client 泄漏；QueryCreator facade 阻断 Kysely 关闭能力逃逸；锁定 linux/amd64 镜像、停止 wait + ExitCode inspect 与唯一 owner 回收控制 one-shot 生命周期；raw Dockerode request 的独立 5 秒 timeout/abort/race 和后续 strict bounded multiplex parser 阻断永久 pending、截断、非法 frame、late settle 与跨通道 Secret 漏检。Flyway 12.11.0 多连接实测还要求在 JDBC 建连层强制 `role=xht_flyway`，callback 保留二次证明，测试 LOGIN 不获得直接对象权限。真实 database 65/65、database unit 24/24、全量 unit 132/132 与资源残留 0 构成本地证据；Task 3 已通过最终外部复审并 VERIFIED，但这不代表生产凭据、共享数据库或部署风险已关闭。
 
 Task 4 已实现并验证单连接 Unit of Work、TransactionContext 禁止逃逸、同步/异步异常回滚、错误传播、SQL 策略和连接释放；完整 unit 132/132、database 203/203、Task 4 integration 138/138 与资源残留 0 构成本地证据。Task 5 v1.3 当前仍是等待外部复审的未来 Inbox/Telegram Update 去重计划；其 canonical fragments 和 TEMP 可执行性证据不是已实施控制。
+
+## 阶段 1 实施事实（2026-08-17）
+
+已实证控制：Webhook 五道门禁（401/400/415/413/503 矩阵）、Secret constant-time、代理信任伪造拒绝、Inbox 零 raw 存储、日志零敏感值、HMAC 密钥分离与轮换、并发注册唯一性（屏障真并发）、失败全量回滚、子进程 SIGTERM 清理。
