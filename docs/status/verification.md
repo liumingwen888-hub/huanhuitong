@@ -1,5 +1,11 @@
 # 最近验证
 
+## 2026-08-17 — S2-4 锁定、计数与速率限制实施（macOS/arm64 本地）
+
+- 写入：Create 5（session-rate-limiter.ts、lock-audit.service.ts、credential-rehash.ts、unit/database 双 spec）+ Modify 3（verify-payment-credential：锁审计行 + 借用内重哈希 + 解锁释放；credential-session.service：单 OPEN 断言 + 令牌桶；双仓储：security_locks 两方法 + hasOpenSession）。
+- 落地：锁定阈值触发同事务 security_locks 审计行、成功解锁写 released_at（S4D01 全链）；同 uid 第二 OPEN 会话拒绝、取消后可开（S4D02）；每窗令牌桶防洪水（S4D03 + S4U01/02）；旧 param_version 验证成功后**借用内透明重哈希**至当前版本且可再次验证（S4D04——重哈希在同一 withBytes 借用内完成，原文零二次借出）。
+- 验证：S2-4 spec 6/6；全量 unit 213/213、database 294/296（M14/M06 已知边界）、architecture 0 违规（97 模块）、三锁无漂移。
+
 ## 2026-08-17 — S2-3 设置与验证会话实施（macOS/arm64 本地）
 
 - 写入：Create 4（credential-session.registry.ts、credential-session.service.ts、unit/database 双 spec）。Modify 0。

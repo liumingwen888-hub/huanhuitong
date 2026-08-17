@@ -1,7 +1,12 @@
 import type { Uid } from '@xht/contracts';
 import type { UnitOfWork } from '../../../infrastructure/database/unit-of-work.js';
 import { CredentialError } from '../domain/credential.errors.js';
-import { verifyCredentialDigits } from '../domain/credential-hash.js';
+import {
+  hashCredentialDigits,
+  verifyCredentialDigits,
+  SCRYPT_PARAM_VERSION
+} from '../domain/credential-hash.js';
+import { SecurityLockAuditService } from './lock-audit.service.js';
 import type { CredentialEntryBuffer } from '../domain/credential-processor.js';
 import type { CredentialRepository } from './credential.repository.js';
 
@@ -16,10 +21,12 @@ export type VerifyCredentialOutcome =
 export class VerifyPaymentCredential {
   readonly #unitOfWork: UnitOfWork;
   readonly #credentials: CredentialRepository;
+  readonly #lockAudit: SecurityLockAuditService;
 
   constructor(unitOfWork: UnitOfWork, credentials: CredentialRepository) {
     this.#unitOfWork = unitOfWork;
     this.#credentials = credentials;
+    this.#lockAudit = new SecurityLockAuditService(credentials);
   }
 
   public async execute(
@@ -58,11 +65,26 @@ export class VerifyPaymentCredential {
       if (storedRow === undefined || storedRow.hash_v1 === null) {
         throw new CredentialError('CREDENTIAL_STATE_INVALID');
       }
-      const matches = await digits.withBytes(async (bytes) =>
-        verifyCredentialDigits(bytes, storedRow.hash_v1)
-      );
-      if (matches) {
-        await this.#credentials.recordSuccessfulVerification(context, uid);
+      const verification = await digits.withBytes(async (bytes) => {
+        const matches = await verifyCredentialDigits(bytes, storedRow.hash_v1);
+        const upgraded =
+          matches && storedRow.hash_param_version < SCRYPT_PARAM_VERSION
+            ? await hashCredentialDigits(bytes)
+            : null;
+        return { matches, upgraded } as const;
+      });
+      if (verification.matches) {
+        if (verification.upgraded !== null) {
+          await this.#credentials.upsertActiveCredential(context, {
+            uid,
+            hashV1: verification.upgraded.hashV1,
+            hashAlgorithm: 'scrypt' as never,
+            hashParamVersion: verification.upgraded.paramVersion
+          });
+        } else {
+          await this.#credentials.recordSuccessfulVerification(context, uid);
+        }
+        await this.#lockAudit.onReleased(context, uid);
         return 'verified';
       }
       const policy = await this.#credentials.activePolicy(context);
@@ -77,6 +99,9 @@ export class VerifyPaymentCredential {
         lockUntil = new Date(now + lockSeconds * 1000);
       }
       await this.#credentials.recordFailedAttempt(context, uid, lockUntil);
+      if (lockUntil !== null) {
+        await this.#lockAudit.onLocked(context, uid, 'credential-failed-attempts');
+      }
       return 'rejected';
     });
   }

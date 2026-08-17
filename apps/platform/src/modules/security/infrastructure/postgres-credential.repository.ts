@@ -105,6 +105,37 @@ export class PostgresCredentialRepository implements CredentialRepository {
     return result.rows.length === 1;
   }
 
+  public async recordSecurityLock(
+    context: TransactionContext,
+    uid: Uid,
+    reason: 'credential-failed-attempts' | 'recovery-open' | 'admin-hold'
+  ): Promise<string> {
+    const result = await context.executeSql<{ lock_id: string }>(
+      `INSERT INTO security_locks (uid, lock_reason)
+       VALUES ($1::uuid, $2) RETURNING lock_id`,
+      [uid, reason]
+    );
+    const row = result.rows[0];
+    if (row === undefined) {
+      throw new CredentialError('CREDENTIAL_STATE_INVALID');
+    }
+    return row.lock_id;
+  }
+
+  public async releaseOpenSecurityLocks(
+    context: TransactionContext,
+    uid: Uid
+  ): Promise<number> {
+    const result = await context.executeSql(
+      `UPDATE security_locks
+          SET released_at = clock_timestamp()
+        WHERE uid = $1::uuid AND released_at IS NULL
+        RETURNING lock_id`,
+      [uid]
+    );
+    return result.rows.length;
+  }
+
   public async activePolicy(
     context: TransactionContext
   ): Promise<CredentialPolicySnapshot> {

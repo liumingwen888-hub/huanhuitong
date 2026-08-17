@@ -100,6 +100,18 @@ export class PostgresCredentialSessionRepository
     };
   }
 
+  public async hasOpenSession(
+    context: TransactionContext,
+    uid: Uid
+  ): Promise<boolean> {
+    const result = await context.executeSql<{ session_id: string }>(
+      `SELECT session_id FROM credential_sessions
+        WHERE uid = $1::uuid AND status = 'OPEN' LIMIT 1`,
+      [uid]
+    );
+    return result.rows.length > 0;
+  }
+
   public async transitionSession(
     context: TransactionContext,
     sessionId: string,

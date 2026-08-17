@@ -54,6 +54,12 @@ export interface CredentialRepository {
     context: TransactionContext,
     uid: Uid
   ): Promise<boolean>;
+  recordSecurityLock(
+    context: TransactionContext,
+    uid: Uid,
+    reason: 'credential-failed-attempts' | 'recovery-open' | 'admin-hold'
+  ): Promise<string>;
+  releaseOpenSecurityLocks(context: TransactionContext, uid: Uid): Promise<number>;
   activePolicy(
     context: TransactionContext
   ): Promise<CredentialPolicySnapshot>;
@@ -74,4 +80,5 @@ export interface CredentialSessionRepository {
     from: CredentialSessionStatus,
     to: CredentialSessionStatus
   ): Promise<boolean>;
+  hasOpenSession(context: TransactionContext, uid: Uid): Promise<boolean>;
 }

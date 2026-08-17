@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S2-4 实施完成，等待外部复审
+
+- Create 5 / Modify 3；security_locks 审计行、单 OPEN + 令牌桶限流、scrypt 透明重哈希全部落地可证。
+- S2-4 spec 6/6；unit 213/213；db 294/296（已知边界）；arch 0 违规。
+- 状态收敛：S2-4 `IMPLEMENTED`，等待用户外部复审；S2-5 起NOT_STARTED。
+
 ## 2026-08-17 — S2-4 详细计划 v1.0 完成，等待外部复审
 
 - 范围重估：失败计数/阶梯锁定已在 S2-2 落地；S2-4 增量 = security_locks 审计行、会话创建速率限制（单 OPEN + 令牌桶）、scrypt param_version 透明重哈希。

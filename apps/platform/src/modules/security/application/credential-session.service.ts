@@ -12,13 +12,16 @@ import type {
   CredentialSessionRepository
 } from './credential.repository.js';
 import { CredentialSessionRegistry } from './credential-session.registry.js';
+import { SessionRateLimiter } from './session-rate-limiter.js';
 
 export class CredentialSessionServiceError extends Error {
   public readonly code:
     | 'SESSION_NOT_OPEN'
     | 'SESSION_EXPIRED'
     | 'ENTRIES_MISMATCH'
-    | 'DIGITS_OUT_OF_POLICY_RANGE';
+    | 'DIGITS_OUT_OF_POLICY_RANGE'
+    | 'SESSION_ALREADY_OPEN'
+    | 'SESSION_RATE_LIMITED';
   constructor(code: CredentialSessionServiceError['code']) {
     super(code);
     this.name = 'CredentialSessionServiceError';
@@ -34,17 +37,22 @@ export class CredentialSessionService {
   readonly #credentials: CredentialRepository;
   readonly #verifier: VerifyPaymentCredential;
   readonly #registry = new CredentialSessionRegistry();
+  readonly #rateLimiter: SessionRateLimiter;
 
   constructor(
     unitOfWork: UnitOfWork,
     sessions: CredentialSessionRepository,
     credentials: CredentialRepository,
-    verifier: VerifyPaymentCredential
+    verifier: VerifyPaymentCredential,
+    rateLimiter?: SessionRateLimiter
   ) {
     this.#unitOfWork = unitOfWork;
     this.#sessions = sessions;
     this.#credentials = credentials;
     this.#verifier = verifier;
+    this.#rateLimiter =
+      rateLimiter ??
+      new SessionRateLimiter({ maxPerWindow: 10, windowMillis: 60_000 });
   }
 
   public get registry(): CredentialSessionRegistry {
@@ -55,6 +63,7 @@ export class CredentialSessionService {
     readonly sessionId: string;
     readonly expiresAt: string;
   }> {
+    await this.#assertCanOpenSession(uid);
     const session = await this.#unitOfWork.execute((context) =>
       this.#sessions.createSession(context, {
         uid,
@@ -74,6 +83,7 @@ export class CredentialSessionService {
     readonly amountSummary: string;
     readonly assetSummary: string;
   }): Promise<{ readonly sessionId: string; readonly expiresAt: string }> {
+    await this.#assertCanOpenSession(input.uid);
     const session = await this.#unitOfWork.execute((context) =>
       this.#sessions.createSession(context, {
         uid: input.uid,
@@ -201,6 +211,18 @@ export class CredentialSessionService {
     await this.#unitOfWork.execute((context) =>
       this.#sessions.transitionSession(context, sessionId, 'OPEN', 'CANCELLED')
     );
+  }
+
+  async #assertCanOpenSession(uid: Uid): Promise<void> {
+    if (!this.#rateLimiter.allow(uid)) {
+      throw new CredentialSessionServiceError('SESSION_RATE_LIMITED');
+    }
+    const open = await this.#unitOfWork.execute((context) =>
+      this.#sessions.hasOpenSession(context, uid)
+    );
+    if (open) {
+      throw new CredentialSessionServiceError('SESSION_ALREADY_OPEN');
+    }
   }
 
   async #assertOpen(sessionId: string): Promise<void> {
