@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-17 — 第 20/48 步 Task 10 复审通过与 VERIFIED 收敛
+
+- 用户裁决：Task 10 实施结果 EXTERNAL REVIEW PASS；三项实施期修正 ACCEPT。Task 10 代码转 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；Tasks 1–10 全部 VERIFIED；提交 `f5a6507` 已推送。
+- 进入第 21/48 步：Task 11“日志字段白名单与敏感数据泄露测试”详细计划 DESIGNING。
+
 ## 2026-08-17 — 第 20/48 步 Task 10 实施完成，/start 端到端链路打通，等待外部复审
 
 - Create 8、Modify 4、Delete 0；build/typecheck exit 0；unit 179/179；Task 10 双 spec 12/12；全量 database 267/268（仅 M14 平台边界）。
