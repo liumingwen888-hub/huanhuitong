@@ -1,4 +1,12 @@
-# 进度日志
+# 进展日志
+
+## 2026-08-17 — 第 9/48 步 Task 5 v1.3 外部复审通过，全部复审项关闭
+
+- 用户复审 Task 5 v1.3 并接受 AI 整理的复审建议：T5R-03、T5R-08 均 `ACCEPT / CLOSED`；T5R-01～T5R-08 现全部 `ACCEPT / CLOSED`。
+- 复审依据：T5R-03 已改为 Proxy 前置拒绝 + 精确 `Date.prototype` + own key 0 + `Date.prototype.getTime.call(value)` intrinsic，四类伪造探针在 TEMP 证据中均为 authentic `INBOX_COMMAND_INVALID` 且输入代码/trap/context 触达 0；T5R-08 已移除 Step 1 硬编码基线，改为授权时由用户提供最新获批 ZIP 的路径/bytes/SHA-256 与报告 raw/normalized SHA-256 并逐项对照，回滚只用同一获批包。
+- 状态收敛：第 9/48 步 `COMPLETED / EXTERNAL REVIEW PASS`；Task 5 详细计划 `READY v1.3 / EXTERNAL REVIEW PASS`；Task 5 代码 `NOT_STARTED`；第 10/48 步 `NOT_STARTED`。
+- 本轮只同步状态 Markdown；工程、依赖、锁文件、容器、数据库、外部服务与部署写入均为 0。唯一下一步是等待用户按 T5R-08 合同授权第 10/48 步实施。
+
 
 ## 2026-08-05 — 增加跨设备中文 AI 第一接手提示词
 

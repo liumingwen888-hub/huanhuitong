@@ -1,5 +1,12 @@
 # 当前工作
 
+## 2026-08-17 第 9/48 步 Task 5 v1.3 外部复审通过
+
+- 用户基于整理的复审包（T5R-03 Date 伪造防御三层方案、T5R-08 实施基线动态对照合同）接受建议，裁决 T5R-03、T5R-08 均 `ACCEPT / CLOSED`。
+- Task 5 v1.3 外部复审登记 `APPROVED`；T5R-01～T5R-08 全部 `ACCEPT / CLOSED`；第 9/48 步转 `COMPLETED / EXTERNAL REVIEW PASS`；Task 5 计划转 `READY v1.3 / EXTERNAL REVIEW PASS`；Task 5 代码与第 10/48 步保持 `NOT_STARTED`。
+- 本轮只同步权威状态 Markdown（current、next、active-work、progress-log、Task 5 计划 00-index 与 01-scope）；工程代码、测试、依赖、锁文件、Docker、数据库、外部服务和部署变化均为 0。
+- 唯一下一步：等待用户授权第 10/48 步实施；授权须按 T5R-08 提供获批 ZIP 路径/bytes/SHA-256 与复审报告 raw/normalized SHA-256。
+
 ## 2026-08-05 中文 AI 第一接手提示词
 
 - 用户批准方案 A 及书面规格，并将根入口文件名最终确定为 `AI接手提示词.md`。

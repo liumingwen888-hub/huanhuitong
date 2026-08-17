@@ -1,8 +1,8 @@
 # 当前状态
 
-基线日期：2026-07-20。状态更新时间：2026-08-05。
+基线日期：2026-07-20。状态更新时间：2026-08-17。
 
-第 8/48 步为 `COMPLETED / EXTERNAL REVIEW PASS`，Task 4 代码为 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`，未解决阻断 0。Task 5 v1.2 外部复审为 `NOT APPROVED / REVISION REQUIRED` 并由 v1.3 candidate 取代；T5R-01、T5R-02、T5R-04、T5R-05、T5R-06、T5R-07 为 `ACCEPT / CLOSED`，T5R-03、T5R-08 为 `RESOLVED_IN_PLAN / WAITING_EXTERNAL_REVIEW`；第 9/48 步现为 `WAITING_EXTERNAL_REVIEW`，Task 5 独立详细计划为 `READY v1.3 / WAITING_EXTERNAL_REVIEW`，Task 5 代码保持 `NOT_STARTED`，第 10/48 步保持 `NOT_STARTED`。v1.3 只修订现有 Markdown、canonical fragments 与直接冲突的活动文档；未来工程矩阵继续为 Create 6/Modify 1/Delete 0。第 7/48 步为 `COMPLETED / EXTERNAL REVIEW PASS`；Task 4 技术计划保持 `READY v1.10 / EXTERNAL REVIEW PASS`，文档布局 `LAYOUT-S1 VERIFIED`，T4R-16～T4R-27 全部 `ACCEPT / CLOSED`。阶段 0 已由用户验收并整体 VERIFIED；阶段 1 总计划 READY v1.2.6、代码保持 BUILDING；Tasks 1–4 的代码和测试均为 VERIFIED。
+第 9/48 步为 `COMPLETED / EXTERNAL REVIEW PASS`（2026-08-17 用户复审 Task 5 v1.3 通过）；Task 5 详细计划为 `READY v1.3 / EXTERNAL REVIEW PASS`，T5R-01～T5R-08 全部 `ACCEPT / CLOSED`，Task 5 代码保持 `NOT_STARTED`，第 10/48 步保持 `NOT_STARTED`。第 8/48 步为 `COMPLETED / EXTERNAL REVIEW PASS`，Task 4 代码为 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`，未解决阻断 0。第 7/48 步为 `COMPLETED / EXTERNAL REVIEW PASS`；Task 4 技术计划保持 `READY v1.10 / EXTERNAL REVIEW PASS`，文档布局 `LAYOUT-S1 VERIFIED`，T4R-16～T4R-27 全部 `ACCEPT / CLOSED`。阶段 0 已由用户验收并整体 VERIFIED；阶段 1 总计划 READY v1.2.6、代码保持 BUILDING；Tasks 1–4 的代码和测试均为 VERIFIED。
 
 E3-01 至 E3-04 全部保持。v1.2.4 TEMP 验证是历史计划可执行性证据；第 4 步真实项目证据为 clean build exit 0、6/6 文件 95/95 聚焦测试、typecheck exit 0、7/7 文件 96/96 unit、三个 package export 导入成功、18/18 权威代码块一致和 29 项安全范围检查通过。新依赖、lockfile 漂移、超范围工程文件和真实网络调用均为 0。
 
@@ -23,12 +23,12 @@ Task 1 工程和供应链事实未改变：Node.js x64 `v24.18.0`、pnpm `11.15.
 | Task 3 详细计划、代码与测试 | VERIFIED（v1.5，第 6 步最终复审 PASS；T3R-13 关闭） |
 | Task 4 详细计划 | READY（v1.10 / EXTERNAL REVIEW PASS；LAYOUT-S1 VERIFIED） |
 | Task 4 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 8/48 步 COMPLETED） |
-| Task 5 详细计划 | READY v1.3 / WAITING_EXTERNAL_REVIEW（v1.2 EXTERNAL REVIEW NOT APPROVED / REPLACED；T5R-01/02/04/05/06/07 ACCEPT / CLOSED；T5R-03/08 RESOLVED_IN_PLAN） |
+| Task 5 详细计划 | READY v1.3 / EXTERNAL REVIEW PASS（2026-08-17；T5R-01～T5R-08 全部 ACCEPT / CLOSED） |
 | Task 5 代码与 Tasks 6–14 | NOT_STARTED |
 | 本地 Task 3 PostgreSQL/Flyway/Testcontainers 验证 | VERIFIED（第 6 步已执行，资源已清理；本轮 NOT_RERUN） |
 | 共享/生产数据库、Telegram、collector、其他业务外部连接 | NOT_STARTED |
 | 部署 | NOT_STARTED |
 
-第 6/48 步临时授权保持已消费并归零。第 8 步 Task 4 的 Create 3、Modify 2 与本地隔离 Docker/PostgreSQL/Flyway/Testcontainers 授权已经消费并闭环。第 9/48 步 Task 5 v1.3 计划修订已完成并等待外部复审；Task 5 工程实现、第 10/48 步、Git 写入、worktree、代理、Telegram、其他业务外部服务、生产/共享数据库、生产部署、真实 Secret、依赖与锁文件修改授权均为 0。唯一当前动作是等待用户外部复审 Task 5 v1.3。
+第 6/48 步临时授权保持已消费并归零。第 8 步 Task 4 的 Create 3、Modify 2 与本地隔离 Docker/PostgreSQL/Flyway/Testcontainers 授权已经消费并闭环。第 9/48 步 Task 5 v1.3 外部复审已于 2026-08-17 通过并关闭；Task 5 工程实现、第 10/48 步、Git 写入、worktree、代理、Telegram、其他业务外部服务、生产/共享数据库、生产部署、真实 Secret、依赖与锁文件修改授权均为 0。唯一当前动作是等待用户授权第 10/48 步 Task 5 实施（授权时须按 T5R-08 合同提供获批计划 ZIP 的路径/bytes/SHA-256 及复审报告 raw/normalized SHA-256）。
 
 验证证据见 [verification.md](verification.md)；唯一下一步见 [next.md](next.md)。

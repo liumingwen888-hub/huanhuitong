@@ -1,8 +1,8 @@
 # Task 5 Inbox 与 Telegram Webhook 去重详细计划索引
 
-计划版本：`v1.3`。风险级别：`L3`。计划状态：`READY v1.3 / WAITING_EXTERNAL_REVIEW`。v1.2 外部复审：`NOT APPROVED / REVISION REQUIRED / REPLACED BY v1.3 CANDIDATE`；T5R-01、T5R-02、T5R-04、T5R-05、T5R-06、T5R-07：`ACCEPT / CLOSED`；T5R-03、T5R-08：`RESOLVED_IN_PLAN / WAITING_EXTERNAL_REVIEW`。Task 5 代码状态：`NOT_STARTED`。
+计划版本：`v1.3`。风险级别：`L3`。计划状态：`READY v1.3 / EXTERNAL REVIEW PASS`（2026-08-17 用户外部复审通过）。T5R-01～T5R-08 全部 `ACCEPT / CLOSED`（T5R-03、T5R-08 于 2026-08-17 复审 ACCEPT）。Task 5 代码状态：`NOT_STARTED`。
 
-当前为第 9/48 步 `WAITING_EXTERNAL_REVIEW`。第 8/48 步与 Task 4 实施结果均为 `COMPLETED / IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；第 10/48 步 `NOT_STARTED`。本计划只描述未来实施，不代表代码、测试、Docker、PostgreSQL、Flyway 或 Testcontainers 已执行。
+当前为第 9/48 步 `COMPLETED / EXTERNAL REVIEW PASS`。第 8/48 步与 Task 4 实施结果均为 `COMPLETED / IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；第 10/48 步 `NOT_STARTED`，等待用户按 T5R-08 合同提供获批计划 ZIP 标识并授权实施。本计划只描述未来实施，不代表代码、测试、Docker、PostgreSQL、Flyway 或 Testcontainers 已执行。
 
 ## 权威阅读顺序
 
