@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-17 — S2-1 复审通过与 VERIFIED 收敛，进入 S2-2 规划
+
+- 用户裁决：S2-1 实施结果 EXTERNAL REVIEW PASS；三项实施期修正与既有测试演进 ACCEPT。S2-1 转 VERIFIED；提交 `c00f21a` 已推送。
+- S2-2"凭证处理组件"详细计划 DESIGNING。
+
 ## 2026-08-17 — S2-1 实施完成（V2 迁移落地），等待外部复审
 
 - Create 5 + Modify 1；V2 五表与 P0-7 策略种子进入数据库；contracts 凭证合同与 AuthorizePaymentProofV1；platform security 三层（errors/repository 接口/双 Postgres 仓储）。
