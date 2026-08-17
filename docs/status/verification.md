@@ -1,5 +1,14 @@
 # 最近验证
 
+## 2026-08-17 — S2-2 凭证处理组件实施（macOS/arm64 本地）
+
+- 授权：用户复审 S2-2 v1.0 通过并确认算法裁决方案 B（Node 内置 scrypt，零新依赖零锁漂移）。
+- 写入：Create 5（domain/credential-hash.ts、domain/credential-processor.ts、application/verify-payment-credential.ts、unit 双 spec、database spec）+ Modify 2（仓储接口与实现补 recordSuccessfulVerification——S2-2 计划冻结矩阵外的最小增补，如实登记）。
+- **红线落地**：`CredentialEntryBuffer` 是全进程唯一可持有密码原文的结构——字节缓冲、借出即 finally 清零、畸形输入触发整体清零、原型冻结；verify 流程经 `withBytes` 借用，验证完成缓冲归零（S2U03 无残留断言；S2U06 静态断言三文件零 console/JSON.stringify/logger 通道）。
+- scrypt v1：N=32768、r=8、p=1、盐 32B、键 64B；四段格式 `scrypt$ln=…,r=…,p=…$盐$键` 与 V2 CHECK 兼容；`timingSafeEqual` 常量时间；格式非法稳定失败关闭（S2U14）。
+- 验证编排：NOT_SET/REVOKED/LOCKED 窗口/COOLDOWN 窗口短路；成功清零计数并解锁；失败按策略计数，达 5 次以 ×2 阶梯锁定（S2D03 实证 5 次→LOCKED→locked 窗口拒绝）。
+- 验证：unit 12 文件 207/207（含 S2-2 unit 10/10）；database 284 中 282 PASS（S2-2 spec 5/5；M14/M06 已知边界）；architecture 0 违规（92 模块）；三锁无漂移（`59D72A2A…3C73B`）。
+
 ## 2026-08-17 — 上线标准全量审查与缺陷修复（macOS/arm64 本地）
 
 - 审查范围：阶段 1 全部代码 + S2-1，静态审查关键路径 + 全量验证。

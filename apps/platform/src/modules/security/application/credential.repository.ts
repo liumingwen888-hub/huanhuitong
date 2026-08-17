@@ -50,6 +50,10 @@ export interface CredentialRepository {
     uid: Uid,
     lockUntil: Date | null
   ): Promise<number>;
+  recordSuccessfulVerification(
+    context: TransactionContext,
+    uid: Uid
+  ): Promise<boolean>;
   activePolicy(
     context: TransactionContext
   ): Promise<CredentialPolicySnapshot>;

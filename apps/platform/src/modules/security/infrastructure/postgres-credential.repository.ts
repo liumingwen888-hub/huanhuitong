@@ -88,6 +88,23 @@ export class PostgresCredentialRepository implements CredentialRepository {
     return row.failed_attempts;
   }
 
+  public async recordSuccessfulVerification(
+    context: TransactionContext,
+    uid: Uid
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE payment_credentials
+          SET failed_attempts = 0,
+              locked_until = NULL,
+              status = CASE WHEN status = 'LOCKED' THEN 'ACTIVE' ELSE status END,
+              updated_at = clock_timestamp()
+        WHERE uid = $1::uuid
+        RETURNING uid`,
+      [uid]
+    );
+    return result.rows.length === 1;
+  }
+
   public async activePolicy(
     context: TransactionContext
   ): Promise<CredentialPolicySnapshot> {
