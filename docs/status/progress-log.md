@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — 第 25/48 步 Task 13 详细计划 v1.0 完成
+
+- 完成 Task 13"集成、真实并发和失败恢复验收"独立详细计划 v1.0：`docs/plans/task-13-acceptance/`。23 项具名验收表以总计划为唯一权威，本计划补充七项实施裁决（07 HMAC 全矩阵经 HTTP+真实 keyring、14/15 测试装配注入、16 崩溃重投+幂等 effect+审计、17 并入 span/轮换断言、19/20 复用 Task 3 fixture、21/22 复用 Task 12 成果、23 以 listen 驱动 lifecycle）。
+- 冻结 Create 11 / Modify 1 / Delete 0。
+- 本轮只新增计划 Markdown 与状态同步；工程写入 0。唯一下一步：等待用户外部复审 Task 13 v1.0。
+
 ## 2026-08-17 — 第 24/48 步 Task 12 复审通过与 VERIFIED 收敛
 
 - 用户裁决：Task 12 实施结果 EXTERNAL REVIEW PASS；四项实施期裁决 ACCEPT。Task 12 代码转 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；Tasks 1–12 全部 VERIFIED；提交 `d21f84e` 已推送。
