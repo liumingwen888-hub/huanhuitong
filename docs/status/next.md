@@ -1,5 +1,9 @@
 # 下一步
 
-第 17/48 步：Task 9“Telegram Webhook 适配器与默认拒绝边界”独立详细计划 v1.0 已完成（`docs/plans/task-9-telegram-webhook/`，5 份拆分 Markdown、T9C01–T9C15 测试合同、冻结 Create 11 / Modify 2 / Delete 0），状态 `READY v1.0 / WAITING_EXTERNAL_REVIEW`；Task 9 代码与第 18/48 步 `NOT_STARTED`。
+第 18/48 步 Task 9 实施于 2026-08-17 在构建门禁处 `BLOCKED`：代码骨架已完成，但 `@types/express`（@nestjs/platform-express 类型链必需）与 `@types/node-fetch`（grammY 1.45.1 shim.node.d.ts 必需）不在锁内，属于 Task 9 计划停止条件覆盖的范围漂移。未提交任何不可构建代码。
 
-复审重点：① 02 文件五道门禁顺序与 200-ignored vs 400 分类边界（F-07）；② 03 文件 grammY 隔离（BotInfo 注入、禁 bot.start、类型零泄漏）；③ 完整 parsed Update 以同引用直传 Task 5 digest 的边界证明方式。未经用户复审结论与实施授权，不实施 Task 9、不进入第 18/48 步。
+等待用户裁决（二选一）：
+A. 授权以精确版本新增 devDependencies `@types/express` 与 `@types/node-fetch`（修改 apps/platform/package.json 与 pnpm-lock.yaml，锁文件漂移受控登记）；
+B. 授权在冻结矩阵外新增一个环境声明文件（src 内 .d.ts 结构化声明 express/node-fetch 模块），锁文件零漂移，但声明为手写近似类型。
+
+裁决前不继续实施 Task 9、不进入第 19/48 步、不提交构建失败状态。

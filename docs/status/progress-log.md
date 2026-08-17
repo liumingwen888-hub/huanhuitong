@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — 第 18/48 步 Task 9 实施在构建门禁 BLOCKED
+
+- 用户授权第 18/48 步后开始实施：contracts telegram、schema（手写结构校验替代 zod——zod 仅属 packages/config，platform 无权 import）、secret verifier、request policy、mapper、controller（去装饰器化——tsconfig.base.json 无 experimentalDecorators 且被冻结，改函数式路由）、module（providers DI）、create-platform-app、main.ts。
+- 构建门禁停止：@nestjs/platform-express 类型链必需 @types/express、grammY 1.45.1 shim.node.d.ts 必需 @types/node-fetch，两者均不在锁内；按 Task 9 计划停止条件（依赖漂移）BLOCKED。
+- 未提交任何不可构建代码；工程树保持本地未提交状态。等待用户在方案 A（精确版本 devDeps）与方案 B（环境声明 .d.ts，零锁漂移）间裁决。
+
 ## 2026-08-17 — 第 17/48 步 Task 9 详细计划 v1.0 完成
 
 - 完成 Task 9“Telegram Webhook 适配器与默认拒绝边界”独立详细计划 v1.0：`docs/plans/task-9-telegram-webhook/` 5 份拆分 Markdown。
