@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 12/48 步 Task 6 实施完成，等待用户外部复审
+
+- 用户授权第 12/48 步；按冻结矩阵完成 Create 8、Modify 2、Delete 0：contracts reliability、platform outbox/durable-job repository、worker outbox-store/outbox-worker/durable-job-worker/create-worker/main、worker database spec。
+- 验证：build/typecheck exit 0；unit 156/156；Task 6 database spec 13/13 全绿（T6C11–T6C27 + durable job 状态机）；全量 database 240/242（M14 平台边界、M06 并行负载抖动且隔离 PASS）。
+- 实施期发现并修复：claim SQL 遗漏到期 RETRY_WAIT（T6C20 RED 暴露）；worker NOINHERIT 需显式 SET ROLE；UoW 错误包装语义下稳定码断言调整为包装码+DB 不变量；worker Kysely 池须用 createWorkerDatabase。
+- 状态收敛：第 12/48 步 `COMPLETED`；Task 6 代码 `IMPLEMENTED`，等待用户外部复审；Tasks 7–14 与第 13/48 步 NOT_STARTED；三锁无漂移、无依赖修改、无外部业务服务连接。
+
 ## 2026-08-17 — 第 11/48 步 Task 6 详细计划 v1.0 完成
 
 - Task 5 复审通过后（第 10/48 步 EXTERNAL REVIEW PASS，提交 `789605f` 已推送），完成 Task 6“Outbox、持久任务与安全 Worker”独立详细计划 v1.0：`docs/plans/task-6-outbox-worker/` 9 份拆分 Markdown。

@@ -1,5 +1,14 @@
 # 最近验证
 
+## 2026-08-17 — 第 12/48 步 Task 6 实施（macOS/arm64 本地）
+
+- 前置门禁：8 个 Create 目标不存在、2 个 Modify 输入一致；基线 ZIP `huanhuitong-task6-baseline.zip`（源提交 `a28e24a`）SHA-256 `058D46C259029792A05705ADD33D0AAA0063CFBB78A932DB3342E650BFAA31CF`；三锁无漂移。
+- 写入：Create 8、Modify 2、Delete 0，与冻结矩阵一致。
+- 最终验证：`pnpm build`/`pnpm typecheck` exit 0；unit 10 文件 156/156；database 5 文件 242 中 240 PASS：Task 6 spec 13/13（T6C11–T6C27 及 durable job 状态机）、UOW 138/138、Inbox 26/26、permissions 24/24、migrations 40/41（M14 平台边界；M06 并行负载下清理超时抖动，隔离运行 PASS 3136ms，非代码缺陷）。
+- 实施期修复（如实申报）：① claim 查询最初遗漏到期 RETRY_WAIT 行，T6C20 暴露后补入（outbox 与 durable jobs 两条 claim SQL）；② worker LOGIN 为 NOINHERIT，worker 原生 SQL 连接需显式 SET ROLE xht_worker；③ UoW 按 Task 4 合同包装 callback 错误（TRANSACTION_CALLBACK_FAILED、无 cause），稳定错误码断言改为 UoW 包装码 + 数据库不变量双证据；④ jobRepository 的 Kysely 池使用 worker 自有 `createWorkerDatabase`（xht_worker 绑定），不得复用 platform 角色池或被 SET ROLE 污染的共享池。
+- 安全边界实测：T6C25 权限矩阵（worker INSERT outbox 拒 42501、platform UPDATE outbox 拒 42501）；T6C27 敏感 payload 键入队前拒绝且数据库触达 0；T6C19 at-least-once 重投证据（deliveries=2）；T6C17/18 四路错误凭证 CAS 全部 stale_lease、过期重领代次+1、旧凭证迟到确认被拒。
+- 资源：全部 Testcontainers 容器/网络由 fixture 清理，残留 0。
+
 ## 2026-08-17 — 第 10/48 步 Task 5 实施（macOS/arm64 本地）
 
 - 基线（T5R-08 合同）：用户授权以当前仓库为基线包；`git archive HEAD(82e6380)` 生成 `huanhuitong-v1.3-approved.zip`，680924 bytes，SHA-256 `2401E364B469572B4BE0F8797367C62CDF5ECB3AD33E25B12BCA12CF7106B6B5`。复审报告即本轮会话结论（用户 2026-08-17 ACCEPT T5R-03/08）。
