@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — S2-3 设置与验证会话实施（macOS/arm64 本地）
+
+- 写入：Create 4（credential-session.registry.ts、credential-session.service.ts、unit/database 双 spec）。Modify 0。
+- 注册表：内存缓冲 + 已用 nonce 集合；close 即双缓冲清零并移除；未知会话拒绝（重启安全：DB OPEN 行不可续输）；nonce 同步消费恰一成功（S3U03/04）。
+- 服务：beginSetup/appendDigit（两段）/confirmSetup（一致 + 位数区间 → scrypt 入库 → CONFIRMED）；beginAuthorization/authorizePayment（验证通过签发冻结 AuthorizePaymentProofV1，operationType 经注册表元数据携带）；cancel；过期检测（assertOpen 过期即 EXPIRED 并拒绝）。
+- 验证：unit 4/4 + database 8/8（S3D01 全流程 ACTIVE、S3D02 不一致 FAILED 零入库、S3D03 位数下限失败关闭、S3D04 nonce 重放缓冲零变化、S3D05 proof 冻结且字段完整、S3D06 错误密码计数 +1 且会话 FAILED、S3D07 取消后禁输、S3D08 过期 EXPIRED）；全量 unit 211/211、database 290/292（M14/M06 已知边界）、architecture 0 违规（94 模块）、三锁无漂移。
+- 实施期修正（如实申报）：① hashAlgorithm 列标记载荷修正为 'scrypt'（S2-2 曾临时沿用 'argon2id' 标签）；② AuthorizePaymentProofV1 的 operationType 经注册表元数据随会话携带（V2 表无该列，不改迁移）。
+
 ## 2026-08-17 — S2-2 凭证处理组件实施（macOS/arm64 本地）
 
 - 授权：用户复审 S2-2 v1.0 通过并确认算法裁决方案 B（Node 内置 scrypt，零新依赖零锁漂移）。

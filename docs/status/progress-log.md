@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S2-3 实施完成，等待外部复审
+
+- Create 4；会话状态机全链路可证（setup/authorize/cancel/过期/nonce 幂等/重启安全）。
+- S2-3 spec 12/12；unit 211/211；db 290/292（已知边界）；arch 0 违规。
+- 状态收敛：S2-3 `IMPLEMENTED`，等待用户外部复审；S2-4 起NOT_STARTED。
+
 ## 2026-08-17 — S2-3 详细计划 v1.0 完成，等待外部复审
 
 - 冻结合同：会话应用服务（begin/append/confirm/authorize/cancel）、内存注册表（借出清零/终态移除/nonce 防重）、重启安全（DB 权威、OPEN 不可续输）、AuthorizePaymentProofV1 签发、审计零值化。
