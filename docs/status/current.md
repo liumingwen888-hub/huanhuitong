@@ -28,7 +28,8 @@ Task 1 工程和供应链事实未改变：Node.js x64 `v24.18.0`、pnpm `11.15.
 | Task 6 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 12/48 步 COMPLETED / EXTERNAL REVIEW PASS） |
 | Task 7 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 14/48 步 COMPLETED / EXTERNAL REVIEW PASS） |
 | Task 8 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 16/48 步 COMPLETED / EXTERNAL REVIEW PASS） |
-| Tasks 9–14 | NOT_STARTED |
+| Task 9 代码 | IMPLEMENTED（第 18/48 步 COMPLETED，2026-08-17；等待用户外部复审） |
+| Tasks 10–14 | NOT_STARTED |
 | 本地 Task 3 PostgreSQL/Flyway/Testcontainers 验证 | VERIFIED（第 6 步已执行，资源已清理；本轮 NOT_RERUN） |
 | 共享/生产数据库、Telegram、collector、其他业务外部连接 | NOT_STARTED |
 | 部署 | NOT_STARTED |

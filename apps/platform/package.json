@@ -32,6 +32,8 @@
   },
   "devDependencies": {
     "@nestjs/testing": "11.1.28",
+    "@types/express": "5.0.6",
+    "@types/node-fetch": "2.6.13",
     "@types/supertest": "7.2.1",
     "@xht/testing": "workspace:0.1.0",
     "supertest": "7.2.2",

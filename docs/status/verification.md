@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — 第 18/48 步 Task 9 实施（macOS/arm64 本地，方案 A 授权后）
+
+- 授权裁决：用户批准方案 A——以精确版本新增 devDependencies `@types/express@5.0.6`、`@types/node-fetch@2.6.13`（apps/platform）。锁文件受控漂移：`pnpm-lock.yaml` 新哈希 `59D72A2ACC1E46104C65114B0A92B5E8B3D1DDB6FF7B514E2A23927080B3C73B`（原 `EE1F63DB…AD9BC`）；根 `package.json` 与 `toolchain-lock.json` 无漂移；运行时依赖零新增（两包均为 devDependencies 类型包）。
+- 写入：Create 11、Modify 2（contracts index 追加 telegram export、main.ts 导出 createPlatformApp）。
+- 验证：build/typecheck exit 0；unit 13 文件 174/174（含 http 两 spec 12/12：T9C01–T9C11 contract + T9C12–T9C14 adapter）；database 261 中 259 PASS（M06 并行负载抖动且隔离 PASS、M14 平台边界，非 Task 9 缺陷）。
+- 关键证据：缺/错/多值/非法/超长 Secret 401 零副作用；伪造代理头 400 HTTPS_REQUIRED；非 JSON 415；畸形 envelope 400；照片/callback/群聊 200 ignored 零调用；`/start param` DTO 无 raw message 字段；digest 输入与业务收到的 rawUpdate 为同一对象（见下方裁决）；digest 不可用 503 零 handler 调用；错误响应零回显；adapter 源码 bot.start 0 次、API 调用 0 次、identity/reliability grammy import 0。
+- 实施期裁决与修正（如实申报）：① zod 仅属 packages/config，Update 校验改为手写结构校验（同项目防御风格）；② tsconfig.base.json 无 decorators 且被冻结，controller 去装饰器化 + ExpressAdapter 函数式路由注册（NestFactory + providers DI 闭环保持）；③ 群聊 chat.id 为负数，校验器区分 user id（非负十进制）与 chat id（可带负号）——首轮 400 误判群聊修正；④ grammY webhookCallback 自行解析 JSON（请求 body 对象不可能同引用直达 dispatch），identity 合同细化为"digest 输入 === dispatch 收到的 rawUpdate"，即 Task 5 digest 处理的对象与业务处理对象严格同一；⑤ grammY handler 错误不落入响应路径，adapter 增设 errorSink 在 handle 作用域映射 503/next。
+
 ## 2026-08-17 — 第 16/48 步 Task 8 实施（macOS/arm64 本地）
 
 - 前置门禁：3 个 Create 目标不存在、三锁无漂移；基线 ZIP SHA-256 `63E1715096AFC4A884619DA9BD4610D19F80DE8241E19259BEC330EFCE9CD87A`（源提交 `82301f8`）。

@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 18/48 步 Task 9 实施完成，等待用户外部复审
+
+- 用户批准方案 A 后完成实施：devDeps `@types/express@5.0.6`、`@types/node-fetch@2.6.13`（仅类型包，运行时依赖零新增）；lockfile 受控漂移登记（`59D72A2A…3C73B`）。
+- Create 11、Modify 2、Delete 0；build/typecheck exit 0；unit 174/174（http 12/12）；database 259/261（M06 抖动、M14 边界）。
+- 默认拒绝边界全部可证：Secret/HTTPS 代理/415/413（body limit 固定 256kb）/400 畸形；合法不支持 Update 200 ignored 零副作用；`/start` DTO 无 raw Update；digest 不可用 503；grammY 零网络、零 bot.start、类型零泄漏。
+- 状态收敛：第 18/48 步 `COMPLETED`；Task 9 代码 `IMPLEMENTED`，等待用户外部复审；Tasks 10–14 与第 19/48 步 NOT_STARTED。
+
 ## 2026-08-17 — 第 18/48 步 Task 9 实施在构建门禁 BLOCKED
 
 - 用户授权第 18/48 步后开始实施：contracts telegram、schema（手写结构校验替代 zod——zod 仅属 packages/config，platform 无权 import）、secret verifier、request policy、mapper、controller（去装饰器化——tsconfig.base.json 无 experimentalDecorators 且被冻结，改函数式路由）、module（providers DI）、create-platform-app、main.ts。

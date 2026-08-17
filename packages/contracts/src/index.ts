@@ -4,3 +4,4 @@ export * from './identity.js';
 export * from './inbox-digest.js';
 export * from './observability.js';
 export * from './reliability.js';
+export * from './telegram.js';
