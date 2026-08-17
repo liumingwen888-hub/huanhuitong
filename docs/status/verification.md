@@ -1,5 +1,14 @@
 # 最近验证
 
+## 2026-08-17 — S2-1 凭证领域合同与 V2 迁移实施（macOS/arm64 本地）
+
+- 授权：用户复审 S2-1 v1.0 通过并显式授权 V2 migration（项目首个 schema 变更）。
+- 写入：Create 5（V2__stage_2_credential_security.sql、contracts credentials.ts、platform security domain/application/infrastructure 三层、database spec）+ Modify（contracts index）。
+- V2 五表落地：payment_credentials（六态 CHECK、四段 Argon2id 哈希格式 CHECK、锁定形状 CHECK）、credential_policies（P0-7 策略 v1 种子：6–8 位/5 次/900s/×2 阶梯/86400s 冷静期）、credential_sessions（nonce 唯一、authorize 形状与十进制金额 CHECK、OPEN↔终态解析 CHECK）、security_locks、recovery_cases（≥2 独立因素、APPROVED 必带冷静期 CHECK）；权限仅 platform SELECT/INSERT/UPDATE，worker 零访问（S2C07 正反实证）。
+- 验证：S2-1 spec 7/7（S2C01–S2C07）；全量 test:all——unit 194/194、database 276/279（M14 平台边界、M06/M16 并行负载清理抖动）、integration 全过、architecture 0 违规（89 模块）、三锁无漂移。
+- 受演进影响的既有测试更新（如实登记）：M03/M04/M07/M08 与 schema-boundary 19/20 的版本与表数断言扩展至 ['1','2']/14 表；documentation spec 的阶段 1 断言由 READY 更新为 VERIFIED 终态（阶段验收已通过的合法演进）。
+- 实施期修正（如实申报）：① Postgres ARE 中 `\$` 与含 `+` 的字符类组合不可靠——SQL CHECK 正则改用 `[$]` 类写法；② 哈希格式按标准 Argon2id 四段（算法$参数$盐$摘要）修正 TS 与 SQL 双侧正则；③ transitionSession 需 RETURNING 计数。
+
 ## 2026-08-17 — 第 28/48 步 Task 14 实施：阶段 1 终态收敛（macOS/arm64 本地）
 
 - 写入：Create 2（scripts/check-docs.mjs、documentation spec）、Modify 27（package.json docs:check 脚本 + 25 份权威文档/索引/状态 + 总计划头部）。

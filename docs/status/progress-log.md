@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S2-1 实施完成（V2 迁移落地），等待外部复审
+
+- Create 5 + Modify 1；V2 五表与 P0-7 策略种子进入数据库；contracts 凭证合同与 AuthorizePaymentProofV1；platform security 三层（errors/repository 接口/双 Postgres 仓储）。
+- S2-1 spec 7/7；test:all unit 194/194、db 276/279（已知边界）、integration 全过。
+- 状态收敛：S2-1 `IMPLEMENTED`，等待用户外部复审；S2-2（凭证处理组件）NOT_STARTED。
+
 ## 2026-08-17 — S2-1 详细计划 v1.0 完成，等待外部复审
 
 - 完成 S2-1"凭证领域合同与 V2 迁移"详细计划：V2 五表（credentials/policies/sessions/locks/recovery_cases，状态机 CHECK 与权限矩阵）、contracts 凭证类型与 AuthorizePaymentProofV1、四仓储接口、Argon2id 哈希格式裁决。

@@ -329,13 +329,13 @@ describe('stage one migrations', () => {
     );
   });
 
-  it('M03 migrates an empty database with version 1', () => {
-    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1']);
+  it('M03 migrates an empty database through all versions', () => {
+    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1', '2']);
     expect(migrationEvidence.firstMigrate.exitCode).toBe(0);
   });
 
   it('M04 applies no new version on the second migrate', () => {
-    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1']);
+    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1', '2']);
     expect(migrationEvidence.secondMigrate.exitCode).toBe(0);
   });
 
@@ -376,24 +376,34 @@ describe('stage one migrations', () => {
     );
   });
 
-  it('M07 creates exactly the nine stage-one business tables', async () => {
+  it('M07 creates exactly the fourteen stage one and two tables', async () => {
     expect(await fixture.tableNames()).toEqual([
       'audit_events',
       'channel_bindings',
+      'credential_policies',
+      'credential_sessions',
       'durable_jobs',
       'identity_profiles',
       'inbox_messages',
       'memberships',
       'outbox_messages',
+      'payment_credentials',
+      'recovery_cases',
       'registration_idempotency',
+      'security_locks',
       'users'
     ]);
   });
 
-  it('M08 records one successful Flyway history row with a checksum', async () => {
+  it('M08 records successful Flyway history rows with checksums', async () => {
     expect(await fixture.appliedMigrations()).toEqual([
       expect.objectContaining({
         version: '1',
+        success: true,
+        checksum: expect.any(Number)
+      }),
+      expect.objectContaining({
+        version: '2',
         success: true,
         checksum: expect.any(Number)
       })
