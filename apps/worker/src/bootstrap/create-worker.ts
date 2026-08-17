@@ -1,4 +1,7 @@
 import type { OutboxHandler } from '@xht/contracts';
+import { TelegramMainMenuHandler } from '../outbox/telegram-main-menu.handler.js';
+import type { BindingLookup } from '../outbox/telegram-main-menu.handler.js';
+import type { TelegramBotGateway } from '../infrastructure/telegram/telegram-bot.gateway.js';
 import type { OutboxWorker, WorkerClock } from '../outbox/outbox-worker.js';
 import type { StoreClient, StoreConnectionFactory } from '../outbox/outbox-store.js';
 import { PostgresOutboxStore } from '../outbox/outbox-store.js';
@@ -31,6 +34,18 @@ export interface CreateWorkerOptions {
   readonly jobHandler: DurableJobHandler | undefined;
   readonly workerId: string;
   readonly clock: WorkerClock;
+  readonly telegramGateway?: {
+    readonly enabled: boolean;
+    readonly gateway: TelegramBotGateway;
+    readonly bindings: BindingLookup;
+    readonly menu: {
+      readonly text: string;
+      readonly buttons: readonly {
+        readonly id: string;
+        readonly label: string;
+      }[];
+    };
+  };
 }
 
 class PoolConnectionFactory implements StoreConnectionFactory {
@@ -62,11 +77,23 @@ class PoolConnectionFactory implements StoreConnectionFactory {
 
 export function createWorker(options: CreateWorkerOptions): WorkerRuntime {
   const connections = new PoolConnectionFactory(options.pool);
+  const topicHandlers = new Map<string, OutboxHandler>();
+  if (options.telegramGateway?.enabled === true) {
+    topicHandlers.set(
+      'telegram.main-menu-requested.v1',
+      new TelegramMainMenuHandler(
+        options.telegramGateway.gateway,
+        options.telegramGateway.bindings,
+        options.telegramGateway.menu
+      )
+    );
+  }
   const outbox = new OutboxWorkerClass(new PostgresOutboxStore(connections), {
     handler:
       options.outboxHandler ?? { handle: async () => undefined },
     clock: options.clock,
-    workerId: options.workerId
+    workerId: options.workerId,
+    topicHandlers
   });
   const jobs = new DurableJobWorkerClass(
     connections,

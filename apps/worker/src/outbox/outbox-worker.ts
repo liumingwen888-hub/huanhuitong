@@ -18,6 +18,9 @@ export interface OutboxWorkerOptions {
   readonly limit?: number;
   readonly leaseMilliseconds?: number;
   readonly jitter?: () => number;
+  readonly topicHandlers?:
+    | ReadonlyMap<string, OutboxHandler>
+    | undefined;
 }
 
 export function classifyWorkerError(error: unknown): WorkerErrorClassification {
@@ -37,6 +40,7 @@ export class OutboxWorker {
       limit: 25,
       leaseMilliseconds: 30_000,
       jitter: Math.random,
+      topicHandlers: undefined,
       ...options
     };
   }
@@ -66,8 +70,22 @@ export class OutboxWorker {
 
   async #deliver(message: LeasedOutboxMessage): Promise<boolean> {
     const attemptCount = (message as { attemptCount?: number }).attemptCount;
+    const topicHandler =
+      this.#options.topicHandlers?.get(message.topic) ?? this.#options.handler;
+    if (topicHandler === undefined) {
+      await this.#store.applyFailure({
+        id: message.id,
+        workerId: message.workerId,
+        leaseToken: message.leaseToken,
+        lockGeneration: message.lockGeneration,
+        classification: 'PERMANENT',
+        attemptCount: attemptCount ?? 1,
+        jitter: this.#options.jitter
+      });
+      return false;
+    }
     try {
-      await this.#options.handler.handle(message);
+      await topicHandler.handle(message);
     } catch (error: unknown) {
       await this.#store.applyFailure({
         id: message.id,

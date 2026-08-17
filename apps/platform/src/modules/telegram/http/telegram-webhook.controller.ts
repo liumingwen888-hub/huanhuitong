@@ -1,4 +1,7 @@
-import type { ParsedTelegramStartUpdate } from '@xht/contracts';
+import type {
+  HandleTelegramStartResult,
+  ParsedTelegramStartUpdate
+} from '@xht/contracts';
 import type {
   PolicyRequestShape,
   WebhookRequestPolicy
@@ -40,6 +43,18 @@ export class DigestUnavailableError extends Error {
     super('WEBHOOK_DIGEST_KEY_UNAVAILABLE');
     this.name = 'DigestUnavailableError';
   }
+}
+
+export function toWebhookOutcome(
+  result: HandleTelegramStartResult
+): { readonly status: number; readonly body: unknown } {
+  if (result.kind === 'digest_key_unavailable') {
+    return { status: 503, body: { code: 'WEBHOOK_DIGEST_KEY_UNAVAILABLE' } };
+  }
+  if (result.kind === 'processed') {
+    return { status: 200, body: { code: 'OK' } };
+  }
+  return { status: 200, body: { code: 'OK_IDEMPOTENT' } };
 }
 
 export class TelegramWebhookController {

@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — 第 20/48 步 Task 10 实施（macOS/arm64 本地）
+
+- 前置门禁：8 个 Create 目标不存在、4 个 Modify 输入一致；基线 ZIP SHA-256 `68F05698B25FEA2C9D01C43F8235C841B294A95129E13EAA4C0B3E5ECE4B44AC`（源提交 `bf5e9a8`）；三锁与方案 A 后基线一致（lockfile `59D72A2A…3C73B`）。
+- 写入：Create 8、Modify 4、Delete 0：contracts telegram 扩展（HandleTelegramStartCommand/Result、TelegramMainMenuRequestedV1）、platform application 三文件（mapper 防御 + 单 UoW 编排 + 菜单常量）、controller 增加 toWebhookOutcome 结果映射、worker 主菜单 handler + 双 Gateway + create-worker 注册 + outbox-worker topic 路由、双 spec。
+- 验证：build/typecheck exit 0；unit 14 文件 179/179（含 worker 菜单 spec 5/5）；database 8 文件 268 中 267 PASS：Task 10 platform spec 7/7（T10C01–T10C08）、全部既有回归（UOW 138、Inbox 26、Outbox 13、identity 10、resolve 9、permissions 24、migrations 41/42——M14 平台边界，M06 本轮 PASS）。
+- 关键证据：首启原子（Inbox PROCESSED + 身份五件套 + 双 Outbox topic 同事务，T10C01）；同 payload 重复安全成功零新增（T10C02）；冲突零副作用（T10C03）；retained key 缺失 503 零写入（T10C04）；**中段失败全量回滚**——预占菜单 eventKey 使 enqueue 失败后 users/memberships/bindings/registration/inbox 全 0（T10C05）；老用户再 /start 无第二个 UID（T10C07）；敏感键命令零数据库触达（T10C08）；Recording Gateway 收到精确 mainMenuV1 且幂等键=eventKey（T10C11）；禁用网关源码零网络引用（T10C13/15）。
+- 实施期修正（如实申报）：① T10C05 场景由"篡改租约"改为确定性"预占 eventKey 中段失败"（同事务内租约不可篡改，原设计不可达）；② outbox-worker 的 topic 路由首版遗漏默认 handler 回退，Task 6 旧 spec 四例回归红灯暴露后修复——全量回归的价值实证；③ countTopic 测试工具漏传参数（纯测试缺陷）。
+
 ## 2026-08-17 — 第 18/48 步 Task 9 实施（macOS/arm64 本地，方案 A 授权后）
 
 - 授权裁决：用户批准方案 A——以精确版本新增 devDependencies `@types/express@5.0.6`、`@types/node-fetch@2.6.13`（apps/platform）。锁文件受控漂移：`pnpm-lock.yaml` 新哈希 `59D72A2ACC1E46104C65114B0A92B5E8B3D1DDB6FF7B514E2A23927080B3C73B`（原 `EE1F63DB…AD9BC`）；根 `package.json` 与 `toolchain-lock.json` 无漂移；运行时依赖零新增（两包均为 devDependencies 类型包）。

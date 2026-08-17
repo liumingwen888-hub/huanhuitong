@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — 第 20/48 步 Task 10 实施完成，/start 端到端链路打通，等待外部复审
+
+- Create 8、Modify 4、Delete 0；build/typecheck exit 0；unit 179/179；Task 10 双 spec 12/12；全量 database 267/268（仅 M14 平台边界）。
+- 阶段 1 业务链路（Inbox 认领→身份→菜单 Outbox→worker Gateway）端到端打通；四结果语义全部有数据库证据；中段失败全量回滚可证。
+- 状态收敛：第 20/48 步 `COMPLETED`；Task 10 代码 `IMPLEMENTED`，等待用户外部复审；Tasks 11–14 与第 21/48 步 NOT_STARTED。
+
 ## 2026-08-17 — 第 19/48 步 Task 10 详细计划 v1.0 完成
 
 - 完成 Task 10“/start 自动注册、原子编排和主菜单任务”独立详细计划 v1.0：`docs/plans/task-10-telegram-start/` 5 份拆分 Markdown。
