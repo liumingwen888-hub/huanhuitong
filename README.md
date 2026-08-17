@@ -14,20 +14,19 @@
 
 | 项目 | 当前状态 |
 |---|---|
-| 总进度 | 第 12/48 步 `COMPLETED`（Task 6 实施，等待外部复审） |
+| 总进度 | 第 13/48 步 `IN_PROGRESS`（Task 7 计划制定中） |
 | 阶段 0 | `VERIFIED` |
 | 阶段 1 总计划 | `READY v1.2.6` |
 | 阶段 1 代码 | `BUILDING` |
-| Tasks 1–5 | `VERIFIED` |
+| Tasks 1–6 | `VERIFIED` |
 | Task 4 | `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS` |
 | Task 5 详细计划 | `READY v1.3 / EXTERNAL REVIEW PASS`（T5R-01～08 全部 CLOSED） |
 | Task 5 代码 | `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS` |
 | 第 11/48 步 | Task 6 计划 `READY v1.0 / WAITING_EXTERNAL_REVIEW` |
-| Task 6 代码 | `IMPLEMENTED`（build/typecheck exit 0；T6C11–T6C27 全部 PASS） |
 | Tasks 7–14 | `NOT_STARTED` |
 | 生产部署 | `NOT_STARTED` |
 
-当前唯一下一步是：**等待用户外部复审 Task 6 实施结果**。复审通过前不实施 Task 7、不进入第 13/48 步、不运行真实 Telegram 或其他业务外部服务。
+当前唯一下一步是：**第 13/48 步——制定 Task 7“身份领域实体、接口和数据库约束”详细计划**。计划外部复审通过前不实施 Task 7、不进入第 14/48 步、不运行真实 Telegram 或其他业务外部服务。
 
 准确状态以 [`docs/status/current.md`](docs/status/current.md) 和 [`docs/status/next.md`](docs/status/next.md) 为准；本 README 只提供入口摘要。
 

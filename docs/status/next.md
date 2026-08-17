@@ -1,7 +1,5 @@
 # 下一步
 
-第 12/48 步已于 2026-08-17 完成：Task 6“Outbox、持久任务与安全 Worker”按冻结矩阵实施（Create 8、Modify 2、Delete 0）并验证——build/typecheck exit 0、unit 156/156、Task 6 database spec 13/13（T6C11–T6C27 与 durable job 状态机）。Task 6 代码为 `IMPLEMENTED`，等待用户外部复审实施结果。
+第 12/48 步已于 2026-08-17 完成并通过用户外部复审：Task 6 代码 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`，四项实施期修订（claim SQL 补到期 RETRY_WAIT、worker SET ROLE、UoW 错误包装断言、worker 专用数据库工厂）ACCEPT，提交 `1ec902a` 已推送。
 
-复审关注点：① claim SQL 对 READY/到期 RETRY_WAIT/到期 LEASED 三类可领取行的语义（实施期修订）；② at-least-once 重投证据（T6C19）；③ F-06 禁用 WAITING_CONFIGURATION 行为（T6C22/23）；④ 权限矩阵（T6C25）。已知边界：M14（Windows 前置断言）macOS 不适用；M06 并行负载下清理超时抖动、隔离运行 PASS。
-
-复审通过前不实施 Task 7、不进入第 13/48 步、不提交推送本轮变更。
+唯一当前动作：第 13/48 步——制定 Task 7“身份领域实体、接口和数据库约束”独立详细技术计划（依据阶段 1 总计划 Task 7 节：渠道无关 UID、会员、资料、绑定与注册幂等合同；identity 不导入 Telegram 类型；数据库约束保证一个有效外部绑定只对应一个 UID）。计划完成并外部复审通过前，不实施 Task 7、不进入第 14/48 步。
