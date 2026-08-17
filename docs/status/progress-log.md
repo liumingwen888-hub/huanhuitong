@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S2-3 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：会话应用服务（begin/append/confirm/authorize/cancel）、内存注册表（借出清零/终态移除/nonce 防重）、重启安全（DB 权威、OPEN 不可续输）、AuthorizePaymentProofV1 签发、审计零值化。
+- 冻结 Create 4 / Modify 0。
+- 唯一下一步：等待用户外部复审 S2-3 v1.0。
+
+## 2026-08-17 — S2-2 复审通过与 VERIFIED 收敛，进入 S2-3 规划
+
+- 用户裁决：S2-2 实施结果 EXTERNAL REVIEW PASS；仓储增补 ACCEPT。S2-2 转 VERIFIED；提交 `bdf1543` 已推送。
+- S2-3"设置与验证会话"详细计划 DESIGNING。
+
 ## 2026-08-17 — S2-2 实施完成（凭证处理组件落地），等待外部复审
 
 - Create 5 + Modify 2；密码原文生命周期红线全部落地并可证（借出即清零、零日志通道、常量时间、失败关闭格式）。
