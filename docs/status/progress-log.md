@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 13/48 步 Task 7 详细计划 v1.0 完成
+
+- 完成 Task 7“身份领域实体、接口和数据库约束”独立详细计划 v1.0：`docs/plans/task-7-identity-contracts/` 6 份拆分 Markdown。
+- 冻结合同：Uid 品牌 string、ChannelType 小写 telegram（DB 大写映射只在 repository 层）、externalUserId 十进制字符串校验、username 仅快照、UidCreatedV1/TelegramUserSeenV1 事件、IdentityRepository/RegistrationIdempotencyRepository 接口（全部显式 TransactionContext）、registrationKey 服务端 UUIDv5 派生（命令对象结构上无注入字段，F-10）。
+- 测试合同 T7C01–T7C21（unit 6 + database 15）；冻结 Create 8 / Modify 1 / Delete 0。
+- 本轮只新增计划 Markdown 与状态同步；工程代码、依赖、锁文件、容器、数据库与外部服务写入均为 0。唯一下一步：等待用户外部复审 Task 7 v1.0。
+
 ## 2026-08-17 — 第 12/48 步 Task 6 复审通过与 VERIFIED 收敛
 
 - 用户裁决：Task 6 实施结果 EXTERNAL REVIEW PASS；四项实施期修订 ACCEPT。
