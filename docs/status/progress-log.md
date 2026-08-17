@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — 第 26/48 步 Task 13 实施完成，23 项验收全 PASS，等待外部复审
+
+- Create 11、Modify 1；23 项具名验收全部真实断言通过；integration 项目 43/43 全绿；test:all 全链（database 仅 M14 平台边界 + M06/M16 负载抖动）。
+- 阶段 1 端到端能力获总验收：HMAC 全矩阵、真并发唯一注册、失败全量回滚、at-least-once 重投、零资金对象、角色链、子进程生命周期。
+- 状态收敛：第 26/48 步 `COMPLETED`；Task 13 代码 `IMPLEMENTED`，等待用户外部复审；Task 14 与第 27/48 步 NOT_STARTED。
+
 ## 2026-08-17 — 第 25/48 步 Task 13 详细计划 v1.0 完成
 
 - 完成 Task 13"集成、真实并发和失败恢复验收"独立详细计划 v1.0：`docs/plans/task-13-acceptance/`。23 项具名验收表以总计划为唯一权威，本计划补充七项实施裁决（07 HMAC 全矩阵经 HTTP+真实 keyring、14/15 测试装配注入、16 崩溃重投+幂等 effect+审计、17 并入 span/轮换断言、19/20 复用 Task 3 fixture、21/22 复用 Task 12 成果、23 以 listen 驱动 lifecycle）。

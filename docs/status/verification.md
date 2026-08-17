@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — 第 26/48 步 Task 13 实施（macOS/arm64 本地）
+
+- 前置门禁：11 个 Create 目标不存在、testing index 一致；基线 ZIP SHA-256 `7F0FEE6A00F0C37EED4A82FDF98E6E9F45FC1E353C8EA233F35CBD44B5828B7D`（源提交 `e65448a`）；三锁无漂移。
+- 写入：Create 11、Modify 1（testing index）：AsyncBarrier（真并发屏障）、RecordingTelegramBotGateway（event-ID 幂等 + duplicate-risk 审计）、StageOneHarness（真实 HTTP server + Testcontainers + 计数器）、六个 spec 文件。
+- **23 项具名验收全部 PASS**：01–07/10–13/17（webhook，含 07 全矩阵：键序等价重放 duplicate、retained v1 重放 duplicate、四类字段变异 conflict、drop key 503、原行 digest/version 不变）、08–09（AsyncBarrier 两连接真并发恰一 UID/绑定/UidCreated）、14–15（注入失败全量回滚五表归零）、16（外部成功+确认前崩溃→重投→deliveries=2、effect=1、duplicate-risk 审计 1 条、最终 SUCCEEDED）、18（information_schema：资金禁止表零存在、inbox 无任何 raw 列）、19（角色链：flyway history ['1']、业务表 owner 全 xht_flyway、platform DDL 拒 42501）、20（重复迁移无 drift）、21（Task 12 T12C01 复用可追溯）、22（测试零 exec 根脚本静态断言）、23a/b（子进程 READY≤15s、HTTP 探测、SIGTERM 退出码 0≤10s、端口释放、零网络）。
+- 全量回归：build/typecheck exit 0；architecture 0 违规（84 模块 116 依赖）；unit 191/191；integration 6 文件 43/43 全绿；database 272 中 269 PASS（M14 平台边界；M06/M16 为 Flyway 容器清理在并行负载下超时抖动，M06 已验证隔离 PASS，M16 同类，均非 Task 13 缺陷）。
+- 实施期修正（如实申报）：① harness 通用化（packages 不 import apps，业务组装在 platform 测试侧共享工厂，遵守 no-packages-to-apps）；② digest key 形状对齐 Task 5 合同（status/字符串时间戳/借用清零）；③ 密钥轮换模型修正（初始 current=v1，轮换后 v1 retained）；④ 12 号测试屏障仅并发段激活；⑤ RecordingGateway deliveries 记录每次尝试（at-least-once 证据）、effects 记录幂等效果；⑥ failure spec 双重 cleanup 修正。
+
 ## 2026-08-17 — 第 24/48 步 Task 12 实施（macOS/arm64 本地）
 
 - 前置门禁：4 个 Create 目标不存在；package.json 现有 architecture:check 脚本无需修改（Modify 实际差异 0）；三锁无漂移。
