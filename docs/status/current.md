@@ -16,7 +16,7 @@ Task 1 工程和供应链事实未改变：Node.js x64 `v24.18.0`、pnpm `11.15.
 |---|---|
 | 阶段 0 整体 | VERIFIED（用户验收通过） |
 | 阶段 1 总计划 | READY（v1.2.6） |
-| 阶段 1 代码 | READY（Tasks 1–13 全部 VERIFIED、23 项验收全 PASS、test:all 全链通过；等待用户验收阶段 1 实现，验收前不得标记 VERIFIED、不得获得部署授权） |
+| 阶段 1 代码 | VERIFIED（2026-08-17 用户验收通过：Tasks 1–13 VERIFIED、23 项验收全 PASS、test:all/docs:check 通过、Task 14 文档收官） |
 | Task 1 工程骨架 | VERIFIED |
 | Task 2 详细计划 | VERIFIED（v1.2.6，已实施并通过最终复审） |
 | Task 2 代码与测试 | VERIFIED（v1.2.6 最终复审 PASS；R5-01 ACCEPT；新鲜复核通过） |
@@ -33,7 +33,7 @@ Task 1 工程和供应链事实未改变：Node.js x64 `v24.18.0`、pnpm `11.15.
 | Task 11 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 22/48 步 COMPLETED / EXTERNAL REVIEW PASS） |
 | Task 12 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 24/48 步 COMPLETED / EXTERNAL REVIEW PASS） |
 | Task 13 代码 | IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS（第 26/48 步 COMPLETED / EXTERNAL REVIEW PASS） |
-| Task 14 | IMPLEMENTED（第 28/48 步 COMPLETED，2026-08-17；文档同步完成，docs:check 156 文件通过） |
+| Task 14 | VERIFIED（第 28/48 步 COMPLETED；用户验收阶段 1 实现通过） |
 | 本地 Task 3 PostgreSQL/Flyway/Testcontainers 验证 | VERIFIED（第 6 步已执行，资源已清理；本轮 NOT_RERUN） |
 | 共享/生产数据库、Telegram、collector、其他业务外部连接 | NOT_STARTED |
 | 部署 | NOT_STARTED |

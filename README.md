@@ -14,10 +14,10 @@
 
 | 项目 | 当前状态 |
 |---|---|
-| 总进度 | **阶段 1 全流程完成**（第 28/48 步 COMPLETED；代码 `READY` 等待用户验收） |
+| 总进度 | **阶段 1 VERIFIED**（2026-08-17 用户验收通过）；阶段 2 DESIGNING |
 | 阶段 0 | `VERIFIED` |
 | 阶段 1 总计划 | `READY v1.2.6` |
-| 阶段 1 代码 | `READY`（等待用户验收） |
+| 阶段 1 代码 | `VERIFIED` |
 | Tasks 1–13 | `VERIFIED` |
 | Task 14 | `IMPLEMENTED`（文档终态收敛完成） |
 | Task 4 | `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS` |
