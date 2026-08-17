@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-17 — 第 24/48 步 Task 12 复审通过与 VERIFIED 收敛
+
+- 用户裁决：Task 12 实施结果 EXTERNAL REVIEW PASS；四项实施期裁决 ACCEPT。Task 12 代码转 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；Tasks 1–12 全部 VERIFIED；提交 `d21f84e` 已推送。
+- 进入第 25/48 步：Task 13"集成、真实并发和失败恢复验收"详细计划 DESIGNING。
+
 ## 2026-08-17 — 第 24/48 步 Task 12 实施完成，test:all 全链恢复，等待外部复审
 
 - Create 4（depcruise 配置、故意违规 fixture、架构 spec）、Modify 0；真实图 0 违规、fixture 非零退出可定位规则名。
