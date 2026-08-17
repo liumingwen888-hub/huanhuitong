@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-17 — 第 16/48 步 Task 8 复审通过与 VERIFIED 收敛
+
+- 用户裁决：Task 8 实施结果 EXTERNAL REVIEW PASS；两处测试修正 ACCEPT。Task 8 代码转 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；Tasks 1–8 全部 VERIFIED；提交 `009d5f0` 已推送。
+- 进入第 17/48 步：Task 9“Telegram Webhook 适配器与默认拒绝边界”详细计划 DESIGNING。
+
 ## 2026-08-17 — 第 16/48 步 Task 8 实施完成，等待用户外部复审
 
 - 用户授权第 16/48 步；完成 Create 3、Modify 0、Delete 0：事件工厂、ResolveOrCreateUid 三分支编排（绑定命中→seen；acquired→五件套+UidCreated；PROCESSING→零写入退出）、database spec。
