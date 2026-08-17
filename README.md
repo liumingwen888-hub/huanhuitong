@@ -14,7 +14,7 @@
 
 | 项目 | 当前状态 |
 |---|---|
-| 总进度 | 第 27/48 步 `IN_PROGRESS`（Task 14 计划制定中） |
+| 总进度 | 第 27/48 步 `IN_PROGRESS`（Task 14 计划 READY v1.0 待复审） |
 | 阶段 0 | `VERIFIED` |
 | 阶段 1 总计划 | `READY v1.2.6` |
 | 阶段 1 代码 | `BUILDING` |
