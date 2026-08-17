@@ -14,7 +14,7 @@
 | Create | `apps/platform/src/modules/reliability/inbox/telegram-update-digest.ts` | [04](04-telegram-update-digest.ts.md) | 7377 | `C0E30632B1489FD40A665B6E3F836212ADDE73B52FF528B597991CF824475606` |
 | Create | `apps/platform/src/modules/reliability/inbox/inbox.repository.ts` | [05](05-inbox.repository.ts.md) | 14127 | `8A40F116F2470459D3993EA8A7623AE280B5767978DB89449A415D478B5337E2` |
 | Create | `apps/platform/test/unit/telegram-update-digest.spec.ts` | [06](06-telegram-update-digest.spec.ts.md) | 14484 | `6E410A0E10B58BA6024B6914F3335EA328B1D96331D7B51BC5DB82BBEE898D45` |
-| Create | `apps/platform/test/database/inbox-repository.integration.spec.ts` | [07](07-inbox-repository.integration.spec.ts.md) | 38625 | `E45C6AE2B15A57354167FF96DF774A6B5778FE65AC408F0010FB4C7C3490F0ED` |
+| Create | `apps/platform/test/database/inbox-repository.integration.spec.ts` | [07](07-inbox-repository.integration.spec.ts.md) | 38927 | `CEBAC9F66E409FEB052494F48648E146F2623B08C19A7C8EA985633DB8250630` |
 
 合计 Create 6、Modify 1、Delete 0。Target 集合外内容写入即停止。
 

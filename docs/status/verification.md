@@ -1,5 +1,16 @@
 # 最近验证
 
+## 2026-08-17 — 第 10/48 步 Task 5 实施（macOS/arm64 本地）
+
+- 基线（T5R-08 合同）：用户授权以当前仓库为基线包；`git archive HEAD(82e6380)` 生成 `huanhuitong-v1.3-approved.zip`，680924 bytes，SHA-256 `2401E364B469572B4BE0F8797367C62CDF5ECB3AD33E25B12BCA12CF7106B6B5`。复审报告即本轮会话结论（用户 2026-08-17 ACCEPT T5R-03/08）。
+- 前置门禁：六个 Create 目标存在数 0；`packages/contracts/src/index.ts` Modify 输入存在；三锁哈希与既有记录一致（lockfile `EE1F63DB…AD9BC`）。
+- 环境：macOS darwin/arm64（偏离锁定 win32/x64，Node 官方 `v24.18.0-darwin-arm64` 临时下载至系统 TEMP 使用）；Docker 29.7.2 linux/arm64 以模拟运行锁定 linux/amd64 镜像；pnpm `11.15.1`；`pnpm install --frozen-lockfile --ignore-scripts` exit 0，下载 lifecycle 0，三锁漂移 0。
+- 写入：七个 canonical fragments 机械提取，7/7 bytes/SHA-256 与 manifest IDENTICAL 后写入（Create 6、Modify 1、Delete 0）。
+- 最终验证：`pnpm build` exit 0；`pnpm typecheck` exit 0；unit 10 文件 156/156 PASS（含 T5C01–T5C24 24/24）；database 229 中 228 PASS：Task 5 inbox T5C25–T5C50 26/26 PASS、Task 4 UOW 138/138、permissions 24/24、migrations 40/41。
+- M14（Windows 源路径断言 `^[A-Za-z]:\`）在 macOS 前置不成立而失败；属平台绑定环境边界，非 Task 5 缺陷，其核心迁移断言由 M03–M13 覆盖。T5C48 有 1 个预期内 unhandled FATAL 日志（测试故意终止后端连接），结果 PASS。
+- 实施中发现并修复 1 项计划缺陷（需用户复审确认）：fragment 07 spec 的 `beforeEach` 原以 platform 角色 `DELETE FROM audit_events` 清理，而 V1 迁移有意只授予 xht_platform SELECT/INSERT——真实数据库首跑 26/26 RED。最小修复：新增 `cleanupPool`（`fixture.bootstrapLogin`，max 1，专用 `xht-task5-inbox-cleanup`）执行两条 DELETE 清理，业务断言与 T5C50 权限反断言不变。修复后 fragment 07 更新为 38927 bytes / SHA-256 `CEBAC9F66E409FEB052494F48648E146F2623B08C19A7C8EA985633DB8250630`，manifest 同步；其余六目标保持 canonical 原值。
+- 容器/资源：Testcontainers 容器与网络由 fixture 统一清理，运行残留 0（以 fixture stop exit 0 为证）；TEMP Node 安装保留至本轮结束。
+
 ## 2026-08-05 — 中文 AI 第一接手提示词（发布前）
 
 - 范围：根目录 `AI接手提示词.md`、批准设计、实施计划和七份导航/状态 Markdown；工程代码、测试、依赖与锁文件修改 0。

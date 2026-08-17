@@ -1,5 +1,21 @@
 # 进展日志
 
+## 2026-08-17 — 第 10/48 步 Task 5 实施复审通过，转 VERIFIED
+
+- 用户复审 Task 5 实施结果 PASS；fragment 07 清理连接修订（bootstrapLogin 专用 cleanupPool）ACCEPT。
+- 状态收敛：第 10/48 步 `COMPLETED / EXTERNAL REVIEW PASS`；Task 5 代码 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`；Tasks 1–5 全部 VERIFIED。
+- 下一步进入第 11/48 步：Task 6“Outbox、持久任务与安全 Worker”详细计划。
+
+## 2026-08-17 — 第 10/48 步 Task 5 实施完成，等待用户外部复审
+
+- 用户授权第 10/48 步并同意以当前仓库为 T5R-08 基线：`huanhuitong-v1.3-approved.zip`（680924 bytes，SHA-256 `2401E364…B6B5`，源提交 `82e6380`）。
+- 前置门禁通过：六个 Create 目标不存在、Modify 输入一致、三锁无漂移；`pnpm install --frozen-lockfile --ignore-scripts` exit 0。环境为 macOS/arm64 + 官方 Node `v24.18.0-darwin-arm64`（TEMP）+ Docker 29.7.2 模拟 linux/amd64 锁定镜像。
+- 七个 canonical fragments 机械写入，7/7 bytes/SHA IDENTICAL（Create 6、Modify 1、Delete 0）。
+- 最终验证：build/typecheck exit 0；unit 10 文件 156/156（T5C01–T5C24 24/24）；database 228/229：T5C25–T5C50 26/26 PASS、UOW 138/138、permissions 24/24、migrations 40/41（M14 为 Windows 平台前置断言，macOS 不适用，非 Task 5 缺陷）。
+- 实施期发现计划缺陷并最小修复（待用户复审确认）：fragment 07 `beforeEach` 以 platform 角色清理 `audit_events`，但 V1 仅授予 SELECT/INSERT，真实数据库 26/26 RED；改为 `bootstrapLogin` 专用 `cleanupPool` 执行清理，业务与权限断言不变；修复后 26/26 GREEN。fragment 07 与 manifest 已同步为 38927 bytes / `CEBAC9F6…0630`。
+- 状态收敛：第 10/48 步 `COMPLETED`；Task 5 代码 `IMPLEMENTED`，等待用户外部复审实施结果（含上述 canonical 修订裁决）；Tasks 6–14 与第 11/48 步 `NOT_STARTED`。本轮无 Git 提交、无外部业务服务、无依赖/锁文件修改。
+
+
 ## 2026-08-17 — 第 9/48 步 Task 5 v1.3 外部复审通过，全部复审项关闭
 
 - 用户复审 Task 5 v1.3 并接受 AI 整理的复审建议：T5R-03、T5R-08 均 `ACCEPT / CLOSED`；T5R-01～T5R-08 现全部 `ACCEPT / CLOSED`。

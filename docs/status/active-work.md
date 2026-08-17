@@ -1,5 +1,21 @@
 # 当前工作
 
+## 2026-08-17 第 10/48 步 Task 5 复审通过与 VERIFIED 收敛
+
+- 用户裁决：Task 5 实施结果 EXTERNAL REVIEW PASS；fragment 07 修订 ACCEPT。
+- Task 5 代码转 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`，第 10/48 步 `COMPLETED / EXTERNAL REVIEW PASS`；Tasks 1–5 全部 VERIFIED，未解决阻断 0。
+- 本轮同步状态 Markdown 并提交推送；工程变更仅第 10 步已申报的七个目标与 fragment 07 修订，三锁无漂移。
+- 唯一下一步：第 11/48 步 Task 6“Outbox、持久任务与安全 Worker”详细计划 DESIGNING。
+
+## 2026-08-17 第 10/48 步 Task 5 实施完成
+
+- 授权与基线：用户授权第 10/48 步，按 T5R-08 以当前仓库 `82e6380` 生成基线 ZIP（680924 bytes，SHA-256 `2401E364…B6B5`）。
+- 实施：Node 24.18.0（TEMP darwin-arm64）、frozen/ignore-scripts install、七目标机械写入 7/7 IDENTICAL（Create 6、Modify 1、Delete 0）、build/typecheck exit 0、unit 156/156、database T5C25–T5C50 26/26 PASS。
+- 已执行并如实保留的失败：首轮真实 database 中 Task 5 spec 26/26 RED（platform 角色无 audit_events DELETE 权限，系计划缺陷）；M14 Windows 前置断言在 macOS 失败（平台边界，非缺陷）。
+- 最小修复：fragment 07 改用 bootstrap 清理连接；修复后 26/26 GREEN；fragment 07/manifest 更新为 38927 bytes / `CEBAC9F6…0630`，待用户复审确认。
+- 当前状态：第 10/48 步 COMPLETED；Task 5 代码 IMPLEMENTED、等待用户外部复审；Tasks 6–14 与第 11/48 步 NOT_STARTED；Git 提交、外部业务服务、依赖/锁修改授权为 0。
+
+
 ## 2026-08-17 第 9/48 步 Task 5 v1.3 外部复审通过
 
 - 用户基于整理的复审包（T5R-03 Date 伪造防御三层方案、T5R-08 实施基线动态对照合同）接受建议，裁决 T5R-03、T5R-08 均 `ACCEPT / CLOSED`。

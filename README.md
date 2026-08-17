@@ -14,19 +14,19 @@
 
 | 项目 | 当前状态 |
 |---|---|
-| 总进度 | 第 9/48 步 `COMPLETED / EXTERNAL REVIEW PASS` |
+| 总进度 | 第 10/48 步 `COMPLETED / EXTERNAL REVIEW PASS` |
 | 阶段 0 | `VERIFIED` |
 | 阶段 1 总计划 | `READY v1.2.6` |
 | 阶段 1 代码 | `BUILDING` |
-| Tasks 1–4 | `VERIFIED` |
+| Tasks 1–5 | `VERIFIED` |
 | Task 4 | `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS` |
 | Task 5 详细计划 | `READY v1.3 / EXTERNAL REVIEW PASS`（T5R-01～08 全部 CLOSED） |
-| Task 5 代码 | `NOT_STARTED` |
-| 第 10/48 步 | `NOT_STARTED`（等待用户按 T5R-08 提供获批 ZIP 标识并授权实施） |
+| Task 5 代码 | `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS` |
+| 第 11/48 步 | `NOT_STARTED` |
 | Tasks 6–14 | `NOT_STARTED` |
 | 生产部署 | `NOT_STARTED` |
 
-当前唯一下一步是：**等待用户授权第 10/48 步 Task 5 实施**。授权时须按 T5R-08 合同提供已外审通过的最新完整 Task 5 计划 ZIP 的精确路径、字节数与 SHA-256，以及复审报告的 raw/normalized SHA-256。在收到明确实施授权前，不实施 Task 5，不写入计划中的七个未来工程目标，不运行真实 Telegram 或其他业务外部服务。
+当前唯一下一步是：**第 11/48 步——制定 Task 6“Outbox、持久任务与安全 Worker”详细计划**。计划外部复审通过前不实施 Task 6、不进入第 12/48 步、不运行真实 Telegram 或其他业务外部服务。
 
 准确状态以 [`docs/status/current.md`](docs/status/current.md) 和 [`docs/status/next.md`](docs/status/next.md) 为准；本 README 只提供入口摘要。
 

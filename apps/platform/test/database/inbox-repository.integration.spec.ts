@@ -1,9 +1,3 @@
-# Canonical fragment: apps/platform/test/database/inbox-repository.integration.spec.ts
-
-[返回 fragments 索引](00-index.md)
-
-<!-- XHT-T5-CANONICAL-BEGIN target="apps/platform/test/database/inbox-repository.integration.spec.ts" sequence="1" -->
-```ts
 import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
@@ -1070,5 +1064,3 @@ describe.sequential('Task 5 Inbox repository', () => {
     }
   });
 });
-```
-<!-- XHT-T5-CANONICAL-END target="apps/platform/test/database/inbox-repository.integration.spec.ts" sequence="1" -->
