@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — S2-5 恢复案件与冷静期实施（macOS/arm64 本地）
+
+- 写入：Create 4（domain/totp.ts RFC 6238 零依赖 + application/recovery-case.service.ts + unit/database 双 spec）。Modify 0。
+- TOTP：RFC 4226/6238 官方向量通过（S5U01）；±1 步长窗口接受、±2 拒绝（S5U02）；畸形码失败关闭（S5U03）；Base32 往返（S5U04）；密钥仅案件生命周期内存持有，approve/reject 即清零。
+- 恢复链：四因子（memory 复用 S2-2 验证器 / TOTP / 注册时间+绑定 ID 精确核对 / 人工证据）→ PENDING_REVIEW → approve（factors 达标 CAS）→ APPROVED + cooldown_until + 凭证联动 COOLDOWN + security_locks recovery-open 行（S5D01 全链）；冷静期内 verifier 返回 cooldown（S5D01 尾）；历史因子精确匹配拒绝模糊（S5D02）；因子不足 approve 失败关闭（S5D03）；并发 approve 恰一成功（S5D04）；reject 终态幂等（S5D05）；TOTP 未注册案件拒绝（S5D06）。
+- 实施期修正（如实申报）：① 人工证据因子的达成数封顶至 factors_required（LEAST）——否则 fr=2 时第三因子违反 CHECK 上限（测试暴露的真实设计缺陷）；② reject 幂等化（前置 requireCase 移除，CAS 结果即答案）。
+- 验证：S2-5 spec 10/10；全量 unit 217/217、database 296/298+4 环境 skip（M14/M06 已知边界）、architecture 0 违规（99 模块）、三锁无漂移。
+
 ## 2026-08-17 — S2-4 锁定、计数与速率限制实施（macOS/arm64 本地）
 
 - 写入：Create 5（session-rate-limiter.ts、lock-audit.service.ts、credential-rehash.ts、unit/database 双 spec）+ Modify 3（verify-payment-credential：锁审计行 + 借用内重哈希 + 解锁释放；credential-session.service：单 OPEN 断言 + 令牌桶；双仓储：security_locks 两方法 + hasOpenSession）。
