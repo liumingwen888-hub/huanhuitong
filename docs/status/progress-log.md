@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S2-5 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：TOTP（RFC 6238 纯 node:crypto 零依赖，密钥持久化推迟 V3 并登记）、四因子接口（memory/totp/history/manual）、案件状态机 CAS 与幂等、APPROVED→冷静期→凭证 COOLDOWN 联动、越权防护矩阵。
+- 冻结 Create 4 / Modify 0。
+- 唯一下一步：等待用户外部复审 S2-5 v1.0。
+
+## 2026-08-17 — S2-4 复审通过与 VERIFIED 收敛，进入 S2-5 规划
+
+- 用户裁决：S2-4 EXTERNAL REVIEW PASS。S2-4 转 VERIFIED；提交 `054fd6a` 已推送。
+- S2-5"恢复案件与冷静期"详细计划 DESIGNING。
+
 ## 2026-08-17 — S2-4 实施完成，等待外部复审
 
 - Create 5 / Modify 3；security_locks 审计行、单 OPEN + 令牌桶限流、scrypt 透明重哈希全部落地可证。
