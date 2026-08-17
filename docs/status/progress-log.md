@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S2-6 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：/setpassword、/cancel、/authorize 演示命令路由；两段输入流（数字消息→nonce→appendDigit→/done 切段）；静态提示常量零动态插值；Outbox security-prompt topic；防滥用与幂等。
+- 冻结 Create 4 / Modify 1。
+- 唯一下一步：等待用户外部复审 S2-6 v1.0。
+
+## 2026-08-17 — S2-5 复审通过与 VERIFIED 收敛，进入 S2-6 规划
+
+- 用户裁决：S2-5 EXTERNAL REVIEW PASS；两项修正 ACCEPT。S2-5 转 VERIFIED；提交 `f6cc2d9` 已推送。
+- S2-6"Telegram 安全 UX 接线"详细计划 DESIGNING。
+
 ## 2026-08-17 — S2-5 实施完成（阶段 2 最后功能块），等待外部复审
 
 - Create 4；P0-8 四因子恢复 + TOTP（零依赖）+ 冷静期联动全部落地可证。
