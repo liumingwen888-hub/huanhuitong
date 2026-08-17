@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — 第 14/48 步 Task 7 实施（macOS/arm64 本地）
+
+- 前置门禁：8 个 Create 目标不存在、contracts index Modify 输入一致、三锁无漂移（基线源提交 `9348b57`）。
+- 写入：Create 8、Modify 1（contracts index 追加 identity export）、Delete 0，与冻结矩阵一致。
+- 验证：build/typecheck exit 0；unit 11 文件 162/162（含 T7C01–T7C06）；database 6 文件 252 中 251 PASS：identity spec 10/10 一次全绿（T7C11–T7C21）、UOW 138/138、Outbox 13/13、Inbox 26/26、permissions 24/24、migrations 41/42（M06 本轮 PASS；仅剩 M14 Windows 平台边界）。
+- 关键证据：双有效绑定被部分唯一索引拒绝且原行不变（T7C11）；registrationKey SHA-1 UUIDv5 确定性派生（T7C02）；命令对象结构上无 key 注入面（T7C03）；Proxy/accessor 解析零触达拒绝（T7C04）；幂等生命周期 acquired→in_progress→completed→findCompleted 回读一致（T7C17/18）；identity 模块源码 Telegram 引用 0（T7C20）；platform 无 DELETE、worker 绑定只读（T7C21）。
+- 资源：Testcontainers 容器/网络由 fixture 清理，残留 0。
+
 ## 2026-08-17 — 第 12/48 步 Task 6 实施（macOS/arm64 本地）
 
 - 前置门禁：8 个 Create 目标不存在、2 个 Modify 输入一致；基线 ZIP `huanhuitong-task6-baseline.zip`（源提交 `a28e24a`）SHA-256 `058D46C259029792A05705ADD33D0AAA0063CFBB78A932DB3342E650BFAA31CF`；三锁无漂移。

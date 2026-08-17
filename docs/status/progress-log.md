@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — 第 14/48 步 Task 7 实施完成，等待用户外部复审
+
+- 用户授权第 14/48 步；按冻结矩阵完成 Create 8、Modify 1、Delete 0：contracts identity、platform identity domain/application/infrastructure 五文件、unit/database 双 spec。
+- 验证：build/typecheck exit 0；unit 162/162；identity database spec 10/10 一次全绿；全量 database 251/252（仅 M14 平台边界，M06 本轮 PASS）。
+- registrationKey 按服务端 SHA-1 UUIDv5 确定性派生（命名空间常量固定），命令对象无注入字段（F-10 结构性落地）。
+- 状态收敛：第 14/48 步 `COMPLETED`；Task 7 代码 `IMPLEMENTED`，等待用户外部复审；Tasks 8–14 与第 15/48 步 NOT_STARTED；三锁无漂移。
+
 ## 2026-08-17 — 第 13/48 步 Task 7 详细计划 v1.0 完成
 
 - 完成 Task 7“身份领域实体、接口和数据库约束”独立详细计划 v1.0：`docs/plans/task-7-identity-contracts/` 6 份拆分 Markdown。
