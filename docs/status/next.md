@@ -1,5 +1,5 @@
 # 下一步
 
-第 10/48 步已于 2026-08-17 完成并通过用户外部复审：Task 5 代码 `IMPLEMENTED / VERIFIED / EXTERNAL REVIEW PASS`，fragment 07 清理连接修订 ACCEPT，T5R/T5C 证据链闭环，未解决阻断 0。
+第 11/48 步：Task 6“Outbox、持久任务与安全 Worker”独立详细计划 v1.0 已完成（`docs/plans/task-6-outbox-worker/00-index.md`，9 份拆分 Markdown、T6C01–T6C28 测试合同、冻结未来工程矩阵 Create 8 / Modify 2 / Delete 0），状态 `READY v1.0 / WAITING_EXTERNAL_REVIEW`；Task 6 代码与第 12/48 步 `NOT_STARTED`。
 
-唯一当前动作：第 11/48 步——制定 Task 6“Outbox、持久任务与安全 Worker”独立详细技术计划（依据阶段 1 总计划 Task 6 节与 F-05/F-06 裁决：at-least-once 投递、workerId+leaseToken+lockGeneration CAS、禁用连接 PAUSED/WAITING_CONFIGURATION、有界指数退避与死信）。计划完成并外部复审通过前，不实施 Task 6、不进入第 12/48 步。
+v1.0 冻结的是合同层（租约/CAS/at-least-once、状态机与退避、安全边界、测试矩阵、实施步骤）；canonical fragments 拟在合同复审通过后的 v1.1 冻结（已在计划 01 登记）。未经用户复审结论与实施授权，不实施 Task 6、不进入第 12/48 步。

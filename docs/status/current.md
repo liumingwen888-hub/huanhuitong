@@ -30,6 +30,6 @@ Task 1 工程和供应链事实未改变：Node.js x64 `v24.18.0`、pnpm `11.15.
 | 共享/生产数据库、Telegram、collector、其他业务外部连接 | NOT_STARTED |
 | 部署 | NOT_STARTED |
 
-第 6/48 步临时授权保持已消费并归零。第 8 步 Task 4 与第 10 步 Task 5 的本地隔离 Docker/PostgreSQL/Flyway/Testcontainers 授权均已消费并闭环。第 9/48 步复审与第 10/48 步实施已于 2026-08-17 完成；Git 提交、worktree、代理、Telegram、其他业务外部服务、生产/共享数据库、生产部署、真实 Secret、依赖与锁文件修改授权均为 0。唯一当前动作是第 11/48 步 Task 6“Outbox、持久任务与安全 Worker”详细计划的规划与外部复审。
+第 6/48 步临时授权保持已消费并归零。第 8 步 Task 4 与第 10 步 Task 5 的本地隔离 Docker/PostgreSQL/Flyway/Testcontainers 授权均已消费并闭环。第 9/48 步复审与第 10/48 步实施已于 2026-08-17 完成；Git 提交、worktree、代理、Telegram、其他业务外部服务、生产/共享数据库、生产部署、真实 Secret、依赖与锁文件修改授权均为 0。第 11/48 步为 `IN_PROGRESS`：Task 6 详细计划 v1.0 已完成，`READY v1.0 / WAITING_EXTERNAL_REVIEW`；唯一当前动作是等待用户外部复审 Task 6 v1.0 合同层。
 
 验证证据见 [verification.md](verification.md)；唯一下一步见 [next.md](next.md)。

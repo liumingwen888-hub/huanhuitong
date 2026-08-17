@@ -1,5 +1,13 @@
 # 进展日志
 
+## 2026-08-17 — 第 11/48 步 Task 6 详细计划 v1.0 完成
+
+- Task 5 复审通过后（第 10/48 步 EXTERNAL REVIEW PASS，提交 `789605f` 已推送），完成 Task 6“Outbox、持久任务与安全 Worker”独立详细计划 v1.0：`docs/plans/task-6-outbox-worker/` 9 份拆分 Markdown。
+- 冻结合同：enqueue 原子性、claimBatch CTE + FOR UPDATE SKIP LOCKED + 原子租约（代次/token/attempt）、四元组 CAS（id+workerId+leaseToken+lockGeneration+status=LEASED）、at-least-once 重投证据、七态任务状态机、有界全抖动退避（base 1s/cap 15min/8 次）、F-06 禁用 WAITING_CONFIGURATION 零写库零日志、payload 哨兵与日志白名单、权限矩阵（platform 只 INSERT、worker 只 UPDATE）。
+- 测试合同 T6C01–T6C28（unit 10 + database 18）；实施步骤 Step 1–18；冻结未来工程矩阵 Create 8 / Modify 2 / Delete 0（与阶段 1 总计划 Task 6 Files 清单一致）。
+- v1.0 冻结合同层，canonical fragments 延后至 v1.1（合同复审通过后固化代码正文），差异点已在计划 00-index 与 01 登记。
+- 本轮只新增计划 Markdown 与状态同步；工程代码、依赖、锁文件、容器、数据库与外部服务写入均为 0。唯一下一步：等待用户外部复审 Task 6 v1.0。
+
 ## 2026-08-17 — 第 10/48 步 Task 5 实施复审通过，转 VERIFIED
 
 - 用户复审 Task 5 实施结果 PASS；fragment 07 清理连接修订（bootstrapLogin 专用 cleanupPool）ACCEPT。
