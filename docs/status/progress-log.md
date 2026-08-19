@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S7-3 换汇确认与冻结详细计划完成，等待外部复审
+
+- 确定性 orderRef = XCHG:{quote_id}：冻结过账幂等 + 重放自愈，无预订单状态。
+- 消费 CAS（ACTIVE+未过期）与订单 INSERT 单 UOW 原子；并发恰一单，输家按 quote_id 收敛 ALREADY_CONFIRMED。
+- 报价匿名裁决：不绑 uid（公共价格板），确认时绑定用户。S7XF01-07 冻结。唯一下一步：等待用户外部复审（通过时 V11 需显式授权）。
+
 ## 2026-08-19 — S7-2 报价源端口与报价服务实施完成
 
 - V10 quotes 快照表：复合 FK 锚定市场配置版本、ACTIVE/CONSUMED/EXPIRED 生命周期、平台仅 INSERT+UPDATE(status)、worker 只读。
