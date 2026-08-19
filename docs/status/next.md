@@ -1,3 +1,5 @@
 # 下一步
 
-阶段 3 S3-5"订单关联与对账接口"详细计划 v1.0 已完成（`docs/plans/s3-5-order-reconciliation/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：差异告警暂走 risk_decisions 的过渡方案裁决、差异不自动修复红线。复审通过后实施（无需新迁移）。
+阶段 3 S3-5"订单关联与对账接口"已实施（Create 3；spec 4/4；对账三检查+幂等告警+订单反查闭环）。S3-5 代码 `IMPLEMENTED`，等待用户外部复审实施结果（含两项修正：动态加载 dist、触发器禁用语义）。
+
+复审通过前不实施 S3-6（记账模板）。

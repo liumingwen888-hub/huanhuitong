@@ -1,5 +1,18 @@
 # 最近验证
 
+## 2026-08-17 — S3-5 订单关联与对账接口实施（macOS/arm64 本地）
+
+- 写入：Create 3（reconciliation.service.ts、worker reconciliation-task.ts、database spec）。Modify 0。
+- **ReconciliationService**（纯读，零写账本）：
+  - checkGlobalBalance：每资产借贷净和≠0 差异（S3R02 实证——禁用触发器注入不平衡行后捕获）；
+  - checkProjectionConsistency：投影 vs SUM（S3R03 篡改→差异→告警→同窗幂等→异窗新告警）；
+  - checkAccountIntegrity：FROZEN/CLOSED 账户有创建后分录的交叉校验；
+  - recordDiscrepancyAlerts：差异写入 risk_decisions（RECONCILIATION_DISCREPANCY，幂等键=窗口+类型+目标）；
+  - findTransactionByOrderKey：幂等键片段反查 transactionId（S3R04 订单查询闭环）。
+- **Worker ReconciliationTask**：动态加载 platform dist，三检查→告警→幂等窗口；不自动修复。
+- 验证：S3-5 spec 4/4（干净零差异/注入不平衡捕获/投影篡改+幂等告警/订单反查）。全量 unit 223/223、db 317/320（M06/M14/M16 已知边界）、architecture 0 违规（120 模块 157 依赖——跨包动态导入被门禁正确忽略）、三锁无漂移。
+- 实施期修正（如实登记）：① worker 任务引用 platform 源码触发 rootDir 约束——改为动态加载 dist（结构化 Pool 类型，不依赖 @types/pg）；② S3R02 注入不平衡需临时禁用触发器（正常路径触发器在 COMMIT 已拒绝——对账是最后防线语义）。
+
 ## 2026-08-17 — S3-4 横切最小合同实施（macOS/arm64 本地）
 
 - 授权：用户复审 S3-4 v1.0 通过并显式授权 V5 migration。
