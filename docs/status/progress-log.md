@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S7-3 换汇确认与冻结实施完成
+
+- V11 exchange_orders：六态状态机、quote_id UNIQUE（一报价一订单的数据库锚）、双过账关联、SETTLED/FAILED 形状 CHECK。
+- ExchangeConfirmService：确定性 orderRef（XCHG:{quoteId}）→ 冻结过账幂等 → 消费 CAS + 建单单 UOW 原子；并发恰一单、崩溃自愈、输家收敛 ALREADY_CONFIRMED。
+- 验证：build/typecheck/architecture(171 模块 0 违规)/unit 238/S7XF 7 项/数据库 457-460（已知环境三件套）/integration 97。
+
 ## 2026-08-19 — S7-3 换汇确认与冻结详细计划完成，等待外部复审
 
 - 确定性 orderRef = XCHG:{quote_id}：冻结过账幂等 + 重放自愈，无预订单状态。

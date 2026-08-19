@@ -71,4 +71,19 @@ export class PostgresQuoteRepository implements QuoteRepository {
     );
     return result.rows[0] ? toSnapshot(result.rows[0]) : null;
   }
+
+  public async consumeActive(
+    context: TransactionContext,
+    quoteId: string
+  ): Promise<QuoteSnapshot | null> {
+    const result = await context.executeSql<QuoteRow>(
+      `UPDATE quotes SET status = 'CONSUMED'
+        WHERE quote_id = $1::uuid
+          AND status = 'ACTIVE'
+          AND expires_at > clock_timestamp()
+        RETURNING ${QUOTE_COLUMNS}`,
+      [quoteId]
+    );
+    return result.rows[0] ? toSnapshot(result.rows[0]) : null;
+  }
 }

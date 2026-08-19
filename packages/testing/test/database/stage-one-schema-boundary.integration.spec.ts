@@ -78,7 +78,7 @@ describe('stage one schema boundary', () => {
       const history = await fixturePool.query<{ version: string; owner: string }>(
         `SELECT version FROM flyway_schema_history WHERE success = true`
       );
-      expect(history.rows.map((row) => row.version)).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
+      expect(history.rows.map((row) => row.version)).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
       const owners = await fixturePool.query<{ owner: string }>(
         `SELECT DISTINCT tableowner AS owner FROM pg_tables
           WHERE schemaname='public' AND tablename != 'flyway_schema_history'`
@@ -105,7 +105,7 @@ describe('stage one schema boundary', () => {
       const before = await fixturePool.query<{ version: string }>(
         `SELECT version FROM flyway_schema_history WHERE success = true`
       );
-      expect(before.rows.map((row) => row.version)).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
+      expect(before.rows.map((row) => row.version)).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']);
     }
   );
 

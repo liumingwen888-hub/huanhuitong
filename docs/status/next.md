@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 7 进行中（S7-1/S7-2 已实施 VERIFIED，2026-08-19）。S7-3"换汇确认与冻结"详细计划 v1.0 已完成（`docs/plans/s7-3-confirm-freeze/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 7 进行中（阶段 1–6 VERIFIED，S7-1/S7-2/S7-3 已实施 VERIFIED，2026-08-19）。
 
-复审重点：确定性 orderRef（XCHG:{quote_id}）的崩溃自愈论证、报价消费 CAS 与订单创建的单 UOW 原子性、报价匿名性裁决（公共价格板语义）、支付密码门留 S7-4 前裁决的安排。复审通过并显式授权 V11 后实施。
+下一步：**S7-4 执行与结算**详细计划——FUNDS_RESERVED → EXECUTING → exchangeSettled 四行过账（卖冻/清算差双行/买得）→ SETTLED；精度/舍入余数落 CLEARING_DIFF 的对账事实；支付密码门裁决（金额阈值制 vs 全量制）在本计划内决定。等待用户"继续下一步工作"启动。

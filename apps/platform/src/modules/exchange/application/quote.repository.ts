@@ -20,4 +20,8 @@ export interface QuoteRepository {
     context: TransactionContext,
     quoteId: string
   ): Promise<QuoteSnapshot | null>;
+  consumeActive(
+    context: TransactionContext,
+    quoteId: string
+  ): Promise<QuoteSnapshot | null>;
 }

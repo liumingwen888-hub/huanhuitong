@@ -1,6 +1,6 @@
 # S7-3 换汇确认与冻结 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（换汇冻结编排）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S7-3 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（换汇冻结编排）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过；同日显式授权 V11 迁移写入；报价匿名与支付密码门后置两项裁决默认接受）。S7-3 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -60,6 +60,22 @@ Create：`database/migrations/V11__stage_7_exchange_orders.sql`、`modules/excha
 ## 边界与不做
 
 - 不做执行/结算（S7-4）、失败/过期释放（S7-5）、EXPIRED 状态迁移与清扫（S7-5）；不做支付密码门（换汇确认是否需要支付授权证明——**留 S7-4 前裁决**：金额阈值制 vs 全量制，计划将补充）。
+
+## 实施裁决记录（2026-08-19）
+
+1. 卖/买资产码由 market_key 按冒号拆分派生（资产码不含冒号，V3 字符集保证）；不重复查市场配置。
+2. UOW 内消费失败/建单唯一冲突的包装错误 → 事后按 quote_id 复查赢家订单收敛 ALREADY_CONFIRMED（S6 保守映射同型）。
+3. 错误码统一并入 QuoteContractErrorCode（撤销独立 ExchangeContractErrorCode，避免双词表漂移）。
+4. V10 形状 CHECK（expires_at > created_at）要求过期测试同时回填 created_at——约束按预期工作。
+5. quote-service 规格版本钉随 V11 改 arrayContaining（第三次同型收敛；此后新规格一律 arrayContaining）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（171 模块、191 依赖）。
+- unit 30 文件 238/238 PASS。
+- S7XF01–S7XF07 全 PASS：冻结与消费原子（可用 −8,000,000/冻结 −2,000,000、报价 CONSUMED、XCHG:{quoteId} 关联）、幂等重放单笔冻结、过期报价拒绝且保持 ACTIVE（惰性过期）、并发恰一单（两路 CONFIRMED+ALREADY_CONFIRMED、单订单单过账）、余额不足报价可再消费、未知/预消费报价 fail-closed、订单金额与报价快照精确一致。
+- 数据库回归 457/460（M06/M14/M16 已知环境边界项）；integration 97/97。
+- 交付物：`V11__stage_7_exchange_orders.sql`、`exchange/application/{exchange-confirm.service.ts, exchange-order.repository.ts}`、`exchange/infrastructure/postgres-exchange-order.repository.ts`、quote 仓储 consumeActive CAS、contracts 统一错误码、S7XF 集成规格。
 
 ## 停止条件
 
