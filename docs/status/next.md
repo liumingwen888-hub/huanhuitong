@@ -1,9 +1,5 @@
 # 下一步
 
-2026-08-17：用户验收阶段 4 通过——阶段 4 整体 VERIFIED。阶段 5 总体规划草案 v0.1 已发布（`docs/plans/2026-08-17-stage-5-transfers-redpackets-master-plan.md`，S5-1～6 任务分解）。
+阶段 5 总体规划 v1.0 READY（四项设计决策已裁决）。S5-1"转账领域合同与 V7 迁移"详细计划 v1.0 已完成（`docs/plans/s5-1-transfer-contracts/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
 
-唯一当前动作：用户确认阶段 5 总体规划草案，并裁决四项设计决策：
-- **转账即时性**（建议：即时到账，无确认等待）
-- **领取链接过期**（建议：24 小时 + 过期退款）
-- **红包类型**（建议：先做普通固定金额，拼手气留后续）
-- **费用**（建议：内部转账免费）
+复审重点：V7 三张表设计（transfer_orders/claim_links/red_packets + red_packet_claims）、领取链接一次性 UNIQUE、红包同一用户唯一领取约束。复审通过并显式授权 V7 后实施。
