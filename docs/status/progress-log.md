@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S3-5 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：订单反查（幂等键→transactionId）、总账平衡/投影一致/账户完整性三检查、worker reconciliation.scheduled 告警任务（幂等窗口）、差异不自动修复红线。
+- 冻结 Create 3 / Modify 0（无新迁移）。
+- 唯一下一步：等待用户外部复审 S3-5 v1.0。
+
+## 2026-08-17 — S3-4 复审通过与 VERIFIED 收敛，进入 S3-5 规划
+
+- 用户裁决：S3-4 EXTERNAL REVIEW PASS；两项修正 ACCEPT。S3-4 转 VERIFIED；提交 `f2ad877` 已推送。
+- S3-5"订单关联与对账接口"详细计划 DESIGNING。
+
 ## 2026-08-17 — S3-4 实施完成（横切最小合同落地），等待外部复审
 
 - Create 2 + V5 六表 + 四接口（费率/风险/配置/管理员授权）；fail-closed 红线实测。
