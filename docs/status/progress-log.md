@@ -1,5 +1,13 @@
 # 进展日志
 
+## 2026-08-19 — S6-1 提现领域合同与 V8 迁移实施完成
+
+- 用户外部复审 S6-1 计划通过并显式授权 V8；计划 READY v1.0，两处收敛（无 REQUESTED、新增 settlement_ledger_transaction_id）已记录在案。
+- 交付：V8 三表 SQL（10 态状态机 + 形状 CHECK + 审批 UNIQUE + 策略只增不改 + 平台列级写/worker 只读）、withdrawals 合同、平台三仓储（订单幂等+CAS、审批、策略）。
+- 修复既有欠账：六个阶段规格 appliedVersions 精确钉住自 V5 起被后续迁移破坏，统一改为 arrayContaining；M03/M04/M07/M08 更新至 V8。
+- 验证：build/typecheck/architecture(150 模块 0 违规)/unit 226/database S6WC 6 项 + 全量回归（M06/M14/M16 为已知环境边界项）。
+- 领域文档 withdrawals.md 补概念状态机到 V8 的显式映射，交付状态转 BUILDING。
+
 ## 2026-08-17 — 阶段 6 总体规划 v1.0 READY + S6-1 详细计划完成，等待外部复审
 
 - 用户裁决五项设计决策按建议值：双轨审批、接口隔离、全热钱包、固定费、复用限额。

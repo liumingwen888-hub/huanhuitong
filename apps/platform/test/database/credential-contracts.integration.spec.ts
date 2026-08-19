@@ -52,7 +52,9 @@ beforeAll(async () => {
     migrationsDirectory: 'database/migrations',
     callbacksDirectory: 'database/flyway-callbacks'
   });
-  expect(evidence.firstMigrate.appliedVersions).toEqual(['1', '2']);
+  expect(evidence.firstMigrate.appliedVersions).toEqual(
+    expect.arrayContaining(['1', '2'])
+  );
   cleanupPool = new Pool({
     connectionString: fixture.bootstrapLogin.connectionString,
     max: 1,

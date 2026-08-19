@@ -66,7 +66,11 @@ PreviewWithdrawal、CreateWithdrawal、ApproveWithdrawal、RecordBroadcastResult
 
 ## 交付状态
 
-NOT_STARTED。
+BUILDING（S6-1 schema/合同/仓储已交付，2026-08-19；服务层 S6-2 起实施）。
+
+## 阶段 6 实现映射（2026-08-19，V8 落地）
+
+概念状态机到 `withdrawal_orders.status` 的投影：FUNDS_RESERVED→FROZEN；PENDING_APPROVAL、SIGNING、FAILED 同名；SIGNING+SIGNED 合并为 SIGNING；BROADCASTING+CONFIRMING 合并为 BROADCAST；SUCCEEDED→CONFIRMED；REVERSED→REFUNDED；CREATED 不单独存在（申请与冻结过账原子同事务）；UNKNOWN 与 MANUAL_REVIEW 是链上/运营层状态，不是订单列状态（S6-5 处理）；新增 REJECTED（Maker-Checker 拒绝，区别于链上 FAILED）与 EXPIRED（审批超时）。冻结过账存 `ledger_transaction_id`，收口过账（成功结算/退款释放）存 `settlement_ledger_transaction_id`；审批记录在 `withdrawal_approvals`（UNIQUE(withdrawal_id, admin_id)），签名策略在 `signer_policies`（(policy_version, network) 主键，只增不改）。
 
 ## 开发门禁
 
