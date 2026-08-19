@@ -4,7 +4,7 @@
 
 ## 权威需求来源
 
-[阶段 6 总体规划 v1.0](../2026-08-17-stage-6-withdrawals-master-plan.md)（S6-4 任务行 + 决策 2 同进程接口隔离、决策 3 初期全热钱包）、[提现领域](../../domains/withdrawals.md)（SigningIntent 实体、"不保存私钥，不直接签名"）、[signer 边界底线](../../AGENTS.md)（私钥不得进普通业务进程/明文库/日志）。
+[阶段 6 总体规划 v1.0](../2026-08-17-stage-6-withdrawals-master-plan.md)（S6-4 任务行 + 决策 2 同进程接口隔离、决策 3 初期全热钱包）、[提现领域](../../domains/withdrawals.md)（SigningIntent 实体、"不保存私钥，不直接签名"）、[signer 边界底线](../../../AGENTS.md)（私钥不得进普通业务进程/明文库/日志）。
 
 ## 目标
 
