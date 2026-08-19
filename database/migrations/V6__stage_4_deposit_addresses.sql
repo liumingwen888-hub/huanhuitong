@@ -93,7 +93,7 @@ GRANT SELECT, INSERT, UPDATE (status)
 GRANT INSERT, SELECT ON address_assignments TO xht_platform;
 GRANT SELECT, INSERT, UPDATE (status, confirmations, updated_at)
   ON deposit_detections TO xht_platform;
-GRANT SELECT, UPDATE ON chain_scan_checkpoints TO xht_platform;
+GRANT SELECT, INSERT, UPDATE ON chain_scan_checkpoints TO xht_platform;
 GRANT SELECT ON confirmation_policies TO xht_platform;
 GRANT SELECT ON deposit_addresses, deposit_detections,
   chain_scan_checkpoints, confirmation_policies TO xht_worker;

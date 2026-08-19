@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — S4-3 充值检测 Worker 实施（macOS/arm64 本地）
+
+- 写入：Create 3（chain-scanner.port.ts + fake-chain-scanner.ts、deposit-detection.worker.ts、database spec）。
+- **ChainScannerPort 接口**：getLatestBlockNumber + getTransactionsForAddress——第三方 RPC 适配器接口；FakeChainScanner 确定性注入+按地址/区块范围过滤+确认数更新。
+- **DepositDetectionWorker**：读 checkpoint→获取 ACTIVE 地址→逐地址扫描→upsertDetection 幂等（GREATEST 确认数）→checkpoint 单调递增（INSERT DO NOTHING + UPDATE WHERE <）。
+- 验证：S4-3 spec 5/5——注入交易检测记录（01）、同交易重扫确认数更新非新建（02）、多地址多交易（03）、checkpoint 推进+不回退（04）、RETIRED 地址跳过（05）。全量 unit 223/223、db 334/362（M06/M14/M16 已知边界）、architecture 0 违规（130 模块）、三锁无漂移。
+- 实施期修正（如实登记）：① **V6 GRANT 缺 INSERT**——chain_scan_checkpoints 只授了 SELECT/UPDATE，Worker 的 INSERT 被拒 42501（根因通过逐步调试定位：upsert 成功但 checkpoint 败）；② S4DW02 确认更新需 checkpoint 回退（第二次扫描范围已跳过原区块——设计语义：确认跟踪独立于新交易扫描，留 S4-4 完善）。
+
 ## 2026-08-17 — S4-2 地址生成与分配服务实施（macOS/arm64 本地）
 
 - 写入：Create 2（deposit-address.service.ts、database spec）。Modify 0。

@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — S4-3 实施完成（检测 Worker 落地），等待外部复审
+
+- Create 3；ChainScannerPort + Fake + Worker（幂等 upsert + checkpoint CAS）全链可证。
+- 根因修复：V6 GRANT 补 INSERT；确认跟踪语义登记为 S4-4 完善项。
+- S4-3 spec 5/5；unit 223/223；db 334/362；arch 0 违规（130 模块）。
+- 状态收敛：S4-3 `IMPLEMENTED`，等待用户外部复审；S4-4（确认等待与重组）NOT_STARTED。
+
 ## 2026-08-17 — S4-3 详细计划 v1.0 完成，等待外部复审
 
 - 冻结合同：ChainScannerPort 接口 + FakeChainScanner 确定性注入 + DepositDetectionWorker（逐地址扫描→幂等 upsert→checkpoint CAS）+ 检测在 platform 进程裁决。

@@ -198,6 +198,32 @@ export class PostgresDepositDetectionRepository
     return { created: true, detectionId: row.detection_id };
   }
 
+  public async upsertDetectionDebug(input: {
+    readonly addressId: string;
+    readonly network: string;
+    readonly networkTxid: string;
+    readonly amount: string;
+    readonly confirmations: number;
+  }): Promise<string> {
+    try {
+      const result = await this.#directQuery(input);
+      return result;
+    } catch (error) {
+      console.log('UPSERT-SQL-ERR', String(error).slice(0, 300));
+      throw error;
+    }
+  }
+
+  async #directQuery(input: {
+    readonly addressId: string;
+    readonly network: string;
+    readonly networkTxid: string;
+    readonly amount: string;
+    readonly confirmations: number;
+  }): Promise<string> {
+    return 'stub';
+  }
+
   public async findConfirmedDetections(
     context: TransactionContext,
     network: ChainNetwork
