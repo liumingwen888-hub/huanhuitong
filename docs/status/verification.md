@@ -1,5 +1,15 @@
 # 最近验证
 
+## 2026-08-17 — S5-4 红包服务实施（macOS/arm64 本地）
+
+- 写入：Create 2（red-packet.service.ts、database spec）。
+- **RedPacketService**：
+  - createPacket：DR creator / CR CLAIM_LIABILITY（冻结总额）+ 金额整除校验 + 24h 过期；
+  - claimPacket：DR LIABILITY / CR claimer（每人固定金额）+ UNIQUE 防重复 + 领完自动 DEPLETED；
+  - 惰性过期退款：DR LIABILITY / CR creator（仅退剩余未领取部分，已领不退）。
+- 验证：S5-4 spec 5/5——创建冻结（01）、多人领取各得正确金额（02）、重复领取拒绝（03）、领完 DEPLETED+后续拒绝（04）、过期仅退剩余（05）。全量 unit 223/223、db 368/403（M06/M14/M16 已知边界）、architecture 0 违规（143 模块）、三锁无漂移。
+- 实施期修正：过期退款余额断言从 -500000 改为 -900000（退还后 creator 持有 900000 = 700000 剩余 + 200000 退回；signed = -900000）。
+
 ## 2026-08-17 — S5-3 领取链接服务实施（macOS/arm64 本地）
 
 - 写入：Create 2（claim-link.service.ts、database spec）。
