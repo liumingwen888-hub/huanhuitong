@@ -1,6 +1,6 @@
 # S8-5 回调接收与 UNKNOWN 查询 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（外部输入信任边界）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S8-5 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（外部输入信任边界）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过；同日显式授权 V13 迁移写入）。S8-5 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -54,6 +54,20 @@ Create：`fiatpayout/domain/{callback-signature.port.ts, fake-hmac.verifier.ts}`
 ## 边界与不做
 
 - 不做结算/释放/冲正过账（S8-6 消费队列）；不做真实回调 HTTP 端点（生产 HTTP 层）；不做 REVERSED 的具体冲正（S8-6）。
+
+## 实施裁决记录（2026-08-19）
+
+1. settlement/reversal 队列事件 eventKey 追加 eventId 片段——同一订单可能多次上报（回调+查询双通道），UNIQUE eventKey 不应吞掉重复事实的审计。
+2. payout-contracts 规格版本钉随 V13 改 arrayContaining（本阶段第四次同型收敛；新规格一律 arrayContaining 立为惯例）。
+3. 回调对应订单不存在时 inbox 仍保留（外部事实审计优先），仅返回 ORDER_NOT_FOUND。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（192 模块、208 依赖）。
+- unit 31 文件 246/246 PASS。
+- S8CB01–S8CB07 全 PASS（一次通过）：签名 SUCCEEDED → inbox + settlement-pending 单事件 + 订单保持 ACCEPTED、坏签名三零断言（inbox/事件/状态）、同 eventId 重放拒绝零副作用、FAILED 回调落 FAILED+原因、畸形载荷/未知供应商零 inbox、查询优先（SUCCEEDED→队列 / UNKNOWN→零写入 PENDING_QUERY / 未知订单拒绝）、HMAC Fake 区分密钥真实性。
+- 数据库回归 505/508（M06/M14/M16 已知环境边界项）；integration 109/109。
+- 交付物：V13、`domain/{callback-signature.port.ts, fake-hmac.verifier.ts}`（真实 HMAC+常量时间比较）、`application/{payout-callback.service.ts, payout-query.service.ts}`、callback-inbox 仓储、payout 仓储 findByProviderKey、S8CB 规格。
 
 ## 停止条件
 

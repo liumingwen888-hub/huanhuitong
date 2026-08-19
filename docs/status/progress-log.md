@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S8-5 回调接收与 UNKNOWN 查询实施完成
+
+- V13 callback_inbox：(provider_id, provider_event_id) UNIQUE 去重锚，只增不改。
+- PayoutCallbackService：HMAC 验真（Fake 真实运算+常量时间比较）→ 解析 → 去重 → 映射（SUCCEEDED 排 settlement-pending / FAILED 落状态 / REVERSED 排 reversal-pending）；验真失败三零断言。
+- PayoutQueryService：查询优先，UNKNOWN 零写入绝不推断。
+- 验证：build/typecheck/architecture(192 模块 0 违规)/unit 246/S8CB 7 项/database 505-508（已知三件套）/integration 109。
+
 ## 2026-08-19 — S8-5 回调接收与 UNKNOWN 查询详细计划完成，等待外部复审
 
 - HMAC 验真端口：secretRef 引用进、密钥本体不出 Vault 边界；Fake 做真实 HMAC-SHA256 运算。

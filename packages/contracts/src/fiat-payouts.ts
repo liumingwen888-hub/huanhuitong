@@ -100,3 +100,35 @@ export interface PayoutQuoteSnapshot {
   readonly estimatedFiat: string;
   readonly estimate: true;
 }
+
+export interface ProviderCallbackInput {
+  readonly providerId: string;
+  readonly rawPayload: string;
+  readonly signature: string;
+}
+
+export type ProviderReportedStatus = 'SUCCEEDED' | 'FAILED' | 'REVERSED';
+
+export type CallbackIngestResult =
+  | {
+      readonly outcome: 'RECORDED';
+      readonly reportedStatus: ProviderReportedStatus;
+      readonly orderRef: string;
+    }
+  | {
+      readonly outcome: 'REJECTED';
+      readonly reasonCode: PayoutContractErrorCode;
+    };
+
+export type PayoutQueryResult =
+  | { readonly outcome: 'SUCCEEDED_REPORTED'; readonly orderRef: string }
+  | { readonly outcome: 'FAILED_REPORTED'; readonly orderRef: string }
+  | { readonly outcome: 'REVERSED_REPORTED'; readonly orderRef: string }
+  | {
+      readonly outcome: 'UNKNOWN';
+      readonly reasonCode: PayoutContractErrorCode;
+    }
+  | {
+      readonly outcome: 'DENIED';
+      readonly reasonCode: PayoutContractErrorCode;
+    };

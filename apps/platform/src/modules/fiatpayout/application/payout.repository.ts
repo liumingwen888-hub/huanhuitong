@@ -33,6 +33,10 @@ export interface PayoutOrderRepository {
     context: TransactionContext,
     payoutOrderId: string
   ): Promise<PayoutOrderSnapshot | null>;
+  findByProviderKey(
+    context: TransactionContext,
+    providerIdempotencyKey: string
+  ): Promise<PayoutOrderSnapshot | null>;
   markSubmitting(
     context: TransactionContext,
     payoutOrderId: string

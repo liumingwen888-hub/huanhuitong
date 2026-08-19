@@ -133,6 +133,17 @@ export class PostgresPayoutOrderRepository implements PayoutOrderRepository {
     return result.rows[0] ? toOrderSnapshot(result.rows[0]) : null;
   }
 
+  public async findByProviderKey(
+    context: TransactionContext,
+    providerIdempotencyKey: string
+  ): Promise<PayoutOrderSnapshot | null> {
+    const result = await context.executeSql<PayoutOrderRow>(
+      `${ORDER_SELECT} WHERE provider_idempotency_key = $1`,
+      [providerIdempotencyKey]
+    );
+    return result.rows[0] ? toOrderSnapshot(result.rows[0]) : null;
+  }
+
   public async markSubmitting(
     context: TransactionContext,
     payoutOrderId: string
