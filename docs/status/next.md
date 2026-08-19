@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 7 VERIFIED（2026-08-19 用户验收通过）。阶段 8"法币代付供应商接入"总体规划草案 v0.1 已完成（`docs/plans/2026-08-19-stage-8-fiat-payout-master-plan.md`），`DRAFT / 需求确认中`。
+阶段 8 总体规划 v1.0 READY（五项设计决策已裁决）。S8-1"代付合同与 V12 迁移"详细计划 v1.0 已完成（`docs/plans/s8-1-payout-contracts/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
 
-待用户裁决五项设计决策：支付密码门（建议：设，资金出平台）、收款人信息合成存储（建议：token 引用 + 摘要哈希零明文）、供应商映射（建议：版本化只增不改 + FakeProvider 注入）、回调验真（建议：HMAC 端口，失败永久拒绝）、UNKNOWN（建议：查询优先绝不重付）。回复"继续"即按建议值全部通过并冻结 v1.0。
+复审重点：收款人零明文设计（token 引用 + SHA-256 摘要双 CHECK）、provider_idempotency_key UNIQUE 作为"同意图只付一次"的数据库锚、八态状态机的 UNKNOWN/REVERSED 语义、callback_secret_ref 只存引用不存密钥本体。复审通过并显式授权 V12 后实施。
