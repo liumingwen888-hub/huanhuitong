@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S6-5 广播与确认监控详细计划完成，等待外部复审
+
+- 双付窗口三层论证：S6-4 确定性签名 → 相同已签名交易 → 链上同 txid 幂等 → markBroadcast CAS 恰好一次；重试重放同一笔交易，双付不可能。
+- UNKNOWN 红线：广播抛错只返回 UNKNOWN，零状态写入、零失败通知，停留 SIGNING 待安全重试；确定失败（端口 FAILED）才 markFailed。
+- 确认数不在服务层重判（端口 CONFIRMED 已含 confirmation_policies 语义）。S6WR01-06 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S6-4 Signer 隔离接口实施完成
 
 - 交付 signer 域：TransactionSignerPort（业务唯一依赖面）、VaultPort（HSM 型边界，无密钥返回方法）、canonicalDigest（固定键 JSON 序列化 + SHA-256）、FakeSigner（确定性 + 请求记录 + 可配置失败 + 摘要一致性校验）。
