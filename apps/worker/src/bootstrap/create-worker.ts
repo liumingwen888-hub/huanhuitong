@@ -1,8 +1,7 @@
 import type { OutboxHandler } from '@xht/contracts';
 import { TelegramMainMenuHandler } from '../outbox/telegram-main-menu.handler.js';
 import {
-  WithdrawalNotificationHandler,
-  WITHDRAWAL_NOTIFICATION_TOPICS
+  WithdrawalNotificationHandler
 } from '../outbox/withdrawal-notification.handler.js';
 import type { BindingLookup } from '../outbox/telegram-main-menu.handler.js';
 import type { TelegramBotGateway } from '../infrastructure/telegram/telegram-bot.gateway.js';
@@ -137,7 +136,9 @@ export function createWorker(options: CreateWorkerOptions): WorkerRuntime {
         withdrawal.bindings,
         withdrawal.texts
       );
-      for (const topic of WITHDRAWAL_NOTIFICATION_TOPICS) {
+      // register every topic the composition provides texts for —
+      // withdrawal and exchange notifications share this mechanism
+      for (const topic of withdrawal.texts.keys()) {
         topicHandlers.set(topic, handler);
       }
     }
@@ -150,7 +151,19 @@ export function createWorker(options: CreateWorkerOptions): WorkerRuntime {
         throw new TelegramConnectionDisabledError();
       }
     });
-    for (const topic of WITHDRAWAL_NOTIFICATION_TOPICS) {
+    for (const topic of [
+      'telegram.withdrawal-requested.v1',
+      'telegram.withdrawal-approved.v1',
+      'telegram.withdrawal-rejected.v1',
+      'telegram.withdrawal-broadcast.v1',
+      'telegram.withdrawal-succeeded.v1',
+      'telegram.withdrawal-failed.v1',
+      'telegram.withdrawal-refunded.v1',
+      'telegram.exchange-reserved.v1',
+      'telegram.exchange-settled.v1',
+      'telegram.exchange-failed.v1',
+      'telegram.exchange-refunded.v1'
+    ]) {
       topicHandlers.set(topic, {
         handle: async () => {
           throw new TelegramConnectionDisabledError();

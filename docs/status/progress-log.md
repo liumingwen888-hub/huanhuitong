@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S7-7 Telegram UX 实施完成
+
+- 受控数值渲染落地：模板常量 + 字符集白名单（金额纯数字/市场键大写含连字符/报价 UUID），白名单外抛错；/rate 显示真实报价数字，通知保持全静态。
+- 四命令（/markets /rate /exchange /exchangestatus）+ 四通知主题；create-worker 通知注册泛化为 texts 映射驱动。
+- 字符集修正：资产码连字符放行（无注入面）。
+- 验证：build/typecheck/architecture(178 模块 0 违规)/unit 246(含 S7EU 8 项)/database 474-477（已知三件套）/integration 97（registration-concurrency 一次抖动，隔离 3/3 过）。
+
 ## 2026-08-19 — S7-7 Telegram UX 详细计划完成，等待外部复审
 
 - 首要复审点：受控数值渲染（领域要求显示报价数字 vs 零插值安全模式的张力）——模板常量 + 字符集白名单填充，fail-closed。
