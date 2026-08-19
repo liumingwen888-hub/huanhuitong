@@ -1,10 +1,5 @@
 # 下一步
 
-2026-08-17：用户验收阶段 5 通过——阶段 5 整体 VERIFIED。阶段 6 总体规划草案 v0.1 已发布（`docs/plans/2026-08-17-stage-6-withdrawals-master-plan.md`，S6-1～8 任务分解）。
+阶段 6 总体规划 v1.0 READY（五项设计决策已裁决）。S6-1"提现领域合同与 V8 迁移"详细计划 v1.0 已完成（`docs/plans/s6-1-withdrawal-contracts/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
 
-唯一当前动作：用户确认阶段 6 总体规划草案，并裁决五项设计决策：
-- **提现审批模式**（建议：低额自动/高额人工双轨）
-- **Signer 隔离级别**（建议：同进程接口隔离，独立容器留后续）
-- **热/冷钱包策略**（建议：初期全热钱包）
-- **提现费用**（建议：固定费）
-- **每日限额**（建议：复用 operation_limits）
+复审重点：V8 三表设计（withdrawal_orders 10 态状态机 / withdrawal_approvals UNIQUE / signer_policies 版本化）。复审通过并显式授权 V8 后实施。
