@@ -1,5 +1,3 @@
 # 下一步
 
-阶段 2 S2-6"Telegram 安全 UX 接线"已实施（Create 4 / Modify 3；spec 10/10；全量通过已知边界）。S2-6 代码 `IMPLEMENTED`，等待用户外部复审实施结果（含三项架构裁决：三段式事务、提示经 worker 投递、deleteMessage 推迟）。
-
-复审通过前不实施 S2-7。
+阶段 2 S2-7"威胁模型与阶段 2 验收"详细计划 v1.0 已完成（`docs/plans/s2-7-acceptance/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：16 项验收覆盖度、威胁模型增补范围。复审通过后实施——完成后阶段 2 代码收敛 READY 等待用户验收。
