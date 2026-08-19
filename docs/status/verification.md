@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — S2-7 威胁模型与阶段 2 验收（macOS/arm64 本地）
+
+- 写入：Create 1（stage-two-acceptance.integration.spec.ts，S2A01–16 编号连续）+ Modify（threat-model.md 增补 9 项威胁→控制→证据映射）。
+- **16 项验收全部 PASS**：泄漏矩阵（五表零密码材料 + 日志零敏感 + span 零通道）；暴力（5 次锁定、第二次锁定 1800s 阶梯、锁定短路）；重放（nonce 零效果、update duplicate）；生命周期（缓冲清零、重哈希升级可再验证）；恢复（四因子→APPROVED→COOLDOWN→authorize 受限；不足失败关闭）；集成（Bot UX 全链 setup→authorize，全表零密码材料）；架构（security 模块零渠道依赖）。
+- **验收抓到并修复 2 项真实缺陷**：① 逐位 nonce 含数字字符——重复数字（919191）误判重放导致输入丢失（位置化 nonce 修复）；② 阶梯锁定按绝对尝试数计算——锁定窗口阻断后续尝试使阶梯不可达（改按 security_locks 锁定事件计数）。
+- 全量回归：unit 220/220、database 301/302+7 skip（仅 M14 平台边界，M06 本轮 PASS）、integration 12/12（acceptance）+ 全部既有、architecture 0 违规（102 模块）、docs:check 通过、三锁无漂移。
+- 状态收敛：S2-7 `IMPLEMENTED`；**阶段 2 代码 READY 等待用户验收**（验收不产生部署授权——四项长期授权保持 0）。
+
 ## 2026-08-17 — S2-6 Telegram 安全 UX 接线实施（macOS/arm64 本地）
 
 - 写入：Create 4（security-replies.ts 零动态常量、security-commands.ts 分类器、security-command.handler.ts 编排、unit/database 双 spec）+ Modify 3（controller 安全旁路 + createPlatformApp securityHandler 透传 + worker 提示投递——两项为 S2-4 先例登记的计划外最小增补；gateway 接口 sendPrompt 可选方法）。

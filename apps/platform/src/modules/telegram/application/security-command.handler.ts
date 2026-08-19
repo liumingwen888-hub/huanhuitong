@@ -145,10 +145,10 @@ export class SecurityCommandHandler {
         return { reply: 'notInSession', prompt: null };
       }
       if (command.kind === 'digits') {
-        for (const digit of command.value) {
+        for (const [index, digit] of [...command.value].entries()) {
           this.#sessions.appendDigit({
             sessionId: flow.sessionId,
-            actionNonce: `sec:${input.updateId}:${digit}:${flow.phase}`,
+            actionNonce: `sec:${input.updateId}:${index}:${flow.phase}`,
             digit,
             phase: flow.phase
           });

@@ -91,8 +91,13 @@ export class VerifyPaymentCredential {
       const nextAttempt = credential.failedAttempts + 1;
       let lockUntil: Date | null = null;
       if (nextAttempt >= policy.maxFailedAttempts) {
-        const escalationSteps =
-          Math.floor(nextAttempt / policy.maxFailedAttempts) - 1;
+        const priorLocks = await context.executeSql<{ n: number }>(
+          `SELECT count(*)::int AS n FROM security_locks
+            WHERE uid = $1::uuid
+              AND lock_reason = 'credential-failed-attempts'`,
+          [uid]
+        );
+        const escalationSteps = priorLocks.rows[0]?.n ?? 0;
         const lockSeconds =
           policy.lockDurationSeconds *
           Math.pow(policy.escalationFactor, escalationSteps);
