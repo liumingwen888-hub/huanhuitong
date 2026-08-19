@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S2-6 实施完成，等待外部复审
+
+- Create 4 / Modify 3；Bot 安全 UX 全链可证（两段输入、零回显、幂等、防滥用）。
+- S2-6 spec 10/10；unit 220/220；db 307/309（已知边界）；arch 0 违规。
+- 状态收敛：S2-6 `IMPLEMENTED`，等待用户外部复审；S2-7（威胁模型与验收）为阶段 2 收官。
+
 ## 2026-08-17 — S2-6 详细计划 v1.0 完成，等待外部复审
 
 - 冻结合同：/setpassword、/cancel、/authorize 演示命令路由；两段输入流（数字消息→nonce→appendDigit→/done 切段）；静态提示常量零动态插值；Outbox security-prompt topic；防滥用与幂等。

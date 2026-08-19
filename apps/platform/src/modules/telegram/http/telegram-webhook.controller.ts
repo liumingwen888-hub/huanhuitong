@@ -7,6 +7,7 @@ import type {
   WebhookRequestPolicy
 } from './webhook-request-policy.js';
 import { parseTelegramUpdate } from './telegram-update.schema.js';
+import { classifySecurityUpdate } from '../application/security-commands.js';
 import type { GrammyWebhookAdapter } from './grammy-webhook.adapter.js';
 
 export interface ControllerRequestShape extends PolicyRequestShape {
@@ -37,6 +38,21 @@ const STATUS_BY_CODE: Record<string, number> = {
   WEBHOOK_CONTENT_TYPE_INVALID: 415
 };
 
+export interface TelegramSecurityHandler {
+  handle(input: {
+    readonly rawUpdate: object;
+    readonly digestSet: object;
+    readonly command:
+      | { readonly kind: 'begin-setup' }
+      | { readonly kind: 'cancel' }
+      | { readonly kind: 'done' }
+      | { readonly kind: 'digits'; readonly value: string }
+      | { readonly kind: 'begin-authorize'; readonly orderRef: string };
+    readonly externalUserId: string;
+    readonly updateId: string;
+  }): Promise<void>;
+}
+
 export class DigestUnavailableError extends Error {
   public readonly code = 'WEBHOOK_DIGEST_KEY_UNAVAILABLE' as const;
   constructor() {
@@ -44,6 +60,14 @@ export class DigestUnavailableError extends Error {
     this.name = 'DigestUnavailableError';
   }
 }
+
+function extractUpdateId(rawUpdate: object): string {
+  const candidate = (rawUpdate as { readonly update_id?: unknown }).update_id;
+  return typeof candidate === 'number' || typeof candidate === 'string'
+    ? String(candidate)
+    : '';
+}
+
 
 export function toWebhookOutcome(
   result: HandleTelegramStartResult
@@ -62,7 +86,8 @@ export class TelegramWebhookController {
     private readonly policy: WebhookRequestPolicy,
     private readonly adapter: GrammyWebhookAdapter,
     private readonly digests: TelegramDigestProvider,
-    private readonly startHandler: TelegramStartHandler
+    private readonly startHandler: TelegramStartHandler,
+    private readonly securityHandler?: TelegramSecurityHandler
   ) {}
 
   public receive(
@@ -100,7 +125,30 @@ export class TelegramWebhookController {
 
   public async dispatchUpdate(rawUpdate: object): Promise<void> {
     const command = parseTelegramUpdate(rawUpdate);
-    if (command.kind === 'ignored') return;
+    if (command.kind === 'ignored') {
+      if (this.securityHandler !== undefined) {
+        const security = classifySecurityUpdate(rawUpdate);
+        if (security !== null) {
+          const digestSet = this.digests.digest(rawUpdate);
+          if (
+            typeof digestSet === 'object' &&
+            digestSet !== null &&
+            'unavailable' in digestSet &&
+            (digestSet as { readonly unavailable?: unknown }).unavailable === true
+          ) {
+            throw new DigestUnavailableError();
+          }
+          await this.securityHandler.handle({
+            rawUpdate,
+            digestSet,
+            command: security.command,
+            externalUserId: security.externalUserId,
+            updateId: extractUpdateId(rawUpdate)
+          });
+        }
+      }
+      return;
+    }
     const digestSet = this.digests.digest(rawUpdate);
     if (
       typeof digestSet === 'object' &&

@@ -7,6 +7,7 @@ import { GrammyWebhookAdapter } from '../modules/telegram/http/grammy-webhook.ad
 import {
   DigestUnavailableError,
   TelegramWebhookController,
+  type TelegramSecurityHandler,
   type ControllerRequestShape,
   type ControllerResponseShape,
   type TelegramDigestProvider,
@@ -20,6 +21,7 @@ export interface CreatePlatformAppOptions {
   readonly injectedBotInfo: UserFromGetMe;
   readonly digestProvider: TelegramDigestProvider;
   readonly startHandler: TelegramStartHandler;
+  readonly securityHandler?: TelegramSecurityHandler | undefined;
   readonly onForbiddenNetworkCall?: ((detail: string) => void) | undefined;
 }
 
@@ -55,7 +57,8 @@ export async function createPlatformApp(
     policy,
     grammyAdapter,
     options.digestProvider,
-    options.startHandler
+    options.startHandler,
+    options.securityHandler
   );
   grammyAdapter.setDispatch((update: object) =>
     controller.dispatchUpdate(update)

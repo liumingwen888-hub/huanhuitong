@@ -1,5 +1,12 @@
 # 最近验证
 
+## 2026-08-17 — S2-6 Telegram 安全 UX 接线实施（macOS/arm64 本地）
+
+- 写入：Create 4（security-replies.ts 零动态常量、security-commands.ts 分类器、security-command.handler.ts 编排、unit/database 双 spec）+ Modify 3（controller 安全旁路 + createPlatformApp securityHandler 透传 + worker 提示投递——两项为 S2-4 先例登记的计划外最小增补；gateway 接口 sendPrompt 可选方法）。
+- 全链实证：/setpassword → 数字两段 → /done×2 → ACTIVE + 会话 CONFIRMED + 静态提示 3 条入 Outbox（S6D01）；不一致 FAILED 零入库（S6D02）；无会话数字零副作用（S6D03）；同 update_id 重放 duplicate 零新提示（S6D04）；cancel 终止会话与输入流（S6D05）；/authorize 演示流 authorized 且提示零密码/零订单材料（S6D06）；Inbox/Outbox/audit 全载荷零数字材料（S6D07）；分类矩阵与静态断言（S6U01–03）。
+- 架构裁决（如实登记）：① 嵌套 UoW 被 Task 4 防逃逸拒绝——编排改为三段式（claim / 会话操作 / markProcessed 各自事务），崩溃一致性由租约到期重领 + SESSION_ALREADY_OPEN 幂等兜底；② 提示 topic telegram.security-prompt.v1 经 worker 网关 sendPrompt 投递（幂等键=eventKey）；③ deleteMessage 推迟部署阶段（外部连接授权 0）。
+- 验证：S2-6 spec 10/10；全量 unit 220/220、database 307/309（M14/M06 已知边界）、architecture 0 违规（102 模块 138 依赖）、三锁无漂移。
+
 ## 2026-08-17 — S2-5 恢复案件与冷静期实施（macOS/arm64 本地）
 
 - 写入：Create 4（domain/totp.ts RFC 6238 零依赖 + application/recovery-case.service.ts + unit/database 双 spec）。Modify 0。

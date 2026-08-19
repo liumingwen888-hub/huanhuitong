@@ -10,6 +10,13 @@ export interface SendMainMenuInput {
   readonly idempotencyKey: string;
 }
 
+export interface SendPromptInput {
+  readonly externalUserId: string;
+  readonly text: string;
+  readonly idempotencyKey: string;
+}
+
 export interface TelegramBotGateway {
   sendMainMenu(input: SendMainMenuInput): Promise<void>;
+  sendPrompt?(input: SendPromptInput): Promise<void>;
 }

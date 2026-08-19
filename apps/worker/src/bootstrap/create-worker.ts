@@ -3,6 +3,7 @@ import { TelegramMainMenuHandler } from '../outbox/telegram-main-menu.handler.js
 import type { BindingLookup } from '../outbox/telegram-main-menu.handler.js';
 import type { TelegramBotGateway } from '../infrastructure/telegram/telegram-bot.gateway.js';
 import { TelegramConnectionDisabledError } from '../infrastructure/telegram/external-connection-disabled.gateway.js';
+import type { LeasedOutboxMessage } from '@xht/contracts';
 import type { OutboxWorker, WorkerClock } from '../outbox/outbox-worker.js';
 import type { StoreClient, StoreConnectionFactory } from '../outbox/outbox-store.js';
 import { PostgresOutboxStore } from '../outbox/outbox-store.js';
@@ -96,6 +97,29 @@ export function createWorker(options: CreateWorkerOptions): WorkerRuntime {
         options.telegramGateway.menu
       )
     );
+    if (options.telegramGateway.gateway.sendPrompt !== undefined) {
+      const gateway = options.telegramGateway.gateway;
+      const promptHandler = async (message: LeasedOutboxMessage): Promise<void> => {
+        const payload = message.payload as {
+          readonly chatRef?: unknown;
+          readonly text?: unknown;
+        };
+        if (
+          typeof payload.chatRef !== 'string' ||
+          typeof payload.text !== 'string'
+        ) {
+          throw Object.assign(new Error('PROMPT_PAYLOAD_INVALID'), {
+            workerFailureClassification: 'PERMANENT' as const
+          });
+        }
+        await gateway.sendPrompt!({
+          externalUserId: payload.chatRef,
+          text: payload.text,
+          idempotencyKey: message.eventKey
+        });
+      };
+      topicHandlers.set('telegram.security-prompt.v1', { handle: promptHandler });
+    }
   } else if (options.telegramGateway?.enabled === false) {
     // F-06: a disabled external connection must park menu messages in
     // WAITING_CONFIGURATION (not PERMANENT dead letters) until explicit
