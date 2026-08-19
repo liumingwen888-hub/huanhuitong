@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S4-3 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：ChainScannerPort 接口 + FakeChainScanner 确定性注入 + DepositDetectionWorker（逐地址扫描→幂等 upsert→checkpoint CAS）+ 检测在 platform 进程裁决。
+- 冻结 Create 4 / Modify 0（无新迁移）。
+- 唯一下一步：等待用户外部复审 S4-3 v1.0。
+
+## 2026-08-17 — S4-2 复审通过与 VERIFIED 收敛，进入 S4-3 规划
+
+- 用户裁决：S4-2 EXTERNAL REVIEW PASS；一项修正 ACCEPT。S4-2 转 VERIFIED；提交 `d94521e` 已推送。
+- S4-3"充值检测 Worker"详细计划 DESIGNING。
+
 ## 2026-08-17 — S4-2 实施完成（地址服务落地），等待外部复审
 
 - Create 2；find-or-create + 地址复用 + retire/compromise CAS + 资产映射 + 并发安全全部可证。

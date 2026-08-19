@@ -1,5 +1,3 @@
 # 下一步
 
-阶段 4 S4-2"地址生成与分配服务"已实施（Create 2；spec 4/4；地址复用+并发+轮换全链可证）。S4-2 代码 `IMPLEMENTED`，等待用户外部复审实施结果。
-
-复审通过前不实施 S4-3（充值检测 Worker）。
+阶段 4 S4-3"充值检测 Worker"详细计划 v1.0 已完成（`docs/plans/s4-3-detection-worker/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：ChainScannerPort 接口边界、检测 Worker 在 platform 进程内运行的裁决、checkpoint CAS 并发安全。复审通过后实施（无新迁移）。
