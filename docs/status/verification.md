@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — S5-5 Telegram UX 接线实施（macOS/arm64 本地）
+
+- 写入：Create 3（transfer-commands.ts 分类器、transfer-replies.ts 零动态插值常量、transfer-command.handler.ts 编排）+ Modify 1（controller 扩展 transfer 命令分支）+ unit spec。
+- **四条命令**：/transfer（解析对方 Telegram ID + 金额→resolveUid→TransferExecutionService）；/claim（领取码→ClaimLinkService）；/redpacket（总金额+个数→RedPacketService）；/balance（余额查询占位）。
+- **命令分类器**：复用 S2-6 security-commands 模式（私聊/有效 from.id/严格正则校验）；零动态插值回复常量（静态断言锁定）。
+- **Controller 扩展**：transfer 命令在 security 命令之前检查（互不冲突——前缀不同）；Inbox 幂等由 controller digest 层保证。
+- 验证：S5-5 unit spec 3/3（分类矩阵、畸形拒绝、零动态插值静态断言）。全量 unit 226/226、db 368/403（M06/M14/M16 已知边界）、architecture 0 违规（146 模块）、三锁无漂移。
+
 ## 2026-08-17 — S5-4 红包服务实施（macOS/arm64 本地）
 
 - 写入：Create 2（red-packet.service.ts、database spec）。

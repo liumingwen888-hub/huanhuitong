@@ -8,6 +8,7 @@ import type {
 } from './webhook-request-policy.js';
 import { parseTelegramUpdate } from './telegram-update.schema.js';
 import { classifySecurityUpdate } from '../application/security-commands.js';
+import { classifyTransferUpdate } from '../application/transfer-commands.js';
 import type { GrammyWebhookAdapter } from './grammy-webhook.adapter.js';
 
 export interface ControllerRequestShape extends PolicyRequestShape {
@@ -87,7 +88,8 @@ export class TelegramWebhookController {
     private readonly adapter: GrammyWebhookAdapter,
     private readonly digests: TelegramDigestProvider,
     private readonly startHandler: TelegramStartHandler,
-    private readonly securityHandler?: TelegramSecurityHandler
+    private readonly securityHandler?: TelegramSecurityHandler,
+    private readonly transferHandler?: TelegramSecurityHandler
   ) {}
 
   public receive(
@@ -126,6 +128,28 @@ export class TelegramWebhookController {
   public async dispatchUpdate(rawUpdate: object): Promise<void> {
     const command = parseTelegramUpdate(rawUpdate);
     if (command.kind === 'ignored') {
+      if (this.transferHandler !== undefined) {
+        const transfer = classifyTransferUpdate(rawUpdate);
+        if (transfer !== null) {
+          const digestSet = this.digests.digest(rawUpdate);
+          if (
+            typeof digestSet === 'object' &&
+            digestSet !== null &&
+            'unavailable' in digestSet &&
+            (digestSet as { readonly unavailable?: unknown }).unavailable === true
+          ) {
+            throw new DigestUnavailableError();
+          }
+          await this.transferHandler.handle({
+            rawUpdate,
+            digestSet,
+            command: transfer.command as never,
+            externalUserId: transfer.externalUserId,
+            updateId: extractUpdateId(rawUpdate)
+          });
+          return;
+        }
+      }
       if (this.securityHandler !== undefined) {
         const security = classifySecurityUpdate(rawUpdate);
         if (security !== null) {

@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S5-5 实施完成（Telegram UX 落地），等待外部复审
+
+- Create 3 / Modify 1 + unit spec 3/3；四命令路由 + 零动态插值 + controller 扩展。
+- S5-5 unit 3/3；全量 unit 226/226；db 368/403；arch 0 违规（146 模块）。
+- 状态收敛：S5-5 `IMPLEMENTED`，等待用户外部复审；S5-6（阶段验收）为阶段 5 收官。
+
 ## 2026-08-17 — S5-5 详细计划 v1.0 完成，等待外部复审
 
 - 冻结合同：/transfer、/claim、/redpacket、/balance 四命令 + 回复常量 + 服务编排 + controller 扩展。
