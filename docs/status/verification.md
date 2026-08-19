@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — S4-7 链上对账实施（macOS/arm64 本地）
+
+- 写入：Create 2（chain-reconciliation.service.ts、database spec）+ Modify 2（scanner port 补 getAddressBalance + fake 实现）。
+- **ChainScannerPort 扩展**：getAddressBalance(network, addressText)——FakeChainScanner 支持 setAddressBalance 注入预期余额。
+- **ChainReconciliationService**：reconcileAll——链上余额 vs POSTED 检测累计逐地址对比；差异→结构化报告（chainBalance/ledgerBalance/difference）→幂等告警写 risk_decisions。
+- 验证：S4-7 spec 5/5——匹配零差异（01）、链上>账本差异+告警（02）、链上<账本差异（03）、幂等告警不重复（04）、多地址批量（05）。全量 unit 223/223、db 355/383（M06/M14/M16 已知边界）、architecture 0 违规（136 模块）、三锁无漂移。
+- 实施期修正（如实登记）：差异告警 uid 引用从 ledger_accounts 改为 users 表（测试环境无 ledger_accounts 行导致 FK 违约）。
+
 ## 2026-08-17 — S4-6 归集 Sweep 服务实施（macOS/arm64 本地）
 
 - 写入：Create 3（transaction-broadcaster.port.ts + fake-broadcaster.ts、deposit-sweep.service.ts、database spec）。

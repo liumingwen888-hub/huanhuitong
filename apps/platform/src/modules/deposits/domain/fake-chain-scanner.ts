@@ -17,6 +17,7 @@ interface QueuedTransaction extends OnChainTransaction {
 export class FakeChainScanner implements ChainScannerPort {
   readonly #transactions: QueuedTransaction[] = [];
   readonly #latestBlocks = new Map<ChainNetwork, string>();
+  readonly #addressBalances = new Map<string, string>();
 
   public inject(
     network: ChainNetwork,
@@ -33,6 +34,21 @@ export class FakeChainScanner implements ChainScannerPort {
 
   public setLatestBlock(network: ChainNetwork, blockNumber: string): void {
     this.#latestBlocks.set(network, blockNumber);
+  }
+
+  public setAddressBalance(
+    network: ChainNetwork,
+    addressText: string,
+    balance: string
+  ): void {
+    this.#addressBalances.set(`${network}:${addressText}`, balance);
+  }
+
+  public async getAddressBalance(
+    network: ChainNetwork,
+    addressText: string
+  ): Promise<string> {
+    return this.#addressBalances.get(`${network}:${addressText}`) ?? '0';
   }
 
   public async getLatestBlockNumber(

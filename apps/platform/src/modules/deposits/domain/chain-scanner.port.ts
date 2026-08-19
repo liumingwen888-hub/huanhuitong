@@ -17,6 +17,10 @@ export interface ChainScannerPort {
     fromBlock: string,
     toBlock: string
   ): Promise<readonly OnChainTransaction[]>;
+  getAddressBalance(
+    network: ChainNetwork,
+    addressText: string
+  ): Promise<string>;
 }
 
 export type ChainScanResult = {
