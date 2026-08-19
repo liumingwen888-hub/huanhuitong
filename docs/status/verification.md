@@ -1,5 +1,14 @@
 # 最近验证
 
+## 2026-08-17 — S5-2 转账执行服务实施（macOS/arm64 本地）
+
+- 写入：Create 2（transfer-execution.service.ts、database spec）。
+- **TransferExecutionService**：
+  - execute：幂等查重（EXECUTED 返回既有）→ PENDING 订单 → ensureAccount 双方 → internalTransfer 模板 → PostMoneyService 过账 → markExecuted CAS → **双端 Outbox 通知**（transfer-sent + transfer-received）；
+  - 失败路径：过账异常 → markFailed(reason) + 零余额变化 + 不自动重试；
+  - 并发安全：PostMoneyService 行锁 + 余额防线 + order_ref UNIQUE。
+- 验证：S5-2 spec 4/4——正常转账+余额+双端通知（01）、幂等重放零新行（02）、余额不足失败+零变化+零通知（03）、**并发双花恰一成功**（04）。全量 unit 223/223、db 358/393（M06/M14/M16 已知边界）、architecture 0 违规（141 模块）、三锁无漂移。
+
 ## 2026-08-17 — S5-1 转账领域合同与 V7 迁移实施（macOS/arm64 本地）
 
 - 授权：用户复审 S5-1 v1.0 通过并显式授权 V7 migration。
