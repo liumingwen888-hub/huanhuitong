@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S6-6 提现完成/失败结算实施完成（含一项真实缺陷修复）
+
+- 交付 WithdrawalSettlementService：settleConfirmed（链上权威复查→四账户结算→CAS CONFIRMED→通知；费用不可扣停留 BROADCAST fail-closed）、release（REJECTED/FAILED/EXPIRED→RELEASE 过账→REFUNDED）、expireStalePending（ConfigStore TTL，无配置零过期）。
+- **修复真实缺陷**：NULL-owner 平台账户的 `INSERT ON CONFLICT DO NOTHING` 因 NULL 不判重而重复建户，结算曾落错账户被内核拒绝；改为 SELECT-first 三步。S5 同型 ensure 存在未暴露的残余并发竞态，已记录。
+- 清除 apps/platform/src 内 21 个陈旧编译产物（.js 遮蔽 .ts 源导致调试探针失效的根因）；2 个架构 fixture 保留。
+- 验证：build/typecheck/architecture(154 模块 0 违规)/unit 228/S6WF 8 项/数据库回归 440-443（M06/M14/M16 已知环境边界）。
+
 ## 2026-08-19 — S6-6 提现完成/失败结算详细计划完成，等待外部复审
 
 - 双收口：SETTLE:0（成功）与 RELEASE:0（释放）模板键动作互斥 + V8 CAS，数据库层杜绝并存。

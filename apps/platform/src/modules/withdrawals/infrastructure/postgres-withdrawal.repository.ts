@@ -273,6 +273,21 @@ export class PostgresWithdrawalOrderRepository
     );
     return result;
   }
+
+  public async findExpirable(
+    context: TransactionContext,
+    input: { readonly staleBefore: Date; readonly limit: number }
+  ): Promise<readonly WithdrawalOrderSnapshot[]> {
+    const result = await context.executeSql<WithdrawalRow>(
+      `${WITHDRAWAL_SELECT}
+       WHERE status IN ('FROZEN', 'PENDING_APPROVAL')
+         AND created_at < $1
+       ORDER BY created_at
+       LIMIT $2`,
+      [input.staleBefore, input.limit]
+    );
+    return result.rows.map(toWithdrawalSnapshot);
+  }
 }
 
 async function transition(

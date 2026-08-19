@@ -89,6 +89,10 @@ export interface WithdrawalOrderRepository {
       settlementLedgerTransactionId: string;
     }
   ): Promise<boolean>;
+  findExpirable(
+    context: TransactionContext,
+    input: { readonly staleBefore: Date; readonly limit: number }
+  ): Promise<readonly WithdrawalOrderSnapshot[]>;
 }
 
 export interface WithdrawalApprovalRepository {
