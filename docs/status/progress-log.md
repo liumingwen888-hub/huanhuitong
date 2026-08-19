@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S6-2 提现申请与冻结服务详细计划完成，等待外部复审
+
+- 资金侧首次消费 S2 支付授权证明：定义绑定合同（type/uid/orderRef/amount/asset 精确相等 + expiresAt 过期拒绝，fail-closed）。
+- 编排：证明校验 → 幂等前置 → 策略 fail-closed → RiskGate → 单事务（ensureAccount + withdrawalRequested 模板 + createOrder + 双轨 CAS）→ Outbox。
+- 固定费唯一来源为 signer_policies.fee_amount（裁决 #4 落实）；崩溃自愈依赖模板幂等键与 order_ref UNIQUE 双保险。
+- S6WA01–08 测试矩阵冻结。唯一下一步：等待用户外部复审 S6-2 v1.0。
+
 ## 2026-08-19 — S6-1 提现领域合同与 V8 迁移实施完成
 
 - 用户外部复审 S6-1 计划通过并显式授权 V8；计划 READY v1.0，两处收敛（无 REQUESTED、新增 settlement_ledger_transaction_id）已记录在案。
