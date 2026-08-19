@@ -1,10 +1,5 @@
 # 下一步
 
-2026-08-17：用户验收阶段 3 通过——阶段 3 整体 VERIFIED。阶段 4 总体规划草案 v0.1 已发布（`docs/plans/2026-08-17-stage-4-deposits-master-plan.md`，S4-1～8 任务分解）。
+阶段 4 总体规划 v1.0 READY（四项技术决策已裁决：HD 派生 + 第三方 RPC 接口 + TRON19/ETH12/BTC6 + 阈值归集）。S4-1"地址领域合同与 V6 迁移"详细计划 v1.0 已完成（`docs/plans/s4-1-address-contracts/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
 
-唯一当前动作：用户确认阶段 4 总体规划草案，并裁决以下阻塞项：
-- **P0-1/2/4**（托管链/资产、充值网络、ETH/TRX 角色——可先用合成数据推进机制层）
-- **地址策略**（HD 派生 vs 独立密钥对？私钥存储位置？）
-- **节点访问**（自建 vs 第三方 RPC？）
-- **确认数策略**（每链建议值？）
-- **归集策略**（定时批量 vs 阈值触发？）
+复审重点：V6 五表设计（deposit_addresses/detections/checkpoints/confirmation_policies + address_assignments）、HD 派生接口与 fake 密钥边界、检测表 UNIQUE 约束。复审通过并显式授权 V6 后实施。

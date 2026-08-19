@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — 阶段 4 总体规划 v1.0 READY + S4-1 详细计划完成，等待外部复审
+
+- 用户裁决四项技术决策按建议值：HD 派生、第三方 RPC 接口层、TRON19/ETH12/BTC6、阈值归集。
+- S4-1 冻结：V6 五表（addresses/assignments/detections/checkpoints/policies）+ contracts + 仓储 + HD fake 接口。
+- 唯一下一步：等待用户外部复审 S4-1 v1.0（通过时 V6 migration 需显式授权）。
+
 ## 2026-08-17 — 阶段 4 总体规划草案 v0.1（需求确认中）发布
 
 - S4-1～8 任务分解：地址合同与 V6、地址生成分配、检测 Worker、确认与重组、入账编排、归集、链上对账、验收。
