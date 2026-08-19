@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S5-2 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：RiskGate→模板→过账→状态 CAS→双端 Outbox 通知；失败→FAILED 不重试；并发安全多层。
+- 冻结 Create 2 / Modify 0。
+- 唯一下一步：等待用户外部复审 S5-2 v1.0。
+
+## 2026-08-17 — S5-1 复审通过与 VERIFIED 收敛，进入 S5-2 规划
+
+- 用户裁决：S5-1 EXTERNAL REVIEW PASS。S5-1 转 VERIFIED；提交 `af74323` 已推送。
+- S5-2"转账执行服务"详细计划 DESIGNING。
+
 ## 2026-08-17 — S5-1 实施完成（V7 转账合同落地），等待外部复审
 
 - Create 5 / Modify 1；V7 四表 + 仓储 + contracts 全部可证。
