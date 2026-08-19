@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S4-4 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：processConfirmations CAS + processReorg（已 POSTED→冲正/已 CONFIRMED→阻止/UNKNOWN→标记等待）+ refreshConfirmations（S4-3 遗留）。
+- 冻结 Create 2 / Modify 0（无新迁移）。
+- 唯一下一步：等待用户外部复审 S4-4 v1.0。
+
+## 2026-08-17 — S4-3 复审通过与 VERIFIED 收敛，进入 S4-4 规划
+
+- 用户裁决：S4-3 EXTERNAL REVIEW PASS；V6 GRANT 修复与确认跟踪语义 ACCEPT。S4-3 转 VERIFIED；提交 `628ec59` 已推送。
+- S4-4"确认等待与重组处理"详细计划 DESIGNING。
+
 ## 2026-08-17 — S4-3 实施完成（检测 Worker 落地），等待外部复审
 
 - Create 3；ChainScannerPort + Fake + Worker（幂等 upsert + checkpoint CAS）全链可证。
