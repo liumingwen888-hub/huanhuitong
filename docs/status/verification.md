@@ -1,5 +1,14 @@
 # 最近验证
 
+## 2026-08-17 — S3-4 横切最小合同实施（macOS/arm64 本地）
+
+- 授权：用户复审 S3-4 v1.0 通过并显式授权 V5 migration。
+- 写入：Create 2（V5__stage_3_crosscutting.sql、crosscutting.services.ts 含四接口）+ database spec。
+- **V5 六表**：fee_schedules（版本化费率/无 DELETE 权限）、risk_decisions（追加幂等/七操作类型）、operation_limits（窗口限额/UNIQUE(uid,type)）、config_versions（key+version 唯一）、admin_principals + admin_role_grants（独立管理员身份与五角色 RBAC/撤销时间戳）。
+- **四接口**：FeeCalculator（最新版本费率=基点+固定额；纯读零写账本）；RiskGate（限额超量拒绝 + 幂等键重放返回原裁决 + **fail-closed**异常关闭——已实测）；ConfigStore（当前版本读取 + 版本激活追加）；AdminAuthorizer（查 ACTIVE principal + 未撤销 grant → allow/deny）。
+- 验证：S3-4 spec 6/6——费率计算/未知资产拒绝（01）、限额超量拒绝+幂等重放（02）、无限制放行+决策落库（03）、配置版本激活+历史不可变+缺失拒绝（04）、管理员 RBAC 授权/撤销/角色隔离/无效 ID 全拒（05）、费率表不可删（06）。全量 unit 223/223、db 313/315（M14/M16 已知边界）、architecture 0 违规（111 模块）、三锁无漂移。
+- 实施期修正（如实登记）：① FeeCalculator/ConfigStore 抛错位置移到 UoW 外（避免被包装为 TRANSACTION_CALLBACK_FAILED）；② RiskGate 窗口聚合查询引用不存在的 payload 列——移除死代码路径（窗口计数逻辑留给 S3-5 对账接口时正确实现，风险决策当前依赖 max_amount 单笔限额 + fail-closed 兜底）。
+
 ## 2026-08-17 — S3-3 余额投影实施（macOS/arm64 本地）
 
 - 授权：用户复审 S3-3 v1.0 通过并显式授权 V4 增量迁移。

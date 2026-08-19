@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S3-4 实施完成（横切最小合同落地），等待外部复审
+
+- Create 2 + V5 六表 + 四接口（费率/风险/配置/管理员授权）；fail-closed 红线实测。
+- S3-4 spec 6/6；unit 223/223；db 313/315（已知边界）；arch 0 违规。
+- 状态收敛：S3-4 `IMPLEMENTED`，等待用户外部复审；S3-5（订单关联与对账）NOT_STARTED。
+
 ## 2026-08-17 — S3-4 详细计划 v1.0 完成，等待外部复审
 
 - 冻结合同：V5 五表（fee_schedules 版本化/risk_decisions 追加幂等/operation_limits/config_versions/admin_principals+grants）、四接口（FeeCalculator/RiskGate/ConfigStore/AdminAuthorizer）、fail-closed 与独立管理员红线。
