@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S8-2 能力与报价详细计划完成，等待外部复审
+
+- 能力层只读零推导：route/供应商/固定费/限额全部来自 provider_configs 最新版；报价=费用预估（estimate 标注，1:1 折算为 FakeProvider 合成语义）。
+- 报价不持久化裁决：代付费用在订单创建时快照进订单列，幂等锚是 order_ref + 供应商幂等键（与换汇的 TTL 报价不同的原因记录在案）。
+- S8PC01-05 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S8-1 代付合同与 V12 迁移实施完成
 
 - V12 两表：provider_configs（版本化只增不改 + callback_secret_ref 仅存 vault: 引用）先建、payout_orders（八态 + 收款人双形状 CHECK + provider 幂等键全局 UNIQUE + 复合 FK 收口供应商版本）后建——表序修正后迁移通过。
