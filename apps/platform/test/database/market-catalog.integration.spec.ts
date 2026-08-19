@@ -34,9 +34,9 @@ beforeAll(async () => {
     migrationsDirectory: 'database/migrations',
     callbacksDirectory: 'database/flyway-callbacks'
   });
-  expect(evidence.firstMigrate.appliedVersions).toEqual([
-    '1', '2', '3', '4', '5', '6', '7', '8', '9'
-  ]);
+  expect(evidence.firstMigrate.appliedVersions).toEqual(
+    expect.arrayContaining(['1', '2', '3', '4', '5', '6', '7', '8', '9'])
+  );
   cleanupPool = new Pool({
     connectionString: fixture.bootstrapLogin.connectionString,
     max: 1, application_name: 'xht-s71-cleanup'

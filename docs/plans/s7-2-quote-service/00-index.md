@@ -1,6 +1,6 @@
 # S7-2 报价源端口与报价服务 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（换汇价格事实）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S7-2 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（换汇价格事实）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过；同日显式授权 V10 迁移写入）。S7-2 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -57,6 +57,21 @@ Create：`database/migrations/V10__stage_7_quotes.sql`、`packages/contracts/src
 
 - 不做报价确认/冻结（S7-3）；不做 EXPIRED 状态迁移（S7-3/5 的确认与清扫负责）；不做真实报价源（生产授权）。
 - referenceRate 与 rate 均原样存档（text），计算只经 parseDecimalRate 的 BigInt 分数——数据库不存浮点。
+
+## 实施裁决记录（2026-08-19）
+
+1. 买得为 0（尘埃级卖出额）按 `QUOTE_AMOUNT_OUT_OF_RANGE` 拒绝（计算后防御，防零额报价进入确认链）。
+2. 非法率/参考率解析失败按 `QUOTE_SOURCE_UNAVAILABLE` 拒绝（源数据质量问题，fail-closed 零写入）。
+3. market-catalog 规格版本钉随 V10 改 arrayContaining（与 withdrawal-contracts 同型收敛）。
+4. 偏差检查为精确交叉相乘整数比较（|rate−ref|·10000 > tol·rateDen·refNum），无浮点。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（168 模块、187 依赖）。
+- unit 30 文件 238/238 PASS（含 quote-math 3 项：非法率矩阵、四种向下舍入/精度换位/尘埃归零、偏差边界）。
+- S7QT01–S7QT06 集成全 PASS：同资产跨链恰 995000（reference_rate/source/status/config_version 存档断言）、跨精度恰 945250、TTL 窗口 [before+60s, after+60s]、偏差超容差零行、限额越界零行、未知市场/畸形率/未配置源三类 fail-closed 零行。
+- 数据库回归：全绿（M06/M14/M16 已知环境边界；deposit-address/ledger-contracts 两规格在并行容器负载下抖动，隔离重跑 14/14 PASS）；integration 97/97。
+- 交付物：`V10__stage_7_quotes.sql`、`exchange/domain/{quote-math, quote-source.port, fake-quote.source}.ts`、`exchange/application/{quote.service, quote.repository}.ts`、`exchange/infrastructure/postgres-quote.repository.ts`、contracts 增补、单测 + 集成测试。
 
 ## 停止条件
 

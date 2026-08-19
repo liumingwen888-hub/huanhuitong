@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S7-2 报价源端口与报价服务实施完成
+
+- V10 quotes 快照表：复合 FK 锚定市场配置版本、ACTIVE/CONSUMED/EXPIRED 生命周期、平台仅 INSERT+UPDATE(status)、worker 只读。
+- 纯 BigInt 数学（parseDecimalRate/computeBuyAmount/exceedsDeviationTolerance）：买方所得向下舍入、跨精度换位、偏差精确交叉相乘——全程无浮点，库中无浮点。
+- QuoteService：市场校验→限额→询价→防异常汇率 fail-closed→计算→TTL 落库；尘埃级买得拒绝。
+- 验证：build/typecheck/architecture(168 模块 0 违规)/unit 238/S7QT 6+3 项/数据库全绿（两规格并行负载抖动隔离复跑通过）/integration 97。
+
 ## 2026-08-19 — S7-2 报价源端口与报价服务详细计划完成，等待外部复审
 
 - 报价快照必须持久化（V10）：确认重校验同一份报价（quote_id + TTL + 未消费），"有期限可追溯"语义落地；quotes 有生命周期（ACTIVE/CONSUMED/EXPIRED），区别于 market_configs 只增不改。
