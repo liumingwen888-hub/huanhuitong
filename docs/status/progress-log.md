@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S8-5 回调接收与 UNKNOWN 查询详细计划完成，等待外部复审
+
+- HMAC 验真端口：secretRef 引用进、密钥本体不出 Vault 边界；Fake 做真实 HMAC-SHA256 运算。
+- V13 callback_inbox：(provider_id, provider_event_id) UNIQUE 去重锚，只增不改。
+- 回调不单独视为终态：SUCCEEDED 排 payout.settlement-pending 内部队列（S8-6 消费）；查询 UNKNOWN 零写入。S8CB01-07 冻结。唯一下一步：等待用户外部复审（通过时 V13 需显式授权）。
+
 ## 2026-08-19 — S8-4 供应商提交端口实施完成（防重付三层闭合）
 
 - PayoutProviderPort（submit 抛错=UNKNOWN 语义）+ FakeBankProvider（按键去重返回首次结果——真实供应商幂等契约同构）。
