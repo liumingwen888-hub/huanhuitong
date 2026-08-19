@@ -1,5 +1,16 @@
 # 最近验证
 
+## 2026-08-17 — S4-6 归集 Sweep 服务实施（macOS/arm64 本地）
+
+- 写入：Create 3（transaction-broadcaster.port.ts + fake-broadcaster.ts、deposit-sweep.service.ts、database spec）。
+- **TransactionBroadcasterPort**：broadcast + getStatus——纯接口，测试用 FakeBroadcaster（可配置费率/失败/状态）。
+- **DepositSweepService**：
+  - findSweepCandidates：按 POSTED 检测金额累计≥阈值筛选（GROUP BY address HAVING SUM >= threshold）；
+  - sweepAddress：广播→归集过账（DR custody/CR custody 资产转移 + DR upstream_cost/CR custody 费用）；
+  - sweepAll：批量执行，返回 outcomes 明细（含失败原因）；
+  - 平台承担链上费用（用户到账不变）。
+- 验证：S4-6 spec 5/5——阈值候选识别（01）、低于阈值跳过（02）、归集过账+广播（03）、广播失败不记账（04）、多地址批量（05）。全量 unit 223/223、db 350/378（M06/M14/M16 已知边界）、architecture 0 违规（135 模块）、三锁无漂移。
+
 ## 2026-08-17 — S4-5 充值入账编排实施（macOS/arm64 本地）
 
 - 写入：Create 2（deposit-posting.service.ts、database spec）。
