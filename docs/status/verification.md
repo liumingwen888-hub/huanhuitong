@@ -1,5 +1,14 @@
 # 最近验证
 
+## 2026-08-17 — S4-1 地址领域合同与 V6 迁移实施（macOS/arm64 本地）
+
+- 授权：用户复审 S4-1 v1.0 通过并显式授权 V6 migration。
+- 写入：Create 5（V6__stage_4_deposit_addresses.sql、contracts/deposits.ts、platform deposits domain/application/infrastructure 三层 + FakeDerivationSource、database spec）+ Modify（contracts index）。
+- **V6 五表**：deposit_addresses（UNIQUE(network,address_text) + UNIQUE(asset_code,derivation_index)——地址唯一且派生索引单调）；address_assignments（幂等键 UNIQUE）；deposit_detections（UNIQUE(network,txid,address_id)——同交易对同地址只检测一次 + 确认数 GREATEST UPSERT）；chain_scan_checkpoints（每网络扫描进度）；confirmation_policies（复合 PK(version,network) + UNIQUE(network)——TRON 19/ETH 12/BTC 6 种子）。
+- **FakeDerivationSource**：确定性 fake（SHA-256 hash → 地址文本 + BIP-44 路径），同 (network,index) 恒同地址——零真实密钥。
+- 验证：S4-1 spec 7/7——确认策略种子（01）、地址确定性创建+查找闭环（02）、派生索引单调（03）、不支持网络拒绝（04）、检测幂等 UPSERT（05）、确认阈值→CONFIRMED 检测→POSTED 状态转换→过期拒绝（06）、worker 只读权限（07）。全量 unit 223/223、db 326/353（M06/M14/M16 已知边界）、architecture 0 违规（126 模块）、三锁无漂移。
+- 实施期修正（如实登记）：① confirmation_policies PK 改为复合 (version, network)——三网络同版本插入违反单列 PK；② deposit_addresses GRANT 列修正（原引用了 detections 表的 updated_at/confirmations 列）。
+
 ## 2026-08-17 — S3-7 阶段 3 验收（macOS/arm64 本地）
 
 - **11 个测试块（12 项验收 S3A01–12）全部 PASS**：空账本零差异（01）、幂等重放零新行（02）、超支拒绝零写入（03）、entries 不可变权限实证（04）、并发双花恰一（05）、冲正全链+二次拒绝+余额归零（06-07）、投影实时一致（08）、篡改→校验→重建→清零（09）、模板过账投影正确（10）、横切三接口（费率+风险+管理员 RBAC）（11）、ledger 零渠道依赖（12）。

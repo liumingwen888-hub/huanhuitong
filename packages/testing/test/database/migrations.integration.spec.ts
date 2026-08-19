@@ -330,12 +330,12 @@ describe('stage one migrations', () => {
   });
 
   it('M03 migrates an empty database through all versions', () => {
-    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1', '2', '3', '4', '5']);
+    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1', '2', '3', '4', '5', '6']);
     expect(migrationEvidence.firstMigrate.exitCode).toBe(0);
   });
 
   it('M04 applies no new version on the second migrate', () => {
-    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1', '2', '3', '4', '5']);
+    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1', '2', '3', '4', '5', '6']);
     expect(migrationEvidence.secondMigrate.exitCode).toBe(0);
   });
 
@@ -376,18 +376,23 @@ describe('stage one migrations', () => {
     );
   });
 
-  it('M07 creates exactly the twenty-six stage one to three tables', async () => {
+  it('M07 creates exactly the thirty-one stage one to four tables', async () => {
     expect(await fixture.tableNames()).toEqual([
       'account_balances',
       'account_openings',
+      'address_assignments',
       'admin_principals',
       'admin_role_grants',
       'asset_catalog',
       'audit_events',
+      'chain_scan_checkpoints',
       'channel_bindings',
       'config_versions',
+      'confirmation_policies',
       'credential_policies',
       'credential_sessions',
+      'deposit_addresses',
+      'deposit_detections',
       'durable_jobs',
       'fee_schedules',
       'identity_profiles',
@@ -431,6 +436,11 @@ describe('stage one migrations', () => {
       }),
       expect.objectContaining({
         version: '5',
+        success: true,
+        checksum: expect.any(Number)
+      }),
+      expect.objectContaining({
+        version: '6',
         success: true,
         checksum: expect.any(Number)
       })
