@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S8-3 创建与冻结详细计划完成，等待外部复审
+
+- 七维证明绑定（operationType='fiat-payout' 已在联合类型，零扩展）；assetSummary 绑定路线（源资产配置派生）。
+- beneficiaryDigest 服务端 SHA-256 计算；供应商幂等键 PPO:{providerId}:{orderRef} 确定性派生。
+- S8PR01-07 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S8-2 能力与报价实施完成
 
 - PayoutCapabilityService：能力=provider_configs 纯事实（DISTINCT ON 供应商+路线取最新）；报价=固定费预估（estimate 标注，BigInt 精确）。
