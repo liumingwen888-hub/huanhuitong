@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S4-5 详细计划 v1.0 完成，等待外部复审（充值全链路汇聚点）
+
+- 冻结合同：CONFIRMED→模板过账→POSTED + ledger_transaction_id + Outbox 通知；三层幂等（应用层/账本层/状态层）；用户账户自动开通；失败→FAILED_POST 不重试。
+- 冻结 Create 2 / Modify 0。
+- 唯一下一步：等待用户外部复审 S4-5 v1.0。
+
+## 2026-08-17 — S4-4 复审通过与 VERIFIED 收敛，进入 S4-5 规划
+
+- 用户裁决：S4-4 EXTERNAL REVIEW PASS。S4-4 转 VERIFIED；提交 `bae78c9` 已推送。
+- S4-5"充值入账编排"详细计划 DESIGNING——S4 系列全链路汇聚点。
+
 ## 2026-08-17 — S4-4 实施完成（确认与重组落地），等待外部复审
 
 - Create 2 / Modify 1（V6 补列）；确认 CAS + 重组阻止/冲正/UNKNOWN + 刷新全链可证。
