@@ -62,3 +62,6 @@ desktop.ini
 *.tar.gz
 *.tgz
 *.rar
+apps/platform/src/**/*.js
+apps/platform/src/**/*.js.map
+apps/platform/src/**/*.d.ts
