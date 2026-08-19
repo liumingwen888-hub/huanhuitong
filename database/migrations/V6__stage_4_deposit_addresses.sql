@@ -92,7 +92,7 @@ INSERT INTO confirmation_policies (policy_version, network, required_confirmatio
 GRANT SELECT, INSERT, UPDATE (status)
   ON deposit_addresses TO xht_platform;
 GRANT INSERT, SELECT ON address_assignments TO xht_platform;
-GRANT SELECT, INSERT, UPDATE (status, confirmations, updated_at)
+GRANT SELECT, INSERT, UPDATE (status, confirmations, updated_at, ledger_transaction_id)
   ON deposit_detections TO xht_platform;
 GRANT SELECT, INSERT, UPDATE ON chain_scan_checkpoints TO xht_platform;
 GRANT SELECT ON confirmation_policies TO xht_platform;

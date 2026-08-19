@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-17 — S4-5 实施完成（充值全链路打通），等待外部复审
+
+- Create 2；确认→模板→过账→POSTED→通知全链路可证；三层幂等防线。
+- 根因修复：V6 GRANT 补 ledger_transaction_id；测试查询列名修正。
+- S4-5 spec 5/5；unit 223/223；db 345/373；arch 0 违规（132 模块）。
+- 状态收敛：S4-5 `IMPLEMENTED`，等待用户外部复审；S4-6（归集）NOT_STARTED。
+
 ## 2026-08-17 — S4-5 详细计划 v1.0 完成，等待外部复审（充值全链路汇聚点）
 
 - 冻结合同：CONFIRMED→模板过账→POSTED + ledger_transaction_id + Outbox 通知；三层幂等（应用层/账本层/状态层）；用户账户自动开通；失败→FAILED_POST 不重试。

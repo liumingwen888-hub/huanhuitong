@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — S4-5 充值入账编排实施（macOS/arm64 本地）
+
+- 写入：Create 2（deposit-posting.service.ts、database spec）。
+- **DepositPostingService**：CONFIRMED 检测→S3-6 depositConfirmed 模板→S3-2 PostMoneyService 过账→CAS POSTED + ledger_transaction_id→Outbox 通知。三层幂等：应用层（ledgerTransactionId 跳过）+ 账本层（幂等键 UNIQUE）+ 状态层（CAS）。
+- 验证：S4-5 spec 5/5（含 S4PO00 直接过账验证）——确认检测入账+余额+通知（01）、幂等重放零新行（02）、多笔批量（03）、用户账户自动开通（04）。全量 unit 223/223、db 345/373（M06/M14/M16 已知边界）、architecture 0 违规（132 模块）、三锁无漂移。
+- **根因修复（值得记录）**：**V6 GRANT 缺 `ledger_transaction_id` 列**——deposit_detections 的 UPDATE 授权未包含新增列，`#markPosted` 被 42501 拒。通过定位"poster 成功但 markPosted 失败"（逐步标记法）发现。另修复测试查询列名（uid→owner_uid）。
+- **充值全链路打通**：链上交易→检测（S4-3）→确认（S4-4）→入账过账（S4-5）→余额增加→Outbox 通知。用户从地址收款到看到余额的完整管道就绪。
+
 ## 2026-08-17 — S4-4 确认等待与重组处理实施（macOS/arm64 本地）
 
 - 写入：Create 2（deposit-confirmation.service.ts、database spec）+ Modify（V6 补 ledger_transaction_id 列）。

@@ -144,7 +144,7 @@ CREATE TABLE account_openings (
     CHECK (purpose IN ('USER_AVAILABLE', 'USER_FROZEN', 'USER_IN_TRANSIT'))
 );
 
-GRANT SELECT, INSERT, UPDATE (status, version) ON ledger_accounts TO xht_platform;
+GRANT SELECT, INSERT, UPDATE ON ledger_accounts TO xht_platform;
 GRANT INSERT, SELECT, UPDATE (status, reversed_by_transaction_id)
   ON ledger_transactions TO xht_platform;
 GRANT INSERT, SELECT ON ledger_entries TO xht_platform;
