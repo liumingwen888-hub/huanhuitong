@@ -1,5 +1,15 @@
 # 最近验证
 
+## 2026-08-17 — S3-6 记账模板实施（macOS/arm64 本地）
+
+- 写入：Create 2（posting-templates.ts 含 13 个模板函数、database spec）。Modify 2（posting/reverse 两服务的 DEBIT_NORMAL_PURPOSES 集合修正——按 S2-4 先例登记）。
+- **13 个模板函数**（七大场景全覆盖）：depositConfirmed、internalTransfer（含费用腿）、claimExecuted、redPacketCreated/Refunded、withdrawalRequested/Succeeded/Failed、exchangeFrozen/Settled（双腿清算差中间）、fiatPayoutRequested/Succeeded/Failed。全部纯函数：构造合法 PostMoneyCommand + 标准化幂等键（业务类型:订单:操作:代次），不做校验（内核管）。
+- 验证：S3-6 spec 7/7——全部经真实数据库过账验证（借贷平衡由触发器证明、投影变化逐账户断言、幂等键格式、负余额拒绝 S3T12）。全量 unit 223/223、architecture 0 违规（121 模块）、三锁无漂移。
+- **实施期三项真实缺陷修正（测试驱动）**：
+  ① FEE_INCOME 从借方正常重分类为贷方正常（收入随贷方增加——标准会计语义；原分类导致费用腿被内核拒绝）；
+  ② CLEARING_DIFF 从借方正常集合移除（清算差异可正可负——约束它导致 bootstrap 注入后后续过账被误拒）；
+  ③ withdrawalSucceeded/fiatPayoutSucceeded 的费用腿从冻结账户改到可用账户（原设计 DR 冻结(金额+费用)但只有金额被冻结，费用从未入冻——超支拒绝）。
+
 ## 2026-08-17 — S3-5 订单关联与对账接口实施（macOS/arm64 本地）
 
 - 写入：Create 3（reconciliation.service.ts、worker reconciliation-task.ts、database spec）。Modify 0。

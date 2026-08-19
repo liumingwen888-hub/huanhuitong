@@ -9,9 +9,7 @@ import type {
 
 const DEBIT_NORMAL_PURPOSES = new Set([
   'PLATFORM_CUSTODY',
-  'FEE_INCOME',
-  'UPSTREAM_COST',
-  'CLEARING_DIFF'
+  'UPSTREAM_COST'
 ]);
 
 function violatesNormalBalance(
