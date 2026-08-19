@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S4-6 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：阈值候选识别 + TransactionBroadcasterPort 接口 + 归集过账（DR 充值地址/CR 主钱包 + DR 上游成本/CR 充值地址费用）+ Fake 广播。
+- 冻结 Create 4 / Modify 0（V7 延后至 S4-7/S4-8 前统一申请）。
+- 唯一下一步：等待用户外部复审 S4-6 v1.0。
+
+## 2026-08-17 — S4-5 复审通过与 VERIFIED 收敛，进入 S4-6 规划
+
+- 用户裁决：S4-5 EXTERNAL REVIEW PASS；V6 GRANT 修复 ACCEPT。S4-5 转 VERIFIED；提交 `d471cb4` 已推送。
+- S4-6"归集（Sweep）服务"详细计划 DESIGNING。
+
 ## 2026-08-17 — S4-5 实施完成（充值全链路打通），等待外部复审
 
 - Create 2；确认→模板→过账→POSTED→通知全链路可证；三层幂等防线。
