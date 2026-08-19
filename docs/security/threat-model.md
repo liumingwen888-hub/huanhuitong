@@ -105,3 +105,17 @@ Task 4 已实现并验证单连接 Unit of Work、TransactionContext 禁止逃�
 | 红包抢夺（同用户多次领取） | UNIQUE(packet_id, claimer_uid) + ON CONFLICT | S5A09 |
 | 过期红包退款遗漏 | 惰性退款触发 + 仅退剩余 | S5A10 |
 | 转账模块渠道耦合 | transfers 零 grammY/telegram 依赖（静态+depcruise） | S5A12 |
+
+## 阶段 6 威胁模型增补（2026-08-19，S6-8）
+
+| 威胁 | 控制 | 证据 |
+|---|---|---|
+| 提现双付（广播后崩溃窗口） | 确定性签名→同 txid 链上幂等 + markBroadcast CAS 三层论证 | S6A06、S6WR02 |
+| UNKNOWN 误判为失败后重付 | UNKNOWN 零状态写入；仅链端口权威 FAILED 才迁移 | S6A07、S6WR04 |
+| 审批合谋/同人重复审批 | UNIQUE(withdrawal_id, admin_id) + FINANCE_OFFICER 活跃角色门 + 配置缺失 fail-closed 双审 | S6A08、S6WB01/04/07 |
+| 支付证明重放/替换/跨单挪用 | 七维度绑定校验（type/uid/操作/orderRef/金额/资产/过期）精确相等 | S6WA01、S6WU02 |
+| 费用不可扣时挪用或部分收费 | 结算 fail-closed：停留 BROADCAST 待运营，绝不部分收费、绝不推断成功 | S6WF08 |
+| 过期扫描误杀进行中审批 | TTL 走 ConfigStore；无配置零过期（反向 fail-closed） | S6A05、S6WF07 |
+| 签名密钥越界进入业务/日志/库 | VaultPort 无密钥返回方法（HSM 型）+ 序列化扫描无密钥字段 | S6WS06 |
+| 通知/回复泄露敏感数据 | 零插值常量（类别化）+ outbox 载荷扫描 | S6A11、S6WU03b |
+| NULL-owner 平台账户重复建户（实现期发现） | SELECT-first 三步 ensure + 内核负余额兜底拒绝 | S6A09 对账 + S6-6 实施裁决 |
