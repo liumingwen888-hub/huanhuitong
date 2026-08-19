@@ -34,6 +34,9 @@ function snapshot(row: AccountRow): LedgerAccountSnapshot {
   });
 }
 
+const ACCOUNT_SELECT = `SELECT account_id, owner_uid, asset_code, purpose, status, version
+         FROM ledger_accounts`;
+
 export class PostgresLedgerAccountRepository implements LedgerAccountRepository {
   public async findAccount(
     context: TransactionContext,
@@ -119,6 +122,44 @@ export class PostgresLedgerAccountRepository implements LedgerAccountRepository 
     }
     return raced;
   }
+
+  public async lockAccount(
+    context: TransactionContext,
+    accountId: LedgerAccountId
+  ): Promise<LedgerAccountSnapshot | null> {
+    const result = await context.executeSql<AccountRow>(
+      `${ACCOUNT_SELECT} WHERE account_id = $1::uuid FOR UPDATE`,
+      [accountId]
+    );
+    const row = result.rows[0];
+    return row === undefined ? null : snapshot(row);
+  }
+
+  public async accountBalance(
+    context: TransactionContext,
+    accountId: LedgerAccountId
+  ): Promise<string> {
+    const result = await context.executeSql<{ balance: string }>(
+      `SELECT COALESCE(SUM(
+         CASE direction WHEN 'DEBIT' THEN amount ELSE -amount END
+       ), 0)::text AS balance
+         FROM ledger_entries WHERE account_id = $1::uuid`,
+      [accountId]
+    );
+    return result.rows[0]?.balance ?? '0';
+  }
+
+  public async bumpAccountVersions(
+    context: TransactionContext,
+    accountIds: readonly LedgerAccountId[]
+  ): Promise<void> {
+    if (accountIds.length === 0) return;
+    await context.executeSql(
+      `UPDATE ledger_accounts SET version = version + 1
+        WHERE account_id = ANY($1::uuid[])`,
+      [accountIds as unknown[]]
+    );
+  }
 }
 
 export class PostgresLedgerTransactionRepository
@@ -162,5 +203,100 @@ export class PostgresLedgerTransactionRepository
       );
     }
     return transactionId;
+  }
+
+  public async findTransactionWithLines(
+    context: TransactionContext,
+    transactionId: string
+  ): Promise<{
+    readonly status: 'POSTED' | 'REVERSED';
+    readonly transactionType: string;
+    readonly reversedBy: string | null;
+    readonly lines: readonly {
+      readonly accountId: LedgerAccountId;
+      readonly direction: 'DEBIT' | 'CREDIT';
+      readonly amount: string;
+    }[];
+  } | null> {
+    const header = await context.executeSql<{
+      status: string;
+      transaction_type: string;
+      reversed_by_transaction_id: string | null;
+    }>(
+      `SELECT status, transaction_type, reversed_by_transaction_id
+         FROM ledger_transactions WHERE transaction_id = $1::uuid`,
+      [transactionId]
+    );
+    const row = header.rows[0];
+    if (row === undefined) return null;
+    const entries = await context.executeSql<{
+      account_id: string;
+      direction: string;
+      amount: string;
+    }>(
+      `SELECT account_id, direction, amount::text AS amount
+         FROM ledger_entries WHERE transaction_id = $1::uuid
+        ORDER BY entry_index`,
+      [transactionId]
+    );
+    return {
+      status: row.status as 'POSTED' | 'REVERSED',
+      transactionType: row.transaction_type,
+      reversedBy: row.reversed_by_transaction_id,
+      lines: entries.rows.map((entry) => ({
+        accountId: entry.account_id as LedgerAccountId,
+        direction: entry.direction as 'DEBIT' | 'CREDIT',
+        amount: entry.amount
+      }))
+    };
+  }
+
+  public async insertReversalTransaction(
+    context: TransactionContext,
+    input: {
+      readonly idempotencyKey: string;
+      readonly originalTransactionId: string;
+      readonly lines: readonly {
+        readonly accountId: LedgerAccountId;
+        readonly direction: 'DEBIT' | 'CREDIT';
+        readonly amount: string;
+      }[];
+    }
+  ): Promise<string> {
+    const transactionId = randomUUID();
+    await context.executeSql(
+      `INSERT INTO ledger_transactions
+         (transaction_id, idempotency_key, transaction_type,
+          reversed_by_transaction_id)
+       VALUES ($1::uuid, $2, 'REVERSAL', $3::uuid)`,
+      [transactionId, input.idempotencyKey, input.originalTransactionId]
+    );
+    for (const [index, line] of input.lines.entries()) {
+      await context.executeSql(
+        `INSERT INTO ledger_entries
+           (transaction_id, account_id, direction, amount, entry_index)
+         VALUES ($1::uuid, $2::uuid, $3, $4::bigint, $5)`,
+        [transactionId, line.accountId, line.direction, line.amount, index]
+      );
+    }
+    return transactionId;
+  }
+
+  public async markOriginalReversed(
+    context: TransactionContext,
+    input: {
+      readonly originalTransactionId: string;
+      readonly reversalTransactionId: string;
+    }
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE ledger_transactions
+          SET status = 'REVERSED',
+              reversed_by_transaction_id = $2::uuid
+        WHERE transaction_id = $1::uuid AND status = 'POSTED'
+        RETURNING transaction_id`,
+      [input.originalTransactionId, input.reversalTransactionId]
+    );
+    return result.rows.length === 1;
   }
 }

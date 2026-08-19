@@ -39,6 +39,18 @@ export interface LedgerAccountRepository {
     context: TransactionContext,
     input: OpenAccountInput
   ): Promise<LedgerAccountSnapshot>;
+  lockAccount(
+    context: TransactionContext,
+    accountId: LedgerAccountId
+  ): Promise<LedgerAccountSnapshot | null>;
+  accountBalance(
+    context: TransactionContext,
+    accountId: LedgerAccountId
+  ): Promise<string>;
+  bumpAccountVersions(
+    context: TransactionContext,
+    accountIds: readonly LedgerAccountId[]
+  ): Promise<void>;
 }
 
 export interface LedgerTransactionRepository {
@@ -50,4 +62,36 @@ export interface LedgerTransactionRepository {
     context: TransactionContext,
     command: PostMoneyCommand
   ): Promise<string>;
+  findTransactionWithLines(
+    context: TransactionContext,
+    transactionId: string
+  ): Promise<{
+    readonly status: 'POSTED' | 'REVERSED';
+    readonly transactionType: string;
+    readonly reversedBy: string | null;
+    readonly lines: readonly {
+      readonly accountId: LedgerAccountId;
+      readonly direction: 'DEBIT' | 'CREDIT';
+      readonly amount: string;
+    }[];
+  } | null>;
+  insertReversalTransaction(
+    context: TransactionContext,
+    input: {
+      readonly idempotencyKey: string;
+      readonly originalTransactionId: string;
+      readonly lines: readonly {
+        readonly accountId: LedgerAccountId;
+        readonly direction: 'DEBIT' | 'CREDIT';
+        readonly amount: string;
+      }[];
+    }
+  ): Promise<string>;
+  markOriginalReversed(
+    context: TransactionContext,
+    input: {
+      readonly originalTransactionId: string;
+      readonly reversalTransactionId: string;
+    }
+  ): Promise<boolean>;
 }

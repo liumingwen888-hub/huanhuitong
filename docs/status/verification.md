@@ -1,5 +1,14 @@
 # 最近验证
 
+## 2026-08-17 — S3-2 过账内核实施（macOS/arm64 本地）
+
+- 写入：Create 4（post-money.service.ts、reverse-transaction.service.ts、unit/database 双 spec）+ Modify 3（contracts ledger 错误码增补 NEGATIVE/ALREADY_REVERSED、S3-1 仓储接口五方法、V3 约束修正——均按先例登记）。
+- **PostMoneyService**（唯一资金写入口）：命令防御（复用）→ REVERSAL 类型拒入 → 幂等键查重（命中返回 existing posted:false）→ 按账户聚合净额 → **排序行锁**（防死锁）→ 账户存在/ACTIVE 校验 → **用途感知的正常余额防线**（借方正常用途 signed≥0；贷方正常用途 signed≤0）→ 原子过账 → version 递增。
+- **ReverseTransactionService**：原交易 POSTED 校验 → 全行反向 REVERSAL 新交易（引用原交易）→ 同防线 → 原交易 status=REVERSED + reversed_by 标记（CAS）→ 二次冲正拒绝；幂等键复用返回。
+- 验证：S3-2 spec 11/11——过账落库+version（S3PE01）、幂等重放零新行（02）、缺失/FROZEN 拒绝（03）、REVERSAL 拒入（04）、**超支拒绝零写入**（05）、**并发双花恰一成功**（06，真双连接）、冲正全链+二次拒绝（07）、聚合累积（08）；unit 防御 3/3。
+- 实施期裁决与缺陷修复（如实登记，测试驱动）：① **余额符号语义修正**——借方正常（托管/费用/上游/清算差）与贷方正常（用户三用途+两负债）防线方向相反，原统一"<0 拒绝"会阻断对用户负债的贷记（真实会计缺陷）；② V3 冲正形状 CHECK 矛盾修正——被冲正的原交易也携带 reversed_by，约束改为仅要求 REVERSAL 必须引用（V3 checksum 变更，测试容器每次全新无影响）；③ 测试资金流按 ledger-model 模板对齐（DR 托管/CR 用户负债；bootstrap 经 CLEARING_DIFF 注入）。
+- 全量：unit 223/223、database 315/317+7 skip（M14/M06 已知边界）、architecture 0 违规（109 模块）、三锁无漂移。
+
 ## 2026-08-17 — S3-1 账本领域合同与 V3 迁移实施（macOS/arm64 本地）
 
 - 授权：用户复审 S3-1 v1.0 通过并显式授权 V3 migration（首个资金 schema）。

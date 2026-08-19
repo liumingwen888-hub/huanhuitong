@@ -78,8 +78,8 @@ CREATE TABLE ledger_transactions (
     CHECK (status IN ('POSTED', 'REVERSED')),
   CONSTRAINT ck_ledger_transactions_reversal_shape
     CHECK (
-      (transaction_type = 'REVERSAL' AND reversed_by_transaction_id IS NOT NULL)
-      OR (transaction_type <> 'REVERSAL' AND reversed_by_transaction_id IS NULL)
+      transaction_type <> 'REVERSAL'
+      OR reversed_by_transaction_id IS NOT NULL
     )
 );
 
