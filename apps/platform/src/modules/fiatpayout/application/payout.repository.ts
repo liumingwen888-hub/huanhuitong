@@ -33,6 +33,18 @@ export interface PayoutOrderRepository {
     context: TransactionContext,
     payoutOrderId: string
   ): Promise<PayoutOrderSnapshot | null>;
+  markSubmitting(
+    context: TransactionContext,
+    payoutOrderId: string
+  ): Promise<boolean>;
+  markAccepted(
+    context: TransactionContext,
+    payoutOrderId: string
+  ): Promise<boolean>;
+  markFailed(
+    context: TransactionContext,
+    input: { readonly payoutOrderId: string; readonly reason: string }
+  ): Promise<boolean>;
 }
 
 export interface ProviderConfigRepository {

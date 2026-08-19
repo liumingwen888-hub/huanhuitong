@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S8-4 供应商提交端口实施完成（防重付三层闭合）
+
+- PayoutProviderPort（submit 抛错=UNKNOWN 语义）+ FakeBankProvider（按键去重返回首次结果——真实供应商幂等契约同构）。
+- PayoutSubmissionService：FUNDS_RESERVED→CAS SUBMITTING（幂等重入）→供应商提交→ACCEPTED/FAILED；通知仅首次迁移。
+- 防重付三层实证：确定性键 + V12 UNIQUE + 供应商去重（submits=2/distinct=1）。
+- 验证：build/typecheck/architecture(186 模块 0 违规)/unit 246/S8PS 7 项/database 498-501（已知三件套）/integration 109（一次已知抖动重跑过）。
+
 ## 2026-08-19 — S8-4 供应商提交端口详细计划完成，等待外部复审
 
 - 防重付三层防线闭合：确定性键派生（已落地）+ V12 UNIQUE（已落地）+ FakeBankProvider 按键去重（本任务）——重试同键重放，结构上不可能双付。

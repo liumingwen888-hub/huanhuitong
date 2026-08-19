@@ -132,6 +132,50 @@ export class PostgresPayoutOrderRepository implements PayoutOrderRepository {
     );
     return result.rows[0] ? toOrderSnapshot(result.rows[0]) : null;
   }
+
+  public async markSubmitting(
+    context: TransactionContext,
+    payoutOrderId: string
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE payout_orders SET status = 'SUBMITTING',
+         updated_at = clock_timestamp()
+       WHERE payout_order_id = $1::uuid
+         AND status = 'FUNDS_RESERVED'
+       RETURNING payout_order_id`,
+      [payoutOrderId]
+    );
+    return result.rows.length === 1;
+  }
+
+  public async markAccepted(
+    context: TransactionContext,
+    payoutOrderId: string
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE payout_orders SET status = 'ACCEPTED',
+         updated_at = clock_timestamp()
+       WHERE payout_order_id = $1::uuid AND status = 'SUBMITTING'
+       RETURNING payout_order_id`,
+      [payoutOrderId]
+    );
+    return result.rows.length === 1;
+  }
+
+  public async markFailed(
+    context: TransactionContext,
+    input: { readonly payoutOrderId: string; readonly reason: string }
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE payout_orders SET status = 'FAILED',
+         failure_reason = $2, updated_at = clock_timestamp()
+       WHERE payout_order_id = $1::uuid
+         AND status IN ('FUNDS_RESERVED', 'SUBMITTING', 'ACCEPTED', 'UNKNOWN')
+       RETURNING payout_order_id`,
+      [input.payoutOrderId, input.reason]
+    );
+    return result.rows.length === 1;
+  }
 }
 
 interface ProviderConfigRow {

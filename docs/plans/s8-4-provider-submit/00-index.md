@@ -1,6 +1,6 @@
 # S8-4 供应商提交端口 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（法币出站提交 + 防重付）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S8-4 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（法币出站提交 + 防重付）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S8-4 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -66,6 +66,19 @@ Create：`fiatpayout/domain/{payout-provider.port.ts, fake-bank.provider.ts}`、
 ## 边界与不做
 
 - 不做回调接收（S8-5）、结算/释放过账（S8-6）；不做真实供应商适配器（生产）。
+
+## 实施裁决记录（2026-08-19）
+
+1. 通知仅随首次 CAS 成功发出；幂等重放（CAS 失败但状态收敛）不再通知——outbox eventKey UNIQUE 的天然约束（S6-5 同型）。
+2. markFailed 的合法前态扩至 ACCEPTED/UNKNOWN（供应商可在受理后拒绝——回调/查询可降级，S8-5 消费）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（186 模块、204 依赖）。
+- unit 31 文件 246/246 PASS。
+- S8PS01–S8PS07 全 PASS：提交受理含全事实（estimatedFiat 4,998,000）、崩溃窗口重放供应商单次逻辑提交（submits=2 / distinct=1）且单次 ACCEPTED、供应商拒绝 FAILED 带原因、不可用抛错停留 SUBMITTING 零事件且恢复后去重、非可提交状态/未知订单拒绝零提交、键=订单键三层贯通、查询端口四态矩阵。
+- 数据库回归 498/501（M06/M14/M16 已知环境边界项）；integration 109/109（一次已知抖动重跑通过）。
+- 交付物：`fiatpayout/domain/{payout-provider.port.ts, fake-bank.provider.ts}`、`payout-submission.service.ts`、仓储三 CAS、S8PS 集成规格。
 
 ## 停止条件
 
