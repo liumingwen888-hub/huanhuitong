@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S6-4 Signer 隔离接口详细计划完成，等待外部复审
+
+- 同进程接口隔离（已裁决决策 2）：业务侧仅依赖 TransactionSignerPort；VaultPort 为 HSM 型边界（入摘要、出签名，无密钥返回方法）。
+- canonical digest 绑定六字段防篡改防重放；签名产物不落库（确定性 + S6-5 广播幂等），避免新增敏感数据治理面；真实密钥存储留生产阶段独立授权。
+- 端口/内置 Fake 沿用 S4-6 先例放平台模块 domain 层。S6WS01-06 冻结（4 集成 + 2 单元）。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S6-3 Maker-Checker 审批流实施完成
 
 - 交付 WithdrawalApprovalService：FINANCE_OFFICER 角色校验 → 订单 PENDING_APPROVAL 前置 → 审批记录（预检 + UNIQUE 兜底）→ ConfigStore 分级阈值（缺失 fail-closed 双审）→ 批准/拒绝 CAS 迁移 → 用户/管理侧 Outbox 通知。
