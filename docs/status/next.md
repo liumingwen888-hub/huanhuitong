@@ -1,5 +1,3 @@
 # 下一步
 
-阶段 5 S5-5"Telegram UX 接线"已实施（Create 3 / Modify 1 + unit spec 3/3；四命令路由+零动态插值+controller 扩展）。S5-5 代码 `IMPLEMENTED`，等待用户外部复审。
-
-复审通过前不实施 S5-6（阶段 5 验收——阶段 5 收官）。
+阶段 5 S5-6"威胁模型与阶段 5 验收"详细计划 v1.0 已完成（`docs/plans/s5-6-acceptance/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：12 项验收覆盖度（转账×4、链接×3、红包×3、UX×1、架构×1）。复审通过后实施——完成后阶段 5 代码收敛 READY 等待用户验收。
