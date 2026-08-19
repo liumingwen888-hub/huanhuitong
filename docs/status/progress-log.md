@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S6-5 广播与确认监控实施完成
+
+- 交付 WithdrawalBroadcastService：broadcast（状态门→签名→广播→CAS 落 txid→受理通知；UNKNOWN 零状态写入）与 checkOnChainStatus（PENDING 停留/CONFIRMED 报 readyForSettlement/FAILED 权威迁移+通知）。
+- DeterministicBroadcasterFake：txid 由广播输入内容派生——链上幂等层的合成栈实现，双付三层论证闭环。
+- 安全日志进入封闭治理：withdrawal_broadcast_unknown 事件 + route/outcome 枚举扩展。
+- 验证：build/typecheck/architecture(160 模块 0 违规)/unit 228/S6WR 6 项/数据库回归 432-435（M06/M14/M16 已知环境边界）。
+
 ## 2026-08-19 — S6-5 广播与确认监控详细计划完成，等待外部复审
 
 - 双付窗口三层论证：S6-4 确定性签名 → 相同已签名交易 → 链上同 txid 幂等 → markBroadcast CAS 恰好一次；重试重放同一笔交易，双付不可能。

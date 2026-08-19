@@ -8,7 +8,8 @@ export type SafeLogEvent =
   | 'process_started'
   | 'process_stopped'
   | 'telegram_webhook_processed'
-  | 'telegram_webhook_rejected';
+  | 'telegram_webhook_rejected'
+  | 'withdrawal_broadcast_unknown';
 
 export type SafeLogErrorCategory =
   | 'configuration_invalid'
@@ -29,14 +30,16 @@ export interface SafeLogContext {
     | 'bootstrap'
     | 'configuration'
     | 'telemetry'
-    | 'telegram.start';
+    | 'telegram.start'
+    | 'withdrawals';
   readonly outcome?:
     | 'success'
     | 'rejected'
     | 'disabled'
     | 'configured'
     | 'stopped'
-    | 'processed';
+    | 'processed'
+    | 'unknown';
   readonly error_category?: SafeLogErrorCategory;
   readonly duration_ms?: number;
   readonly retry_count?: number;

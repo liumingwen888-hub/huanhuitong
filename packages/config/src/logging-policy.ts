@@ -71,6 +71,11 @@ const eventPolicies = {
     ],
     optional: ['inbox_id', 'retry_count'],
     route: 'telegram.start', outcome: 'rejected'
+  },
+  withdrawal_broadcast_unknown: {
+    required: ['route', 'outcome'],
+    optional: ['correlation_id'],
+    route: 'withdrawals', outcome: 'unknown'
   }
 } as const satisfies Record<SafeLogEvent, EventPolicy>;
 

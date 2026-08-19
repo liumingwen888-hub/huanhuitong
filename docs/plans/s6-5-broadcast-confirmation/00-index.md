@@ -1,6 +1,6 @@
 # S6-5 广播与确认监控 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（资金出站广播 + 双付窗口）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S6-5 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（资金出站广播 + 双付窗口）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过并授权实施）。S6-5 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -37,6 +37,12 @@
    - `CONFIRMED`（端口语义 = 已满足该网络 confirmation_policies 确认数，策略由 S4 扫描器层执行）→ 返回 `{chainStatus:'CONFIRMED', readyForSettlement:true}`——结算动作属 S6-6；
    - `FAILED`（端口权威确定失败，如重组出局）→ `markFailed` CAS（BROADCAST→FAILED，reason `CHAIN_REPORTED_FAILED`）→ Outbox `telegram.withdrawal-failed.v1`——退款释放编排属 S6-6。
 
+## 实施裁决记录（2026-08-19）
+
+1. S6WR02 崩溃窗口重现场景修正：正确模拟是"链上已受理、markBroadcast 未发生"（订单停留 SIGNING），而非已 BROADCAST 后重调（后者正确地被状态门拒绝）——测试经由签名服务 + 直接调用广播器构造窗口，再验证服务重放收敛。
+2. 安全日志事件 `withdrawal_broadcast_unknown` 进入封闭治理：SafeLogEvent 联合 + logging-policy 条目（required route/outcome）+ SafeLogContext 扩展 route `'withdrawals'`、outcome `'unknown'`；错误细节不入日志（留给广播器适配器遥测）。
+3. markBroadcast CAS 失败但快照一致（BROADCAST + 同 txid）→ 幂等返回 BROADCAST 且不再通知；通知仅在首次成功迁移时发出。
+
 ## 冻结未来工程矩阵
 
 Create：`modules/withdrawals/application/withdrawal-broadcast.service.ts`、`modules/withdrawals/infrastructure/deterministic-broadcaster.fake.ts`（implements S4-6 TransactionBroadcasterPort；txid = canonicalDigest 派生；可配置 PENDING/CONFIRMED/FAILED 与抛错）、`apps/platform/test/database/withdrawal-broadcast.integration.spec.ts`（S6WR）。Modify：无（contracts/迁移均不动；复用 S4-6 端口与 S6-4 服务）。
@@ -54,6 +60,14 @@ Create：`modules/withdrawals/application/withdrawal-broadcast.service.ts`、`mo
 
 - 不做结算过账/退款释放（S6-6）；不做定时轮询 worker 编排（S6-6/S6-8 统一）；不做真实链广播器（生产独立授权）。
 - 确认数策略不在本服务重复执行——端口 CONFIRMED 语义已含（S4 扫描器消费 confirmation_policies）；避免双层确认判定漂移。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（160 模块、187 依赖）。
+- unit 28 文件 228/228 PASS。
+- S6WR01–S6WR06 全 PASS：APPROVED→BROADCAST + txid 落库 + 受理通知一条；崩溃窗口重放同 txid 收敛（两次广播调用、一条订单状态、一条通知）；非法状态零调用；UNKNOWN 零状态写入零失败通知且重试成功；确认监控 PENDING/CONFIRMED 不动状态（readyForSettlement 标记）；端口 FAILED → markFailed + reason + 通知 + 后续操作全部拒绝。
+- 数据库回归 432/435（M06/M14/M16 已知环境边界项）。
+- 交付物：`modules/withdrawals/application/withdrawal-broadcast.service.ts`、`modules/withdrawals/infrastructure/deterministic-broadcaster.fake.ts`、集成测试；contracts/config 的安全日志封闭治理扩展。
 
 ## 停止条件
 
