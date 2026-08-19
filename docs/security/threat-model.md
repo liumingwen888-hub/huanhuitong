@@ -119,3 +119,18 @@ Task 4 已实现并验证单连接 Unit of Work、TransactionContext 禁止逃�
 | 签名密钥越界进入业务/日志/库 | VaultPort 无密钥返回方法（HSM 型）+ 序列化扫描无密钥字段 | S6WS06 |
 | 通知/回复泄露敏感数据 | 零插值常量（类别化）+ outbox 载荷扫描 | S6A11、S6WU03b |
 | NULL-owner 平台账户重复建户（实现期发现） | SELECT-first 三步 ensure + 内核负余额兜底拒绝 | S6A09 对账 + S6-6 实施裁决 |
+
+## 阶段 7 威胁模型增补（2026-08-19，S7-8）
+
+| 威胁 | 控制 | 证据 |
+|---|---|---|
+| 异常汇率操纵/预言机失真 | referenceRate 容差精确整数比较 + fail-closed 零写入 | S7QT04、S7A08 |
+| 过期报价被确认 | 消费 CAS 含 expires_at > now + 惰性清扫 | S7XF03、S7A04 |
+| 并发重复确认/重复结算/重复释放 | quote_id UNIQUE + 消费 CAS + 确定性 orderRef 动作幂等键 + 状态 CAS | S7A05、S7A06 |
+| 精度/舍入资金损耗（浮点污染） | 纯 BigInt 向下舍入 + 库中无浮点（text 存档） | S7QT07 |
+| 跨资产清算混账 | exchangeSettled 拆双腿清算（各资产内平衡） | S7XS02、S7A02 |
+| 点差/舍入价值暗损 | 双清算账户隔离 + 对账计值汇总（报价时点参考价） | S7A12 |
+| 挂单误杀（错误释放进行中换汇） | 结算 TTL 无配置零过期（反向 fail-closed） | S7XR04、S7A04 |
+| 换汇确认冒用（无支付门裁决的补偿控制） | resolveUid 身份绑定 + 订单绑定 uid + 资金不出平台边界 | S7EU03、S7-4 裁决 |
+| 清算账户被绕过写入/篡改 | 对账累计 vs 权威重算 + schema FK/形状 CHECK 双层 | S7RC02/04 |
+| 数字显示注入（UX 层） | 受控数值渲染字符集白名单（金额纯数字/市场键大写连字符） | S7EU06 |
