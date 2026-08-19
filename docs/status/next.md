@@ -1,3 +1,5 @@
 # 下一步
 
-阶段 3 S3-1"账本领域合同与 V3 迁移"详细计划 v1.0 已完成（`docs/plans/s3-1-ledger-contracts/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：五表设计（尤其 entries 平衡 CONSTRAINT TRIGGER 双保险、entries 零 UPDATE/DELETE 授权）、合成资产目录边界。复审通过并显式授权 V3 migration 后实施。
+阶段 3 S3-1"账本领域合同与 V3 迁移"已实施（Create 6 / Modify 1；spec 7/7；全量通过已知边界）。S3-1 代码 `IMPLEMENTED`，等待用户外部复审实施结果（含三项实施期裁决：负债用途重分类、COMMIT 拦截语义、阶段 1 断言演进）。
+
+复审通过前不实施 S3-2（过账内核）。

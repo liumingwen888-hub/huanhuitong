@@ -330,12 +330,12 @@ describe('stage one migrations', () => {
   });
 
   it('M03 migrates an empty database through all versions', () => {
-    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1', '2']);
+    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1', '2', '3']);
     expect(migrationEvidence.firstMigrate.exitCode).toBe(0);
   });
 
   it('M04 applies no new version on the second migrate', () => {
-    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1', '2']);
+    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1', '2', '3']);
     expect(migrationEvidence.secondMigrate.exitCode).toBe(0);
   });
 
@@ -376,8 +376,10 @@ describe('stage one migrations', () => {
     );
   });
 
-  it('M07 creates exactly the fourteen stage one and two tables', async () => {
+  it('M07 creates exactly the nineteen stage one to three tables', async () => {
     expect(await fixture.tableNames()).toEqual([
+      'account_openings',
+      'asset_catalog',
       'audit_events',
       'channel_bindings',
       'credential_policies',
@@ -385,6 +387,9 @@ describe('stage one migrations', () => {
       'durable_jobs',
       'identity_profiles',
       'inbox_messages',
+      'ledger_accounts',
+      'ledger_entries',
+      'ledger_transactions',
       'memberships',
       'outbox_messages',
       'payment_credentials',
@@ -404,6 +409,11 @@ describe('stage one migrations', () => {
       }),
       expect.objectContaining({
         version: '2',
+        success: true,
+        checksum: expect.any(Number)
+      }),
+      expect.objectContaining({
+        version: '3',
         success: true,
         checksum: expect.any(Number)
       })
@@ -590,7 +600,7 @@ describe('stage one migrations', () => {
     }
   });
 
-  it('M13 creates no money, wallet, chain or market column', async () => {
+  it('M13 keeps stage-one tables free of money, wallet, chain or market columns', async () => {
     const forbidden = [
       'asset_id', 'ledger_account_id', 'balance', 'available_balance',
       'frozen_balance', 'wallet_id', 'address', 'network_id', 'chain_id',
@@ -601,11 +611,18 @@ describe('stage one migrations', () => {
       max: 1
     });
     try {
+      const stageOneTables = [
+        'users', 'memberships', 'identity_profiles', 'channel_bindings',
+        'registration_idempotency', 'inbox_messages', 'outbox_messages',
+        'durable_jobs', 'audit_events'
+      ];
       const result = await pool.query<{ readonly count: string }>(
         `select count(*)::text as count
            from information_schema.columns
-          where table_schema = 'public' and column_name = any($1::text[])`,
-        [forbidden]
+          where table_schema = 'public'
+            and column_name = any($1::text[])
+            and table_name = any($2::text[])`,
+        [forbidden, stageOneTables]
       );
       expect(result.rows[0]?.count).toBe('0');
     } finally {

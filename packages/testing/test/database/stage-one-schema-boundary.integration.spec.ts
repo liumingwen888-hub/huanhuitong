@@ -9,11 +9,6 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 const projectRoot = resolve(import.meta.dirname, '../../../..');
 
-const FORBIDDEN_TABLES = [
-  'assets', 'ledger_accounts', 'ledger_entries', 'balances', 'wallets',
-  'addresses', 'networks', 'markets', 'payments', 'withdrawals'
-];
-
 describe('stage one schema boundary', () => {
   let fixturePool: Pool;
   let platformPool: Pool;
@@ -49,17 +44,17 @@ describe('stage one schema boundary', () => {
   });
 
   it(
-    '18: creates no asset, ledger, balance, wallet or raw Update record',
+    '18: keeps an identity-only database free of ledger rows and raw Update columns',
     { timeout: 30_000 },
     async () => {
-      const tables = await fixturePool.query<{ table_name: string }>(
-        `SELECT table_name FROM information_schema.tables
-          WHERE table_schema='public'`
+      const ledgerRows = await fixturePool.query<{ n: number }>(
+        `SELECT
+           (SELECT count(*) FROM ledger_accounts) +
+           (SELECT count(*) FROM ledger_transactions) +
+           (SELECT count(*) FROM ledger_entries) +
+           (SELECT count(*) FROM account_openings) AS n`
       );
-      const names = new Set(tables.rows.map((row) => row.table_name));
-      for (const forbidden of FORBIDDEN_TABLES) {
-        expect(names.has(forbidden)).toBe(false);
-      }
+      expect(Number(ledgerRows.rows[0]?.n ?? 0)).toBe(0);
       const columns = await fixturePool.query<{ column_name: string }>(
         `SELECT column_name FROM information_schema.columns
           WHERE table_schema='public' AND table_name='inbox_messages'`
@@ -83,7 +78,7 @@ describe('stage one schema boundary', () => {
       const history = await fixturePool.query<{ version: string; owner: string }>(
         `SELECT version FROM flyway_schema_history WHERE success = true`
       );
-      expect(history.rows.map((row) => row.version)).toEqual(['1', '2']);
+      expect(history.rows.map((row) => row.version)).toEqual(['1', '2', '3']);
       const owners = await fixturePool.query<{ owner: string }>(
         `SELECT DISTINCT tableowner AS owner FROM pg_tables
           WHERE schemaname='public' AND tablename != 'flyway_schema_history'`
@@ -110,7 +105,7 @@ describe('stage one schema boundary', () => {
       const before = await fixturePool.query<{ version: string }>(
         `SELECT version FROM flyway_schema_history WHERE success = true`
       );
-      expect(before.rows.map((row) => row.version)).toEqual(['1', '2']);
+      expect(before.rows.map((row) => row.version)).toEqual(['1', '2', '3']);
     }
   );
 

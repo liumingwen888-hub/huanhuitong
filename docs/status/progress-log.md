@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S3-1 实施完成（V3 资金 schema 落地），等待外部复审
+
+- Create 6 / Modify 1；五表 + 平衡触发器 + 不可变权限 + 方案 A 开通记录全部实证。
+- S3-1 spec 7/7；unit 220/220；db 307/309+7 skip；arch 0 违规。
+- 状态收敛：S3-1 `IMPLEMENTED`，等待用户外部复审；S3-2（过账内核）NOT_STARTED。
+
 ## 2026-08-17 — S3-1 详细计划 v1.0 完成，等待外部复审
 
 - 冻结合同：V3 五表（asset_catalog 种子/ledger_accounts 用途枚举+并发版本+唯一约束/ledger_transactions 幂等键+冲正自引用/ledger_entries 只插+平衡 CONSTRAINT TRIGGER 双保险/account_openings 显式幂等开通）、金额字符串合同、entries 零 UPDATE/DELETE 授权。

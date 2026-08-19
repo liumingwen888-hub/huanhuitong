@@ -1,5 +1,14 @@
 # 最近验证
 
+## 2026-08-17 — S3-1 账本领域合同与 V3 迁移实施（macOS/arm64 本地）
+
+- 授权：用户复审 S3-1 v1.0 通过并显式授权 V3 migration（首个资金 schema）。
+- 写入：Create 6（V3__stage_3_ledger_core.sql、contracts/ledger.ts、platform ledger domain 双文件 + application 接口 + infrastructure 双仓储 + database spec）+ Modify（contracts index）。
+- V3 五表落地：asset_catalog（5 合成种子）；ledger_accounts（九用途、用户/平台所有权形状 CHECK、并发版本、UNIQUE(owner,asset,purpose)）；ledger_transactions（幂等键 UNIQUE、九类型、REVERSAL 必须引用原交易形状 CHECK）；ledger_entries（只插、BIGINT>0、索引唯一、**DEFERRABLE CONSTRAINT TRIGGER 强制借贷平衡**——未平衡在 COMMIT 拦截）；account_openings（方案 A 显式幂等开通，UNIQUE 键）。权限：entries 任何角色零 UPDATE/DELETE；transactions 仅 status/reversed_by 可更；worker 只读。
+- 合同与防御：MoneyAmount 十进制字符串；parsePostMoneyCommand（Proxy/访问器防御、正整数金额、≥2 行、BigInt 借贷平衡校验）；仓储（openUserAccount ON CONFLICT + openings 记录 + 竞态回读；insertPostedTransaction 全行插入）。
+- 验证：S3-1 spec 7/7（种子/CHECK 拒绝/幂等开通/命令防御/平衡过账+未平衡 COMMIT 拦截/幂等键唯一+不可变实证（platform UPDATE/DELETE 42501；bootstrap 例外登记）/worker 只读）；全量 unit 220/220、database 307/309+7 skip（M14/M06 已知边界）、architecture 0 违规（107 模块）、三锁无漂移。
+- 实施期裁决（如实登记）：① **USER_LIABILITY/CLAIM_LIABILITY 重分类为平台聚合账户**（owner NULL）——个人头寸在 AVAILABLE/FROZEN/IN_TRANSIT，聚合负债/领取负债镜像全体义务（测试暴露原归类矛盾）；② 未平衡分录在 COMMIT 被延迟触发器拦截 → UoW 如实报 TRANSACTION_COMMIT_OUTCOME_UNKNOWN（断言接受两种失败码）；③ 阶段 1 边界断言合法演进（M13 限定九张阶段 1 表、18 号改为"identity-only 库零账本行"、documentation 阶段标记跟随路线图）。
+
 ## 2026-08-17 — S2-7 威胁模型与阶段 2 验收（macOS/arm64 本地）
 
 - 写入：Create 1（stage-two-acceptance.integration.spec.ts，S2A01–16 编号连续）+ Modify（threat-model.md 增补 9 项威胁→控制→证据映射）。
