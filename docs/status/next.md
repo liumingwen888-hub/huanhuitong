@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 7 总体规划 v1.0 READY（五项设计决策已裁决）。S7-1"市场目录与 V9 迁移"详细计划 v1.0 已完成（`docs/plans/s7-1-market-catalog/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 7 进行中（阶段 1–6 VERIFIED，S7-1 已实施 VERIFIED，2026-08-19）。
 
-复审重点：market_configs 采用 signer_policies 同型版本化只增不改（平台无 UPDATE 权限）；四方向市场键格式 `SELL:BUY`；种子参数（TTL 60s/quote_scale 8/点差 50bp/容差 1000bp）。复审通过并显式授权 V9 后实施。
+下一步：**S7-2 报价源端口与报价服务**详细计划——QuoteSourcePort（纯接口 + Fake 配置汇率）、报价快照组装（值/来源/时间/TTL/配置版本）、点差内含计算（买方所得向下舍入）、防异常汇率 bound（deviation_tolerance_bp）。等待用户"继续下一步工作"启动。

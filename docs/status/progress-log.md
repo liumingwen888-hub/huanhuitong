@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S7-1 市场目录与 V9 迁移实施完成
+
+- V9 market_configs：(market_key, config_version) 主键、版本化只增不改（平台无 UPDATE）、点差/精度/限额/TTL/容差七项 CHECK、四方向市场种子（TTL 60s/quote_scale 8/点差 50bp/容差 1000bp）。
+- contracts/exchange.ts（MarketDirectionSnapshot）+ 平台市场仓储（findActive 最高版本/listActive DISTINCT ON）。
+- 验证：build/typecheck/architecture(162 模块 0 违规)/unit 235/S7MK 4 项/数据库回归（M06/M14/M16 已知环境边界）；迁移钉 M03/M04/M07(39 表)/M08/边界×2 更新至 V9。
+
 ## 2026-08-19 — 阶段 7 总体规划 v1.0 READY + S7-1 详细计划完成，等待外部复审
 
 - 用户裁决五项设计决策按建议值：QuoteSourcePort+Fake、四方向市场、买方所得向下舍入、点差内含、TTL 60s。
