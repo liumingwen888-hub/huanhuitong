@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S8-6 结算/释放/冲正详细计划完成，等待外部复审
+
+- fiatPayoutSucceeded/Failed 两存一增：新增 fiatPayoutReversed 补偿模板（DR 上游/CR 可用 + 费用冲回），三动作幂等键互斥。
+- 三路径编排（settle/release/reverse）全部 CAS 收口；费用不可扣 fail-closed 与 S6-6 同型。S8ST01-07 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S8-5 回调接收与 UNKNOWN 查询实施完成
 
 - V13 callback_inbox：(provider_id, provider_event_id) UNIQUE 去重锚，只增不改。
