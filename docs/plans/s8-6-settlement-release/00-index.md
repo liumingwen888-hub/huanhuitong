@@ -1,6 +1,6 @@
 # S8-6 结算/释放/冲正 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（法币出站资金终态）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S8-6 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（法币出站资金终态）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S8-6 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -49,6 +49,19 @@ Create：`fiatpayout/application/payout-settlement.service.ts`、`apps/platform/
 ## 边界与不做
 
 - 不做队列 worker 编排（S8-8 验收统一）；不做真实上游回款对账（生产）；不做 UPSTREAM_COST 的充值补足流程（运营动作，合成期测试直接播种）。
+
+## 实施裁决记录（2026-08-19）
+
+1. 测试种子教训：直接 SQL 播种账本必须（a）借贷平衡（内核 DEFERRABLE 触发器拦单边）且（b）同步 account_balances 投影（内核只维护自己过账的增量）——两处测试修正均暴露既有防线的正确性。
+2. fiatPayoutReversed 按 Create 型新增落地（镜像结算 + 费用冲回），四模板动作键 SETTLE/RELEASE/REVERSE/FREEZE 互斥。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（193 模块、212 依赖）。
+- unit 31 文件 246/246 PASS。
+- S8ST01–S8ST07 全 PASS：五账户终态（冻结 0/可用 −4,998,000/上游 95,000,000/费用收入 −2,000）+ 收口关联 + 通知、SUCCEEDED 重结算拒单笔、释放全额回可用、冲正镜像（可用复原 +10M、上游复原 100M、费用收入清零）、非法前态矩阵四路拒、费用不可扣 fail-closed 停留 ACCEPTED 零 SETTLE、三路径通知各一且三动作账本各恰一笔。
+- 数据库回归 512/515（M06/M14/M16 已知环境边界项）；integration 109/109。
+- 交付物：fiatPayoutReversed 模板、仓储三 CAS（markSucceeded/markRefunded/markReversed）、PayoutSettlementService 三路径、S8ST 集成规格。
 
 ## 停止条件
 

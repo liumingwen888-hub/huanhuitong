@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 8 进行中（S8-1～S8-5 已实施 VERIFIED，2026-08-19）。S8-6"结算/释放/冲正"详细计划 v1.0 已完成（`docs/plans/s8-6-settlement-release/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 8 进行中（阶段 1–7 VERIFIED，S8-1～S8-6 已实施 VERIFIED，2026-08-19）。
 
-复审重点：新增 fiatPayoutReversed 冲正补偿模板（镜像成功过账，REVERSE 动作与 SETTLE/RELEASE 互斥）、费用可扣性 fail-closed 与 S6-6 对齐、冲正的合成语义边界（上游回款对账生产阶段）。复审通过后实施（无迁移）。
+下一步：**S8-7 对账 + Telegram UX**详细计划——订单↔供应商报告↔账本三层对账（callback_inbox 与订单状态映射一致性）+ /payout 命令族（能力/报价/确认/状态）。等待用户"继续下一步工作"启动。

@@ -187,6 +187,60 @@ export class PostgresPayoutOrderRepository implements PayoutOrderRepository {
     );
     return result.rows.length === 1;
   }
+
+  public async markSucceeded(
+    context: TransactionContext,
+    input: {
+      readonly payoutOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE payout_orders SET status = 'SUCCEEDED',
+         settlement_ledger_transaction_id = $2::uuid,
+         updated_at = clock_timestamp()
+       WHERE payout_order_id = $1::uuid AND status = 'ACCEPTED'
+       RETURNING payout_order_id`,
+      [input.payoutOrderId, input.settlementLedgerTransactionId]
+    );
+    return result.rows.length === 1;
+  }
+
+  public async markRefunded(
+    context: TransactionContext,
+    input: {
+      readonly payoutOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE payout_orders SET status = 'REFUNDED',
+         settlement_ledger_transaction_id = $2::uuid,
+         updated_at = clock_timestamp()
+       WHERE payout_order_id = $1::uuid AND status = 'FAILED'
+       RETURNING payout_order_id`,
+      [input.payoutOrderId, input.settlementLedgerTransactionId]
+    );
+    return result.rows.length === 1;
+  }
+
+  public async markReversed(
+    context: TransactionContext,
+    input: {
+      readonly payoutOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE payout_orders SET status = 'REVERSED',
+         settlement_ledger_transaction_id = $2::uuid,
+         updated_at = clock_timestamp()
+       WHERE payout_order_id = $1::uuid AND status = 'SUCCEEDED'
+       RETURNING payout_order_id`,
+      [input.payoutOrderId, input.settlementLedgerTransactionId]
+    );
+    return result.rows.length === 1;
+  }
 }
 
 interface ProviderConfigRow {

@@ -299,6 +299,26 @@ export function fiatPayoutFailed(input: {
   );
 }
 
+export function fiatPayoutReversed(input: {
+  readonly userAvailableAccountId: LedgerAccountId;
+  readonly upstreamCostAccountId: LedgerAccountId;
+  readonly feeIncomeAccountId: LedgerAccountId;
+  readonly amount: string;
+  readonly feeAmount: string;
+  readonly orderId: string;
+}): TemplateResult {
+  if (!positiveAmount(input.amount)) return fail('AMOUNT_INVALID');
+  const lines = [
+    line(input.upstreamCostAccountId, 'DEBIT', input.amount),
+    line(input.userAvailableAccountId, 'CREDIT', input.amount)
+  ];
+  if (positiveAmount(input.feeAmount)) {
+    lines.push(line(input.feeIncomeAccountId, 'DEBIT', input.feeAmount));
+    lines.push(line(input.userAvailableAccountId, 'CREDIT', input.feeAmount));
+  }
+  return ok(`FIAT_PAYOUT:${input.orderId}:REVERSE:0`, 'FIAT_PAYOUT', lines);
+}
+
 Object.freeze({
   depositConfirmed,
   internalTransfer,
@@ -313,5 +333,6 @@ Object.freeze({
   exchangeReleased,
   fiatPayoutRequested,
   fiatPayoutSucceeded,
-  fiatPayoutFailed
+  fiatPayoutFailed,
+  fiatPayoutReversed
 });

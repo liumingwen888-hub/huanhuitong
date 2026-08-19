@@ -49,6 +49,27 @@ export interface PayoutOrderRepository {
     context: TransactionContext,
     input: { readonly payoutOrderId: string; readonly reason: string }
   ): Promise<boolean>;
+  markSucceeded(
+    context: TransactionContext,
+    input: {
+      readonly payoutOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean>;
+  markRefunded(
+    context: TransactionContext,
+    input: {
+      readonly payoutOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean>;
+  markReversed(
+    context: TransactionContext,
+    input: {
+      readonly payoutOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean>;
 }
 
 export interface ProviderConfigRepository {

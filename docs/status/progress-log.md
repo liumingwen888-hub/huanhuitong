@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S8-6 结算/释放/冲正实施完成
+
+- fiatPayoutReversed 补偿模板（镜像结算 + 费用冲回）；四动作幂等键互斥。
+- PayoutSettlementService 三路径：settle（五账户终态 + 费用 fail-closed）/ release（全额回可用）/ reverse（补偿镜像）；全部 CAS 收口。
+- 测试种子两教训：单边播种被平衡触发器拦、投影须手动同步——既有防线正确性的旁证。
+- 验证：build/typecheck/architecture(193 模块 0 违规)/unit 246/S8ST 7 项/database 512-515（已知三件套）/integration 109。
+
 ## 2026-08-19 — S8-6 结算/释放/冲正详细计划完成，等待外部复审
 
 - fiatPayoutSucceeded/Failed 两存一增：新增 fiatPayoutReversed 补偿模板（DR 上游/CR 可用 + 费用冲回），三动作幂等键互斥。
