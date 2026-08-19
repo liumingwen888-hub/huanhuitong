@@ -24,4 +24,8 @@ export interface QuoteRepository {
     context: TransactionContext,
     quoteId: string
   ): Promise<QuoteSnapshot | null>;
+  expireElapsed(
+    context: TransactionContext,
+    limit: number
+  ): Promise<readonly string[]>;
 }

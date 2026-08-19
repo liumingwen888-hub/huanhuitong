@@ -38,4 +38,23 @@ export interface ExchangeOrderRepository {
       readonly settlementLedgerTransactionId: string;
     }
   ): Promise<boolean>;
+  markFailed(
+    context: TransactionContext,
+    input: { readonly exchangeOrderId: string; readonly reason: string }
+  ): Promise<boolean>;
+  markExpired(
+    context: TransactionContext,
+    exchangeOrderId: string
+  ): Promise<boolean>;
+  markRefunded(
+    context: TransactionContext,
+    input: {
+      readonly exchangeOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean>;
+  findExpirable(
+    context: TransactionContext,
+    input: { readonly staleBefore: Date; readonly limit: number }
+  ): Promise<readonly ExchangeOrderSnapshot[]>;
 }

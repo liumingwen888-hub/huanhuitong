@@ -54,6 +54,8 @@ const ORDER_COLUMNS = `exchange_order_id, order_ref, uid, quote_id,
     AS settlement_ledger_transaction_id,
   failure_reason, created_at`;
 
+const ORDER_SELECT = `SELECT ${ORDER_COLUMNS} FROM exchange_orders`;
+
 export class PostgresExchangeOrderRepository
   implements ExchangeOrderRepository
 {
@@ -140,5 +142,67 @@ export class PostgresExchangeOrderRepository
       [input.exchangeOrderId, input.settlementLedgerTransactionId]
     );
     return result.rows.length === 1;
+  }
+
+  public async markFailed(
+    context: TransactionContext,
+    input: { readonly exchangeOrderId: string; readonly reason: string }
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE exchange_orders SET status = 'FAILED',
+         failure_reason = $2, updated_at = clock_timestamp()
+       WHERE exchange_order_id = $1::uuid
+         AND status IN ('FUNDS_RESERVED', 'EXECUTING')
+       RETURNING exchange_order_id`,
+      [input.exchangeOrderId, input.reason]
+    );
+    return result.rows.length === 1;
+  }
+
+  public async markExpired(
+    context: TransactionContext,
+    exchangeOrderId: string
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE exchange_orders SET status = 'EXPIRED',
+         updated_at = clock_timestamp()
+       WHERE exchange_order_id = $1::uuid
+         AND status IN ('FUNDS_RESERVED', 'EXECUTING')
+       RETURNING exchange_order_id`,
+      [exchangeOrderId]
+    );
+    return result.rows.length === 1;
+  }
+
+  public async markRefunded(
+    context: TransactionContext,
+    input: {
+      readonly exchangeOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE exchange_orders SET status = 'REFUNDED',
+         settlement_ledger_transaction_id = $2::uuid,
+         updated_at = clock_timestamp()
+       WHERE exchange_order_id = $1::uuid
+         AND status IN ('FAILED', 'EXPIRED')
+       RETURNING exchange_order_id`,
+      [input.exchangeOrderId, input.settlementLedgerTransactionId]
+    );
+    return result.rows.length === 1;
+  }
+
+  public async findExpirable(
+    context: TransactionContext,
+    input: { readonly staleBefore: Date; readonly limit: number }
+  ): Promise<readonly ExchangeOrderSnapshot[]> {
+    const result = await context.executeSql<ExchangeOrderRow>(
+      `${ORDER_SELECT} WHERE status IN ('FUNDS_RESERVED', 'EXECUTING')
+         AND created_at < $1
+       ORDER BY created_at LIMIT $2`,
+      [input.staleBefore, input.limit]
+    );
+    return result.rows.map(toSnapshot);
   }
 }

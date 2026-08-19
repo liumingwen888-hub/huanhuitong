@@ -226,6 +226,23 @@ export function exchangeSettled(input: {
   );
 }
 
+export function exchangeReleased(input: {
+  readonly userAvailableAccountId: LedgerAccountId;
+  readonly userFrozenAccountId: LedgerAccountId;
+  readonly sellAmount: string;
+  readonly orderId: string;
+}): TemplateResult {
+  if (!positiveAmount(input.sellAmount)) return fail('AMOUNT_INVALID');
+  return ok(
+    `EXCHANGE:${input.orderId}:RELEASE:0`,
+    'EXCHANGE',
+    [
+      line(input.userFrozenAccountId, 'DEBIT', input.sellAmount),
+      line(input.userAvailableAccountId, 'CREDIT', input.sellAmount)
+    ]
+  );
+}
+
 // ─── 7. Fiat payout ───
 export function fiatPayoutRequested(input: {
   readonly userAvailableAccountId: LedgerAccountId;
@@ -293,6 +310,7 @@ Object.freeze({
   withdrawalFailed,
   exchangeFrozen,
   exchangeSettled,
+  exchangeReleased,
   fiatPayoutRequested,
   fiatPayoutSucceeded,
   fiatPayoutFailed

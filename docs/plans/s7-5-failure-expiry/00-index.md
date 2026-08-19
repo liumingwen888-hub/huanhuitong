@@ -1,6 +1,6 @@
 # S7-5 失败/过期/UNKNOWN 处理 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（资金释放路径）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S7-5 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（资金释放路径）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S7-5 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -48,6 +48,19 @@ Create：`modules/exchange/application/exchange-lifecycle.service.ts`、`apps/pl
 ## 边界与不做
 
 - 不做自动失败判定（仅人工 reason 入口与超时扫描）；不做真实上游 UNKNOWN 查询（生产）；不做对账（S7-6）。
+
+## 实施裁决记录（2026-08-19）
+
+1. 报价清扫用 `FOR UPDATE SKIP LOCKED` 子查询限批量——多实例并发清扫安全。
+2. release 幂等语义与提现不同：REFUNDED 后再调用返回 DENIED（非法状态）而非幂等成功——释放的唯一性由 RELEASE 模板键 + CAS + 状态门三层保证，重复调用属调用方错误。
+
+## 实施验证（2026-08-19，macOS/arm64 本本）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（173 模块、195 依赖）。
+- unit 30 文件 238/238 PASS。
+- S7XR01–S7XR06 全 PASS：fail→release 全额回可用 + 单笔 RELEASE + 通知一条；EXECUTING 卡单可释放且释放后结算被拒；SETTLED 不可失败不可释放零过账；超时扫描仅命中配置 TTL 内超时单（无配置 SKIPPED 零动作）；报价清扫仅过期 ACTIVE（未过期/已消费不动）；空 reason 拒绝 + REFUNDED 后重复释放/失败均拒 + 账本仍单笔。
+- 数据库回归 468/471（M06/M14/M16 已知环境边界项）；integration 97/97。
+- 交付物：exchangeReleased 模板、订单仓储四 CAS + findExpirable、报价仓储 expireElapsed（SKIP LOCKED）、ExchangeLifecycleService、S7XR 集成规格。
 
 ## 停止条件
 

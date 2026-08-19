@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S7-5 失败/过期/UNKNOWN 处理实施完成
+
+- exchangeReleased 模板（与 FREEZE/SETTLE 动作互斥）；两步释放（markFailed 带 reason / markExpired 扫描 → release 资金动作）。
+- 挂单超时 fail-closed（ConfigStore TTL，无配置零动作）；报价清扫 SKIP LOCKED 批量安全。
+- 验证：build/typecheck/architecture(173 模块 0 违规)/unit 238/S7XR 6 项/database 468-471（已知三件套）/integration 97。
+
 ## 2026-08-19 — S7-5 失败/过期/UNKNOWN 处理详细计划完成，等待外部复审
 
 - 新增 exchangeReleased 模板（与 FREEZE/SETTLE 动作互斥）；两步释放与挂单超时 fail-closed 均沿用阶段 6 验证模式。

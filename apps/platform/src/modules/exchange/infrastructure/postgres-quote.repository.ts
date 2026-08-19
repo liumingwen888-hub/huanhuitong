@@ -86,4 +86,22 @@ export class PostgresQuoteRepository implements QuoteRepository {
     );
     return result.rows[0] ? toSnapshot(result.rows[0]) : null;
   }
+
+  public async expireElapsed(
+    context: TransactionContext,
+    limit: number
+  ): Promise<readonly string[]> {
+    const result = await context.executeSql<{ quote_id: string }>(
+      `UPDATE quotes SET status = 'EXPIRED'
+        WHERE quote_id IN (
+          SELECT quote_id FROM quotes
+            WHERE status = 'ACTIVE' AND expires_at <= clock_timestamp()
+            ORDER BY expires_at LIMIT $1
+          FOR UPDATE SKIP LOCKED
+        )
+        RETURNING quote_id::text AS quote_id`,
+      [limit]
+    );
+    return result.rows.map((row) => row.quote_id);
+  }
 }
