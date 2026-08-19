@@ -1,6 +1,6 @@
 # S8-3 创建与冻结 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（法币出站冻结编排）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S8-3 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（法币出站冻结编排）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S8-3 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -42,6 +42,19 @@ Create：`modules/fiatpayout/application/payout-request.service.ts`、`apps/plat
 ## 边界与不做
 
 - 不做供应商提交（S8-4）、回调（S8-5）、结算/释放（S8-6）；不做收款人真实校验（token 即引用，真实性生产阶段）。
+
+## 实施裁决记录（2026-08-19）
+
+1. PayoutCommand.uid 品牌化为 Uid（与 WithdrawalCommand 一致——裸 string 与品牌类型混用导致 RiskGate 调用类型错误）。
+2. 供应商幂等键格式 `PPO:{providerId}:{orderRef}`（计划冻结值原样落地）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（183 模块、203 依赖）。
+- unit 31 文件 246/246 PASS。
+- S8PR01–S8PR07 全 PASS：七维绑定拒绝（含 operationType='withdrawal' 跨类证明）零落库、同 orderRef 重放 ALREADY 单笔冻结、未知路线/限额越界零写入、冻结方向与订单快照（fee/config 版本/服务端摘要/供应商幂等键）全断言、余额不足与 RiskGate 拒绝双零写入、命令面无资产参数、收款人 token 形状前置校验零写入。
+- 数据库回归 491/494（M06/M14/M16 已知环境边界项）；integration 109/109。
+- 交付物：`payout-request.service.ts`、contracts 命令/结果类型、S8PR 集成规格。
 
 ## 停止条件
 

@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S8-3 创建与冻结实施完成
+
+- PayoutRequestService：七维证明绑定（assetSummary 绑路线）→ 配置派生源资产 → 限额/RiskGate/余额预检 → fiatPayoutRequested 冻结 → 订单创建（服务端摘要 + PPO 供应商幂等键）→ 通知。
+- PayoutCommand.uid 品牌化统一（裸 string 混用修正）。
+- 验证：build/typecheck/architecture(183 模块 0 违规)/unit 246/S8PR 7 项/database 491-494（已知三件套）/integration 109。
+
 ## 2026-08-19 — S8-3 创建与冻结详细计划完成，等待外部复审
 
 - 七维证明绑定（operationType='fiat-payout' 已在联合类型，零扩展）；assetSummary 绑定路线（源资产配置派生）。

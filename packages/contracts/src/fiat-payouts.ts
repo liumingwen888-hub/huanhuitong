@@ -1,3 +1,5 @@
+import type { Uid } from './identity.js';
+
 export type PayoutOrderStatus =
   | 'FUNDS_RESERVED'
   | 'SUBMITTING'
@@ -40,6 +42,28 @@ export interface ProviderConfigSnapshot {
   readonly callbackSecretRef: string;
   readonly activatedAt: string;
 }
+
+export interface PayoutCommand {
+  readonly orderRef: string;
+  readonly uid: Uid;
+  readonly route: string;
+  readonly amount: string;
+  readonly beneficiaryRef: string;
+}
+
+export type PayoutCommandResult =
+  | {
+      readonly outcome: 'ACCEPTED';
+      readonly order: PayoutOrderSnapshot;
+    }
+  | {
+      readonly outcome: 'ALREADY_REQUESTED';
+      readonly order: PayoutOrderSnapshot;
+    }
+  | {
+      readonly outcome: 'REJECTED';
+      readonly reasonCode: PayoutContractErrorCode;
+    };
 
 export type PayoutContractErrorCode =
   | 'PAYOUT_COMMAND_INVALID'
