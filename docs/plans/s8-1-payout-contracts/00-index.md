@@ -1,6 +1,6 @@
 # S8-1 代付合同与 V12 迁移 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（法币出站 schema 基础）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S8-1 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（法币出站 schema 基础）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过；同日显式授权 V12 迁移写入）。S8-1 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -41,6 +41,20 @@ Create：`database/migrations/V12__stage_8_fiat_payouts.sql`、`packages/contrac
 - S8PO03 provider_idempotency_key UNIQUE 拒绝第二单同键
 - S8PO04 状态机 CHECK 拒绝非法值；形状 CHECK（SUCCEEDED 无收口被拒）
 - S8PO05 provider_configs 版本切换（新版本活跃、旧行保留）；callback_secret_ref 无密钥本体形状
+
+## 实施裁决记录（2026-08-19）
+
+1. payout_orders 增加 `provider_id` 列并构成复合 FK (provider_id, provider_config_version) → provider_configs——收口到具体供应商版本的审计链（计划冻结面的小幅收敛）。
+2. 迁移内表序：provider_configs 先建（payout_orders 的 FK 依赖）——初版顺序导致迁移失败，已修正。
+3. 收款人摘要格式 `sha256:{base64url 43 字符}`（与 inbox 摘要同风格）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（181 模块、199 依赖）。
+- unit 31 文件 246/246 PASS。
+- S8PO01–S8PO05 全 PASS：种子配置 + worker 只读/写拒 + 平台 UPDATE 拒（UOW 包装断言）、order_ref 幂等、provider 幂等键全局 UNIQUE（第二单拒绝）、非法状态/SUCCEEDED 无收口/明文收款人/坏摘要四类 CHECK 拒绝、配置版本切换（旧行保留 + 密钥只存 vault: 引用）。
+- 数据库回归 479/482（M06/M14/M16 已知环境边界项）；integration 109/109（一次 registration-concurrency 已知抖动重跑通过）。
+- 交付物：`V12__stage_8_fiat_payouts.sql`、`packages/contracts/src/fiat-payouts.ts`（index 导出）、`modules/fiatpayout/{application/payout.repository.ts, infrastructure/postgres-payout.repository.ts}`、S8PO 集成规格；迁移钉更新至 V12（43 表）。
 
 ## 停止条件
 

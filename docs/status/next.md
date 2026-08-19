@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 8 总体规划 v1.0 READY（五项设计决策已裁决）。S8-1"代付合同与 V12 迁移"详细计划 v1.0 已完成（`docs/plans/s8-1-payout-contracts/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 8 进行中（阶段 1–7 VERIFIED，S8-1 已实施 VERIFIED，2026-08-19）。
 
-复审重点：收款人零明文设计（token 引用 + SHA-256 摘要双 CHECK）、provider_idempotency_key UNIQUE 作为"同意图只付一次"的数据库锚、八态状态机的 UNKNOWN/REVERSED 语义、callback_secret_ref 只存引用不存密钥本体。复审通过并显式授权 V12 后实施。
+下一步：**S8-2 能力与报价**详细计划——路线能力查询（provider_configs 驱动）、代付报价（固定费 + 限额，纯 BigInt）、GetPayoutCapabilities 接口。等待用户"继续下一步工作"启动。

@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S8-1 代付合同与 V12 迁移实施完成
+
+- V12 两表：provider_configs（版本化只增不改 + callback_secret_ref 仅存 vault: 引用）先建、payout_orders（八态 + 收款人双形状 CHECK + provider 幂等键全局 UNIQUE + 复合 FK 收口供应商版本）后建——表序修正后迁移通过。
+- contracts/fiat-payouts.ts（12 错误码 + 双快照）+ 平台两仓储。
+- 验证：build/typecheck/architecture(181 模块 0 违规)/unit 246/S8PO 5 项/database 479-482（已知三件套）/integration 109（一次已知抖动重跑过）。
+
 ## 2026-08-19 — 阶段 8 总体规划 v1.0 READY + S8-1 详细计划完成，等待外部复审
 
 - 用户裁决五项按建议值：支付门设、收款人 token+摘要零明文、供应商映射版本化、HMAC 验真失败永久拒、UNKNOWN 查询优先。
