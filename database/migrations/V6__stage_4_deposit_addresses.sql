@@ -48,6 +48,7 @@ CREATE TABLE deposit_detections (
   amount bigint NOT NULL,
   confirmations integer NOT NULL DEFAULT 0,
   status text NOT NULL DEFAULT 'DETECTED',
+  ledger_transaction_id uuid,
   detected_at timestamptz NOT NULL DEFAULT clock_timestamp(),
   updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
   CONSTRAINT fk_deposit_detections_address

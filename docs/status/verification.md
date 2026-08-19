@@ -1,5 +1,15 @@
 # 最近验证
 
+## 2026-08-17 — S4-4 确认等待与重组处理实施（macOS/arm64 本地）
+
+- 写入：Create 2（deposit-confirmation.service.ts、database spec）+ Modify（V6 补 ledger_transaction_id 列）。
+- **DepositConfirmationService**：
+  - processConfirmations：DETECTED + 确认达标 → CAS 转 CONFIRMED（幂等——已 CONFIRMED 跳过）；
+  - processReorg：POSTED → 冲正（如有 Reverser）或标记（无 Reverser）；CONFIRMED → 阻止；DETECTED → 阻止——全部转 REORG_DETECTED 作为审计痕迹；
+  - refreshConfirmations：批量刷新已有检测的确认数（S4-3 遗留完善）；
+  - **UNKNOWN 不推断**：无 Reverser 时 POSTED 标记但不自动冲正/重付。
+- 验证：S4-4 spec 6/6——确认推进（01）、阈值+幂等（02）、重组 CONFIRMED→阻止（03）、POSTED 无 Reverser→标记（04）、DETECTED→阻止（05）、不存在 txid 零操作（06）。全量 unit 223/223、db 340/368（M06/M14/M16 已知边界）、architecture 0 违规（131 模块）、三锁无漂移。
+
 ## 2026-08-17 — S4-3 充值检测 Worker 实施（macOS/arm64 本地）
 
 - 写入：Create 3（chain-scanner.port.ts + fake-chain-scanner.ts、deposit-detection.worker.ts、database spec）。

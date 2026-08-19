@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S4-4 实施完成（确认与重组落地），等待外部复审
+
+- Create 2 / Modify 1（V6 补列）；确认 CAS + 重组阻止/冲正/UNKNOWN + 刷新全链可证。
+- S4-4 spec 6/6；unit 223/223；db 340/368；arch 0 违规（131 模块）。
+- 状态收敛：S4-4 `IMPLEMENTED`，等待用户外部复审；S4-5（充值入账编排）NOT_STARTED。
+
 ## 2026-08-17 — S4-4 详细计划 v1.0 完成，等待外部复审
 
 - 冻结合同：processConfirmations CAS + processReorg（已 POSTED→冲正/已 CONFIRMED→阻止/UNKNOWN→标记等待）+ refreshConfirmations（S4-3 遗留）。
