@@ -92,3 +92,16 @@ Task 4 已实现并验证单连接 Unit of Work、TransactionContext 禁止逃�
 | 归集失败或链上费用超支 | FakeBroadcaster 失败路径 + 上游成本账户记录 | S4A12 |
 | 链上余额与账本不一致 | 链上对账差异检测+告警（零容忍不自动修复） | S4A13 |
 | 充值模块渠道耦合 | deposits 零 grammY/telegram 依赖（静态+depcruise） | S4A14 |
+
+## 阶段 5 威胁模型增补（2026-08-17，S5-6）
+
+| 威胁 | 控制 | 证据 |
+|---|---|---|
+| 转账重复执行 | order_ref UNIQUE + 幂等查重 + PostMoneyService 幂等键 | S5A02 |
+| 转账余额超支 | PostMoneyService 用途感知正常余额防线 + 行锁 | S5A03 |
+| 并发双花 | 行锁 + order_ref UNIQUE 多层防线 | S5A04 |
+| 领取链接重放 | claim_code UNIQUE + markClaimed CAS | S5A06 |
+| 过期链接被领取 | expires_at > now 条件 + 惰性退款 | S5A07 |
+| 红包抢夺（同用户多次领取） | UNIQUE(packet_id, claimer_uid) + ON CONFLICT | S5A09 |
+| 过期红包退款遗漏 | 惰性退款触发 + 仅退剩余 | S5A10 |
+| 转账模块渠道耦合 | transfers 零 grammY/telegram 依赖（静态+depcruise） | S5A12 |

@@ -1,5 +1,12 @@
 # 最近验证
 
+## 2026-08-17 — S5-6 阶段 5 验收（macOS/arm64 本地）
+
+- **12 项验收全部 PASS**：转账正常+通知（01）、幂等重放（02）、余额不足（03）、并发双花恰一（04）、链接创建+领取（05）、重复拒绝（06）、过期退款（07）、红包多人领取（08）、重复拒绝（09）、过期退剩余（10）、命令分类+零插值（11）、transfers 零渠道依赖（12）。
+- 全量：unit 226/226、architecture 0 违规（146 模块）、integration 含阶段验收全过。
+- 威胁模型增补 8 项转账/红包威胁→控制→证据映射。
+- **阶段 5 代码 READY 等待用户验收**（四项长期授权保持 0）。
+
 ## 2026-08-17 — S5-5 Telegram UX 接线实施（macOS/arm64 本地）
 
 - 写入：Create 3（transfer-commands.ts 分类器、transfer-replies.ts 零动态插值常量、transfer-command.handler.ts 编排）+ Modify 1（controller 扩展 transfer 命令分支）+ unit spec。
