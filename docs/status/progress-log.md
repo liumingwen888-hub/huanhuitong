@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S6-7 Telegram UX 详细计划完成，等待外部复审
+
+- /withdraw 三参数命令 + /withdrawstatus 查询；开仓即真实绑定值（S6-2 合同调用侧落地，DEMO 占位路径收敛）。
+- 七个提现 outbox 主题的单处理器 + 常量文案（类别化零插值）；worker topicHandlers 注册。
+- 密码流复用阶段 2 已验证安全流程，只接证明消费。S6WU01-06 冻结（单元级 + Fake）。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S6-6 提现完成/失败结算实施完成（含一项真实缺陷修复）
 
 - 交付 WithdrawalSettlementService：settleConfirmed（链上权威复查→四账户结算→CAS CONFIRMED→通知；费用不可扣停留 BROADCAST fail-closed）、release（REJECTED/FAILED/EXPIRED→RELEASE 过账→REFUNDED）、expireStalePending（ConfigStore TTL，无配置零过期）。
