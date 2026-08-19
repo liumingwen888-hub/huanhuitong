@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S8-4 供应商提交端口详细计划完成，等待外部复审
+
+- 防重付三层防线闭合：确定性键派生（已落地）+ V12 UNIQUE（已落地）+ FakeBankProvider 按键去重（本任务）——重试同键重放，结构上不可能双付。
+- submit 抛错=UNKNOWN 零写入停留 SUBMITTING；查询端口为 S8-5 预置。S8PS01-07 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S8-3 创建与冻结实施完成
 
 - PayoutRequestService：七维证明绑定（assetSummary 绑路线）→ 配置派生源资产 → 限额/RiskGate/余额预检 → fiatPayoutRequested 冻结 → 订单创建（服务端摘要 + PPO 供应商幂等键）→ 通知。
