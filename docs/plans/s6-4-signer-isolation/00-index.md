@@ -1,6 +1,6 @@
 # S6-4 Signer 隔离接口 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（密钥边界）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S6-4 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（密钥边界）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过并授权实施）。S6-4 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -40,6 +40,12 @@ withdrawals/application            signer/domain
 
 canonical request 绑定 withdrawalId + orderRef + amount + toAddress + fromAddress + feeAmount：任一字段变化 → digest 变化 → 旧签名不可复用；同订单重放 → 相同请求 → 相同签名。S6-5 广播时再校验 request 与订单一致（纵深）。
 
+## 实施裁决记录（2026-08-19）
+
+1. canonical request 的字段来源切分：amount/toAddress/orderRef/withdrawalId/feeAmount 取**订单事实**，network/fromAddress 取**活跃策略**（热钱包轮换场景下订单金额与目标不可变，出账钱包跟随运营策略）。
+2. FakeSigner 内置摘要一致性校验（canonicalFieldsMatch）——篡改请求直接 SIGNER_DIGEST_MISMATCH，Fake 亦守边界。
+3. 签名失败：SignerError 原样传播（调用方决定重试节奏），订单停留 SIGNING 由幂等重签恢复——与计划的崩溃恢复路径一致。
+
 ## 冻结未来工程矩阵
 
 Create：`modules/signer/domain/{transaction-signer.port.ts, vault.port.ts, fake-signer.ts, canonical-digest.ts}`、`modules/withdrawals/application/withdrawal-signing.service.ts`、`apps/platform/test/unit/canonical-digest.spec.ts`（S6WS 单元部分）、`apps/platform/test/database/withdrawal-signing.integration.spec.ts`（S6WS 集成部分）。Modify：无（contracts 不动，端口按 S4-6 先例留在平台侧）。
@@ -57,6 +63,14 @@ Create：`modules/signer/domain/{transaction-signer.port.ts, vault.port.ts, fake
 
 - 不做真实密钥存储/Vault 实现/独立进程隔离（生产阶段独立授权）；不做广播（S6-5）；不做热钱包余额管理（阶段 10 运营范围）。
 - 签名产物不持久化：有意为之（避免签名落库引出新的敏感数据治理面）；确定性 + 广播幂等保证安全。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（158 模块、185 依赖）。
+- unit 28 文件 228/228 PASS（含 canonical-digest 2 项：七字段任一变化摘要必变、属性序不影响、序列化无密钥材料字段）。
+- S6WS01–S6WS04 集成全 PASS：APPROVED→SIGNING 确定性签名、SIGNING 幂等重签（同摘要同签名引用）、非可签状态零签名调用、签名器失败后订单停留 SIGNING 且重试成功。
+- 数据库回归 426/429（M06/M14/M16 已知环境边界项）。
+- 交付物：`modules/signer/domain/{transaction-signer.port, vault.port, canonical-digest, fake-signer, signer.errors}.ts`、`modules/withdrawals/application/withdrawal-signing.service.ts`、单测与集成测试两文件。
 
 ## 停止条件
 

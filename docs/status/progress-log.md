@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S6-4 Signer 隔离接口实施完成
+
+- 交付 signer 域：TransactionSignerPort（业务唯一依赖面）、VaultPort（HSM 型边界，无密钥返回方法）、canonicalDigest（固定键 JSON 序列化 + SHA-256）、FakeSigner（确定性 + 请求记录 + 可配置失败 + 摘要一致性校验）。
+- WithdrawalSigningService：APPROVED→CAS SIGNING→canonical request（订单事实 + 活跃策略热钱包）→签名；SIGNING 幂等重签；签名产物不落库（确定性 + 广播幂等）。
+- 验证：build/typecheck/architecture(158 模块 0 违规)/unit 228/S6WS 4+2 项/数据库回归 426-429（M06/M14/M16 已知环境边界）。
+
 ## 2026-08-19 — S6-4 Signer 隔离接口详细计划完成，等待外部复审
 
 - 同进程接口隔离（已裁决决策 2）：业务侧仅依赖 TransactionSignerPort；VaultPort 为 HSM 型边界（入摘要、出签名，无密钥返回方法）。
