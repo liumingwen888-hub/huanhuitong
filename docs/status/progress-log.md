@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S7-2 报价源端口与报价服务详细计划完成，等待外部复审
+
+- 报价快照必须持久化（V10）：确认重校验同一份报价（quote_id + TTL + 未消费），"有期限可追溯"语义落地；quotes 有生命周期（ACTIVE/CONSUMED/EXPIRED），区别于 market_configs 只增不改。
+- 纯 BigInt 数学：floor(sell·rate·10^(buyDec−sellDec)·(10000−spread)/10000)，买方所得向下舍入；referenceRate/rate 原样 text 存档，库中无浮点。
+- 防异常汇率：|rate−referenceRate|/referenceRate > toleranceBp 即拒绝（fail-closed 零写入）。S7QT01-07 冻结。唯一下一步：等待用户外部复审（通过时 V10 需显式授权）。
+
 ## 2026-08-19 — S7-1 市场目录与 V9 迁移实施完成
 
 - V9 market_configs：(market_key, config_version) 主键、版本化只增不改（平台无 UPDATE）、点差/精度/限额/TTL/容差七项 CHECK、四方向市场种子（TTL 60s/quote_scale 8/点差 50bp/容差 1000bp）。
