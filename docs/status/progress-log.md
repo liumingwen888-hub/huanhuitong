@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S3-2 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：PostMoneyService（幂等查重→账户校验→行锁+SUM 负余额防线→原子过账→version 递增）、ReverseTransactionService（反向新交易+原交易标记，幂等拒绝二次）、跨资产裁决（模板负责经济语义）、统一负余额裁决。
+- 冻结 Create 4 / Modify 1（仓储两方法按先例登记）。
+- 唯一下一步：等待用户外部复审 S3-2 v1.0。
+
+## 2026-08-17 — S3-1 复审通过与 VERIFIED 收敛，进入 S3-2 规划
+
+- 用户裁决：S3-1 EXTERNAL REVIEW PASS；三项裁决 ACCEPT。S3-1 转 VERIFIED；提交 `dce4ece` 已推送。
+- S3-2"过账内核"详细计划 DESIGNING。
+
 ## 2026-08-17 — S3-1 实施完成（V3 资金 schema 落地），等待外部复审
 
 - Create 6 / Modify 1；五表 + 平衡触发器 + 不可变权限 + 方案 A 开通记录全部实证。
