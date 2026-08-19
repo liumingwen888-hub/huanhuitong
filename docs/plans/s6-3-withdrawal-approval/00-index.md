@@ -1,6 +1,6 @@
 # S6-3 Maker-Checker 审批流 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（资金出站审批权）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S6-3 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（资金出站审批权）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过并授权实施）。S6-3 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -35,6 +35,13 @@
    - 未够票（高额等待第二人）→ 状态保持 PENDING_APPROVAL → Outbox 管理侧事件（`admin.withdrawal-approval-recorded.v1`，等待下一审批人）。
 6. 审计事实即 `withdrawal_approvals` 行（追加式、不可改，S6-1 只授予 INSERT）。
 
+## 实施裁决记录（2026-08-19）
+
+1. 重复投票采用预检（findByWithdrawal 查 adminId）+ UNIQUE 兜底；兜底触发时内核 UOW 包装错误保守映射 DUPLICATE_APPROVAL（S6-2 同型裁决）。
+2. CAS 失败（并发已被处置）返回 `SUPERSEDED` + 当前快照，不视为错误（幂等收敛）。
+3. REJECT 无 reason 时拒绝（`WITHDRAWAL_COMMAND_INVALID`），与 V8 CHECK 的 rejection_reason 非空一致。
+4. RecordApprovalInput.reason 放宽为 `string | null`（exactOptionalPropertyTypes 严格性）。
+
 ## 冻结未来工程矩阵
 
 Create：platform `modules/withdrawals/application/withdrawal-approval.service.ts`、`apps/platform/test/database/withdrawal-approval.integration.spec.ts`（S6WB）。Modify：`packages/contracts/src/withdrawals.ts`（错误码增补 `WITHDRAWAL_UNAUTHORIZED`、`WITHDRAWAL_NOT_PENDING_APPROVAL`）。
@@ -54,6 +61,14 @@ Create：platform `modules/withdrawals/application/withdrawal-approval.service.t
 
 - 不做管理员增强认证 UI/会话（阶段 9 管理后台范围）；服务层以 adminId + AdminAuthorizer 为信任边界，调用方负责认证。
 - 不做 EXPIRED 过期扫描（S6-6 结算计划的定时任务统一处理）；不做签名/广播（S6-4/5）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（152 模块、181 依赖）。
+- unit 27 文件 226/226 PASS。
+- S6WB01–S6WB08 全 PASS：角色拒绝（SUPPORT/非 ACTIVE）零审批行、单审批阈值内一票 APPROVED + 用户通知、双审批两票两管理员（首票后仍 PENDING + 管理事件）、同管理员重复投票拒绝、REJECT 落库 approver/reason + 通知、已结算订单再审拒绝、配置缺失 fail-closed 全双审、并发双批恰好一次迁移 + 两行审批记录。
+- 数据库回归 422/425（M06/M14/M16 已知环境边界项）。
+- 交付物：`apps/platform/src/modules/withdrawals/application/withdrawal-approval.service.ts`、`apps/platform/test/database/withdrawal-approval.integration.spec.ts`、contracts 错误码增补（WITHDRAWAL_UNAUTHORIZED / WITHDRAWAL_NOT_PENDING_APPROVAL）。
 
 ## 停止条件
 

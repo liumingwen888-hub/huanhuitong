@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 6 进行中（阶段 1–5 已 VERIFIED，S6-1/S6-2 已实施 VERIFIED）。S6-3"Maker-Checker 审批流"详细计划 v1.0 已完成（`docs/plans/s6-3-withdrawal-approval/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 6 进行中（阶段 1–5 已 VERIFIED，S6-1/S6-2/S6-3 已实施 VERIFIED，2026-08-19）。
 
-复审重点：分级阈值规则（minAutoAmount/dualApprovalThreshold/maxAmount 三段）、fail-closed 默认（配置缺失一律双审批）、必需角色定为 FINANCE_OFFICER（SUPER_ADMIN 不直接审批的职责分离）、并发双批的 CAS 恰好一次迁移。复审通过后实施（无新迁移）。
+下一步：**S6-4 Signer 隔离接口**详细计划——TransactionSignerPort 纯接口 + Fake 实现（测试）、密钥存储接口（VaultPort，同进程接口隔离裁决已定）、签名意图唯一与防重放、SIGNING 状态编排。等待用户"继续下一步工作"启动。

@@ -22,7 +22,7 @@ export interface RecordApprovalInput {
   readonly adminId: string;
   readonly level: number;
   readonly decision: WithdrawalApprovalDecision;
-  readonly reason?: string;
+  readonly reason?: string | null;
 }
 
 export interface InsertSignerPolicyInput {

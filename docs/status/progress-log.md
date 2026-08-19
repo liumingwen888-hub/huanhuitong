@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S6-3 Maker-Checker 审批流实施完成
+
+- 交付 WithdrawalApprovalService：FINANCE_OFFICER 角色校验 → 订单 PENDING_APPROVAL 前置 → 审批记录（预检 + UNIQUE 兜底）→ ConfigStore 分级阈值（缺失 fail-closed 双审）→ 批准/拒绝 CAS 迁移 → 用户/管理侧 Outbox 通知。
+- 并发双批：审批事实完整落库（两行），状态迁移恰好一次（CAS + SUPERSEDED 幂等返回）。
+- 验证：build/typecheck/architecture(152 模块 0 违规)/unit 226/S6WB 8 项/数据库回归 422-425（M06/M14/M16 已知环境边界）。
+
 ## 2026-08-19 — S6-3 Maker-Checker 审批流详细计划完成，等待外部复审
 
 - 三段分级：自动轨（S6-2 已交付）/ 单审批 / 双审批（不同管理员），阈值 dualApprovalThreshold 走 ConfigStore 版本化配置，缺失即 fail-closed 全双审。
