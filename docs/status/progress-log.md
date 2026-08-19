@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — 阶段 7 总体规划 v1.0 READY + S7-1 详细计划完成，等待外部复审
+
+- 用户裁决五项设计决策按建议值：QuoteSourcePort+Fake、四方向市场、买方所得向下舍入、点差内含、TTL 60s。
+- S7-1 冻结：market_configs 版本化表（(market_key, config_version) 主键、点差/TTL/容差/限额 CHECK、四市场种子）+ contracts + 仓储。
+- 唯一下一步：等待用户外部复审 S7-1 v1.0（通过时 V9 migration 需显式授权）。
+
 ## 2026-08-19 — 阶段 6 用户验收通过（VERIFIED）；阶段 7 总体规划草案 v0.1 启动
 
 - 用户经"继续下一步工作"验收阶段 6：roadmap 转 VERIFIED，阶段 1–6 全部落地。

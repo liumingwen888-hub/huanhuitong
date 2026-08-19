@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 6 VERIFIED（2026-08-19 用户验收通过）。阶段 7"换汇报价、订单、资金状态和对账"总体规划草案 v0.1 已完成（`docs/plans/2026-08-19-stage-7-exchange-master-plan.md`），`DRAFT / 需求确认中`。
+阶段 7 总体规划 v1.0 READY（五项设计决策已裁决）。S7-1"市场目录与 V9 迁移"详细计划 v1.0 已完成（`docs/plans/s7-1-market-catalog/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
 
-待用户裁决五项设计决策：报价来源（建议：QuoteSourcePort + Fake）、合成期市场（建议：USDT 跨链 + BTC/USDT 两市场）、舍入方向（建议：买方所得向下、余数 CLEARING_DIFF）、费用（建议：点差内含）、报价 TTL（建议：市场级配置默认 60 秒）。回复"继续"即按建议值全部通过并冻结 v1.0。
+复审重点：market_configs 采用 signer_policies 同型版本化只增不改（平台无 UPDATE 权限）；四方向市场键格式 `SELL:BUY`；种子参数（TTL 60s/quote_scale 8/点差 50bp/容差 1000bp）。复审通过并显式授权 V9 后实施。
