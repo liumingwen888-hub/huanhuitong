@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S8-2 能力与报价实施完成
+
+- PayoutCapabilityService：能力=provider_configs 纯事实（DISTINCT ON 供应商+路线取最新）；报价=固定费预估（estimate 标注，BigInt 精确）。
+- 验证：build/typecheck/architecture(182 模块 0 违规)/unit 246/S8PC 5 项/database 484-487（已知三件套）/integration 109。
+
 ## 2026-08-19 — S8-2 能力与报价详细计划完成，等待外部复审
 
 - 能力层只读零推导：route/供应商/固定费/限额全部来自 provider_configs 最新版；报价=费用预估（estimate 标注，1:1 折算为 FakeProvider 合成语义）。

@@ -1,6 +1,6 @@
 # S8-2 能力与报价 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（只读能力层，无资金动作）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S8-2 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（只读能力层，无资金动作）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S8-2 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -42,6 +42,14 @@ Create：`modules/fiatpayout/application/payout-capability.service.ts`、`apps/p
 ## 边界与不做
 
 - 不做订单创建/冻结（S8-3）；不做真实汇率（生产）；不做报价 TTL/持久化（裁决见上）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（182 模块、199 依赖）。
+- unit 31 文件 246/246 PASS。
+- S8PC01–S8PC05 全 PASS：能力=配置事实且跟随版本（v2 后能力更新）、费用预估精确（500 万 − 2000 = 4,998,000，estimate 标注）、限额/低于费/畸形拒绝、未知路线 fail-closed、多供应商同路线最新版本胜（config_version 3 覆盖）。
+- 数据库回归 484/487（M06/M14/M16 已知环境边界项）；integration 109/109。
+- 交付物：`payout-capability.service.ts`、仓储 listCapabilities（DISTINCT ON provider+route）、contracts 两快照、S8PC 集成规格。
 
 ## 停止条件
 

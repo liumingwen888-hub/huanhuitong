@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 8 进行中（S8-1 已实施 VERIFIED，2026-08-19）。S8-2"能力与报价"详细计划 v1.0 已完成（`docs/plans/s8-2-capability-quote/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 8 进行中（阶段 1–7 VERIFIED，S8-1/S8-2 已实施 VERIFIED，2026-08-19）。
 
-复审重点：不虚构红线的落地（能力=配置事实零推导；法币金额为标注 estimate 的预估，1:1 折算仅是 FakeProvider 合成语义）、报价不持久化裁决（费用在订单创建时快照，幂等锚已在 V12）。复审通过后实施（无迁移、只读层）。
+下一步：**S8-3 创建与冻结**详细计划——证明绑定（复用 S6-2 七维合同，operationType 'fiat-payout' 扩展）→ 配置校验/限额/RiskGate → fiatPayoutRequested 冻结过账 → 订单创建 + 供应商幂等键生成 → Outbox 通知。等待用户"继续下一步工作"启动。

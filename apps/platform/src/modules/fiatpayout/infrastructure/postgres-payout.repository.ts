@@ -1,4 +1,5 @@
 import type {
+  PayoutCapabilitySnapshot,
   PayoutOrderSnapshot,
   PayoutOrderStatus,
   ProviderConfigSnapshot
@@ -169,6 +170,26 @@ const CONFIG_COLUMNS = `provider_id, config_version, provider_name, route,
 export class PostgresProviderConfigRepository
   implements ProviderConfigRepository
 {
+  public async listCapabilities(
+    context: TransactionContext
+  ): Promise<readonly PayoutCapabilitySnapshot[]> {
+    const result = await context.executeSql<ProviderConfigRow>(
+      `SELECT DISTINCT ON (provider_id, route) ${CONFIG_COLUMNS}
+         FROM provider_configs
+        ORDER BY provider_id, route, config_version DESC`
+    );
+    return result.rows.map((row) => ({
+      providerId: row.provider_id,
+      configVersion: row.config_version,
+      providerName: row.provider_name,
+      route: row.route,
+      sourceAssetCode: row.source_asset_code,
+      fixedFee: row.fixed_fee,
+      minAmount: row.min_amount,
+      maxAmount: row.max_amount
+    }));
+  }
+
   public async findLatestByProvider(
     context: TransactionContext,
     providerId: string

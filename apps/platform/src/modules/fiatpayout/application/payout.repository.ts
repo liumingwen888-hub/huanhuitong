@@ -1,4 +1,5 @@
 import type {
+  PayoutCapabilitySnapshot,
   PayoutOrderSnapshot,
   ProviderConfigSnapshot
 } from '@xht/contracts';
@@ -35,6 +36,9 @@ export interface PayoutOrderRepository {
 }
 
 export interface ProviderConfigRepository {
+  listCapabilities(
+    context: TransactionContext
+  ): Promise<readonly PayoutCapabilitySnapshot[]>;
   findLatestByProvider(
     context: TransactionContext,
     providerId: string

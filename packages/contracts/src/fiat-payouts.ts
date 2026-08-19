@@ -54,3 +54,25 @@ export type PayoutContractErrorCode =
   | 'PAYOUT_CALLBACK_VERIFICATION_FAILED'
   | 'PAYOUT_CALLBACK_REPLAY'
   | 'PAYOUT_UNKNOWN_PENDING_QUERY';
+
+export interface PayoutCapabilitySnapshot {
+  readonly providerId: string;
+  readonly configVersion: number;
+  readonly providerName: string;
+  readonly route: string;
+  readonly sourceAssetCode: string;
+  readonly fixedFee: string;
+  readonly minAmount: string;
+  readonly maxAmount: string;
+}
+
+export interface PayoutQuoteSnapshot {
+  readonly providerId: string;
+  readonly configVersion: number;
+  readonly route: string;
+  readonly sourceAssetCode: string;
+  readonly sourceAmount: string;
+  readonly fee: string;
+  readonly estimatedFiat: string;
+  readonly estimate: true;
+}
