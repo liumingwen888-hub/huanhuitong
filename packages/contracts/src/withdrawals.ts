@@ -63,6 +63,10 @@ export interface WithdrawalCommand {
 export type WithdrawalCommandResult =
   | { readonly outcome: 'ACCEPTED'; readonly order: WithdrawalOrderSnapshot }
   | {
+      readonly outcome: 'ALREADY_REQUESTED';
+      readonly order: WithdrawalOrderSnapshot;
+    }
+  | {
       readonly outcome: 'REJECTED';
       readonly reasonCode: WithdrawalContractErrorCode;
     };
@@ -74,4 +78,6 @@ export type WithdrawalContractErrorCode =
   | 'WITHDRAWAL_ALREADY_CLOSED'
   | 'WITHDRAWAL_POLICY_NOT_FOUND'
   | 'WITHDRAWAL_AMOUNT_ABOVE_MAX'
+  | 'WITHDRAWAL_RISK_DENIED'
+  | 'WITHDRAWAL_INSUFFICIENT_FUNDS'
   | 'WITHDRAWAL_DUPLICATE_APPROVAL';

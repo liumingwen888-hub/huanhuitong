@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S6-2 提现申请与冻结服务实施完成
+
+- 复审通过并授权实施；交付 WithdrawalRequestService：证明绑定七维度校验 → 幂等前置 → 策略 fail-closed → RiskGate → 冻结过账 → 订单创建 → 双轨路由 → Outbox 双通知。
+- 实施裁决：顺序事务（PostMoney 自持 UOW 不可嵌套，幂等键+UNIQUE 自愈）；余额预检取反符号约定（贷方正常）；contracts 增 ALREADY_REQUESTED 变体与两个错误码。
+- 验证：build/typecheck/architecture(151 模块 0 违规)/unit 226/S6WA 8 项/数据库回归 414-417（M06/M14/M16 已知环境边界）。
+
 ## 2026-08-19 — S6-2 提现申请与冻结服务详细计划完成，等待外部复审
 
 - 资金侧首次消费 S2 支付授权证明：定义绑定合同（type/uid/orderRef/amount/asset 精确相等 + expiresAt 过期拒绝，fail-closed）。

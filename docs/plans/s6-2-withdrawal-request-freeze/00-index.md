@@ -1,6 +1,6 @@
 # S6-2 提现申请与冻结服务 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（资金冻结编排）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S6-2 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（资金冻结编排）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过并授权实施）。S6-2 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -36,6 +36,13 @@
 
 Create：platform `modules/withdrawals/application/withdrawal-request.service.ts`、`apps/platform/test/database/withdrawal-request.integration.spec.ts`（S6WA）。Modify：无（合同、仓储、模板 S6-1/阶段 3 已交付）。
 
+## 实施裁决记录（2026-08-19，相对 v1.0 冻结面的收敛）
+
+1. **顺序事务而非单事务**：PostMoneyService.post 自持 unitOfWork 且禁止嵌套；过账与订单创建为顺序两个事务，崩溃窗口由模板幂等键（`WITHDRAWAL:{orderRef}:FREEZE:0`）+ order_ref UNIQUE 双保险自愈，与 S5 先例一致。安全性不变。
+2. **余额预检 + 内核权威**：USER_AVAILABLE 贷方正常，spendable = −signed_balance；预检快速失败返回 WITHDRAWAL_INSUFFICIENT_FUNDS。并发耗尽时内核拒绝（LedgerError 被内核 UOW 包装不可直接判别），保守映射 INSUFFICIENT_FUNDS——不建订单、不推断成功，失败方向。
+3. **contracts 扩展**：WithdrawalCommandResult 增加 `ALREADY_REQUESTED` 变体；错误码增加 `WITHDRAWAL_RISK_DENIED`、`WITHDRAWAL_INSUFFICIENT_FUNDS`（计划冻结面的补充，语义均已在流程描述中存在）。
+4. 通知事件主题：`telegram.withdrawal-requested.v1`（用户）/ `admin.withdrawal-pending-approval.v1`（待审）。
+
 ## 测试矩阵（S6WA）
 
 - S6WA01 证明绑定全维度拒绝（type/uid/orderRef/amount/asset/过期 各一）
@@ -51,6 +58,13 @@ Create：platform `modules/withdrawals/application/withdrawal-request.service.ts
 
 - 不做签名/广播/结算（S6-4～6）；不做 Telegram UX（S6-7，含开仓摘要合同对接）；不做审批流（S6-3）。
 - 手续费在结算时从可用扣（withdrawalSucceeded 模板既有行为）；可用性不足付费的结算期处理属 S6-6 计划。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（151 模块、179 依赖）。
+- unit 27 文件 226/226 PASS（含文档守卫）。
+- S6WA01–S6WA08 全 PASS：证明绑定 7 维度拒绝零落库、幂等重放单笔冻结、无策略/超限 fail-closed 零写入、冻结后可用 9,500,000/冻结 500,000 借贷平衡、双轨路由阈值边界（999,999→APPROVED / 1,000,000→PENDING_APPROVAL）、余额不足零订单、RiskGate 拒绝零账本零订单、Outbox 双事件。
+- 交付物：`apps/platform/src/modules/withdrawals/application/withdrawal-request.service.ts`、`apps/platform/test/database/withdrawal-request.integration.spec.ts`、contracts 三处扩展。
 
 ## 停止条件
 
