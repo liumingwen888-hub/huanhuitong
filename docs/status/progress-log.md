@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S3-3 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：V4 account_balances（signed_balance 同内核符号约定）、内核过账同事务 UPSERT 投影、读服务 + recomputeAll/verifyProjection 重建校验、投影不参与防线的红线。
+- 冻结 Create 3 / Modify 3。
+- 唯一下一步：等待用户外部复审 S3-3 v1.0（通过时 V4 migration 需显式授权）。
+
+## 2026-08-17 — S3-2 复审通过与 VERIFIED 收敛，进入 S3-3 规划
+
+- 用户裁决：S3-2 EXTERNAL REVIEW PASS；三项修正 ACCEPT。S3-2 转 VERIFIED；提交 `6b12149` 已推送。
+- S3-3"余额投影"详细计划 DESIGNING。
+
 ## 2026-08-17 — S3-2 实施完成（资金写入口落地），等待外部复审
 
 - Create 4 / Modify 3；幂等/锁序/用途感知防线/原子过账/冲正全链可证；并发双花恰一。
