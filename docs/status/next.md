@@ -1,5 +1,3 @@
 # 下一步
 
-2026-08-17：用户验收阶段 2 通过——阶段 2 整体 VERIFIED。阶段 3 总体规划草案 v0.1 已发布（`docs/plans/2026-08-17-stage-3-ledger-master-plan.md`，S3-1～7 任务分解）。
-
-唯一当前动作：用户确认阶段 3 总体规划草案，并裁决一项非阻塞设计点——**资产账户开通策略**（显式幂等开通 vs 首次使用懒创建，S3-1 计划内固定）。P0-1/2/4/5 在阶段 4+ 前裁决即可，不阻塞账本机制层。
+阶段 3 S3-1"账本领域合同与 V3 迁移"详细计划 v1.0 已完成（`docs/plans/s3-1-ledger-contracts/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：五表设计（尤其 entries 平衡 CONSTRAINT TRIGGER 双保险、entries 零 UPDATE/DELETE 授权）、合成资产目录边界。复审通过并显式授权 V3 migration 后实施。
