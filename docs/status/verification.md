@@ -1,5 +1,14 @@
 # 最近验证
 
+## 2026-08-17 — S5-3 领取链接服务实施（macOS/arm64 本地）
+
+- 写入：Create 2（claim-link.service.ts、database spec）。
+- **ClaimLinkService**：
+  - createLink：DR creator 可用 / CR CLAIM_LIABILITY（冻结）+ claim_code + 24h 过期 + 通知；
+  - claim：DR CLAIM_LIABILITY / CR claimer 可用（释放）+ markClaimed CAS + 双端通知；
+  - 惰性过期退款：领取时发现 expires_at 已过 → DR CLAIM_LIABILITY / CR creator 可用（退回）+ markExpired + 通知。
+- 验证：S5-3 spec 5/5——创建冻结正确（01）、领取释放正确（02）、重复领取拒绝（03）、过期退款（04）、不存在返回 not_found（05）。全量 unit 223/223、db 363/398（M06/M14/M16 已知边界）、architecture 0 违规（142 模块）、三锁无漂移。
+
 ## 2026-08-17 — S5-2 转账执行服务实施（macOS/arm64 本地）
 
 - 写入：Create 2（transfer-execution.service.ts、database spec）。
