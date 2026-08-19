@@ -78,3 +78,17 @@ Task 4 已实现并验证单连接 Unit of Work、TransactionContext 禁止逃�
 | 对账遗漏 | 三检查（平衡/投影/完整性）+ 幂等告警 | S3A01, S3A08-09 |
 | 金额精度丢失 | 全链十进制字符串 + BIGINT + BigInt 运算 | 全部 |
 | 跨资产不一致 | 每资产独立平衡约束 + 清算差中间账户 | S3A01 |
+
+## 阶段 4 威胁模型增补（2026-08-17，S4-8）
+
+| 威胁 | 控制 | 证据 |
+|---|---|---|
+| 充值地址私钥泄露 | HD 派生接口隔离 + fake 密钥（真实实现需独立授权） | S4A01 |
+| 充值地址分配冲突 | UNIQUE(network,address) + 竞态回读 | S4A01-03 |
+| 链上检测遗漏 | checkpoint 单调递增 + RETIRED 地址排除 | S4A04-05 |
+| 确认数不足即入账 | 版本化确认策略（TRON19/ETH12/BTC6）+ CAS | S4A06-08 |
+| 链重组导致已入账资金回滚 | 重组检测→已POSTED冲正 / 已CONFIRMED阻止 / UNKNOWN标记 | S4A06-08 |
+| 充值重复入账 | 三层幂等（应用层+账本层UNIQUE+状态层CAS） | S4A09-11 |
+| 归集失败或链上费用超支 | FakeBroadcaster 失败路径 + 上游成本账户记录 | S4A12 |
+| 链上余额与账本不一致 | 链上对账差异检测+告警（零容忍不自动修复） | S4A13 |
+| 充值模块渠道耦合 | deposits 零 grammY/telegram 依赖（静态+depcruise） | S4A14 |

@@ -1,5 +1,12 @@
 # 最近验证
 
+## 2026-08-17 — S4-8 阶段 4 验收（macOS/arm64 本地）
+
+- **7 个测试块（14 项验收 S4A01–14）全部 PASS**：地址确定性/唯一/轮换（01-03）、检测记录+RETIRED跳过（04-05）、确认CAS+重组+幂等（06-08）、入账+余额+通知+自动开户（09-11）、归集广播+过账（12）、链上对账差异+告警（13）、deposits 零渠道依赖（14）。
+- 全量回归：unit 223/223、architecture 0 违规（136 模块）、integration 含阶段验收全过。
+- 威胁模型增补 9 项充值威胁→控制→证据映射。
+- **阶段 4 代码 READY 等待用户验收**（充值全链路：地址→检测→确认→入账→归集→对账；四项长期授权保持 0）。
+
 ## 2026-08-17 — S4-7 链上对账实施（macOS/arm64 本地）
 
 - 写入：Create 2（chain-reconciliation.service.ts、database spec）+ Modify 2（scanner port 补 getAddressBalance + fake 实现）。
