@@ -330,12 +330,12 @@ describe('stage one migrations', () => {
   });
 
   it('M03 migrates an empty database through all versions', () => {
-    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1', '2', '3']);
+    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1', '2', '3', '4']);
     expect(migrationEvidence.firstMigrate.exitCode).toBe(0);
   });
 
   it('M04 applies no new version on the second migrate', () => {
-    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1', '2', '3']);
+    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1', '2', '3', '4']);
     expect(migrationEvidence.secondMigrate.exitCode).toBe(0);
   });
 
@@ -376,8 +376,9 @@ describe('stage one migrations', () => {
     );
   });
 
-  it('M07 creates exactly the nineteen stage one to three tables', async () => {
+  it('M07 creates exactly the twenty stage one to three tables', async () => {
     expect(await fixture.tableNames()).toEqual([
+      'account_balances',
       'account_openings',
       'asset_catalog',
       'audit_events',
@@ -414,6 +415,11 @@ describe('stage one migrations', () => {
       }),
       expect.objectContaining({
         version: '3',
+        success: true,
+        checksum: expect.any(Number)
+      }),
+      expect.objectContaining({
+        version: '4',
         success: true,
         checksum: expect.any(Number)
       })

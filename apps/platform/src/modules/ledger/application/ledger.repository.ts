@@ -51,6 +51,26 @@ export interface LedgerAccountRepository {
     context: TransactionContext,
     accountIds: readonly LedgerAccountId[]
   ): Promise<void>;
+  applyProjectionDelta(
+    context: TransactionContext,
+    input: {
+      readonly accountId: LedgerAccountId;
+      readonly delta: bigint;
+      readonly transactionId: string;
+    }
+  ): Promise<void>;
+  upsertProjectionAbsolute(
+    context: TransactionContext,
+    input: {
+      readonly accountId: LedgerAccountId;
+      readonly signedBalance: string;
+      readonly transactionId: string | null;
+    }
+  ): Promise<void>;
+  readProjection(
+    context: TransactionContext,
+    accountId: LedgerAccountId
+  ): Promise<{ readonly signedBalance: string } | null>;
 }
 
 export interface LedgerTransactionRepository {

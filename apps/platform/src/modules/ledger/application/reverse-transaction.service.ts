@@ -131,6 +131,13 @@ export class ReverseTransactionService {
         context,
         [...netByAccount.keys()]
       );
+      for (const accountId of [...netByAccount.keys()].sort()) {
+        await this.#accounts.applyProjectionDelta(context, {
+          accountId,
+          delta: netByAccount.get(accountId) ?? 0n,
+          transactionId: reversalTransactionId
+        });
+      }
       return { reversalTransactionId };
     });
   }

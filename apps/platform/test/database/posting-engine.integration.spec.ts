@@ -157,6 +157,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   for (const table of [
+    'account_balances',
     'ledger_entries',
     'ledger_transactions',
     'account_openings',

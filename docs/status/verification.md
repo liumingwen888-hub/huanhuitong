@@ -1,5 +1,15 @@
 # 最近验证
 
+## 2026-08-17 — S3-3 余额投影实施（macOS/arm64 本地）
+
+- 授权：用户复审 S3-3 v1.0 通过并显式授权 V4 增量迁移。
+- 写入：Create 3（V4__stage_3_balance_projection.sql、balance-query.service.ts、database spec）+ Modify 3（S3-1 仓储接口投影三方法、S3-2 两服务同事务投影同步、两既有 spec 清理顺序——均按先例登记）。
+- **V4**：account_balances（account_id PK、signed_balance 同内核符号、last_transaction_id FK）；platform SELECT/INSERT/UPDATE、worker 只读、**无 DELETE 权限**（重建=UPSERT 覆盖）。
+- **内核同步**：post/reverse 成功路径同事务 applyProjectionDelta（受影响账户净额 UPSERT）——投影与条目零延迟一致。
+- **BalanceQueryService**：accountBalanceOf（业务查询唯一通道）、verifyProjection（投影 vs entries SUM 差异清单）、recomputeAll（以条目为源幂等重建）。
+- 验证：S3-3 spec 5/5——过账后投影即时准确且 verifyProjection 零差异（01）、冲正精确回退（02）、幂等重放零漂移（03）、**篡改→校验捕获→重建修复→差异清零**（04）、投影不可删除（05）。全量：unit 223/223、database 299/302+27 skip（M06/M14/M16 并行负载与平台边界）、architecture 0 违规（110 模块）、三锁无漂移。
+- 实施期修正（如实登记）：① 投影 FK 阻断测试清理——清理顺序 account_balances 前置；② bootstrap 原始 SQL 注入须经 recomputeAll 对齐投影（真实语义：维护操作由重建任务覆盖）。
+
 ## 2026-08-17 — S3-2 过账内核实施（macOS/arm64 本地）
 
 - 写入：Create 4（post-money.service.ts、reverse-transaction.service.ts、unit/database 双 spec）+ Modify 3（contracts ledger 错误码增补 NEGATIVE/ALREADY_REVERSED、S3-1 仓储接口五方法、V3 约束修正——均按先例登记）。

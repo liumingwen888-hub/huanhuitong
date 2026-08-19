@@ -96,6 +96,13 @@ export class PostMoneyService {
         command as PostMoneyCommand
       );
       await this.#accounts.bumpAccountVersions(context, accountIds);
+      for (const accountId of accountIds) {
+        await this.#accounts.applyProjectionDelta(context, {
+          accountId,
+          delta: netByAccount.get(accountId) ?? 0n,
+          transactionId
+        });
+      }
       return { transactionId, posted: true };
     });
   }

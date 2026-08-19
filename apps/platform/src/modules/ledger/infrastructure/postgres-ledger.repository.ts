@@ -160,8 +160,60 @@ export class PostgresLedgerAccountRepository implements LedgerAccountRepository 
       [accountIds as unknown[]]
     );
   }
-}
 
+  public async applyProjectionDelta(
+    context: TransactionContext,
+    input: {
+      readonly accountId: LedgerAccountId;
+      readonly delta: bigint;
+      readonly transactionId: string;
+    }
+  ): Promise<void> {
+    await context.executeSql(
+      `INSERT INTO account_balances
+         (account_id, signed_balance, last_transaction_id, updated_at)
+       VALUES ($1::uuid, $2::bigint, $3::uuid, clock_timestamp())
+       ON CONFLICT (account_id) DO UPDATE
+         SET signed_balance = account_balances.signed_balance + $2::bigint,
+             last_transaction_id = $3::uuid,
+             updated_at = clock_timestamp()`,
+      [input.accountId, input.delta.toString(), input.transactionId]
+    );
+  }
+  public async upsertProjectionAbsolute(
+    context: TransactionContext,
+    input: {
+      readonly accountId: LedgerAccountId;
+      readonly signedBalance: string;
+      readonly transactionId: string | null;
+    }
+  ): Promise<void> {
+    await context.executeSql(
+      `INSERT INTO account_balances
+         (account_id, signed_balance, last_transaction_id, updated_at)
+       VALUES ($1::uuid, $2::bigint, $3::uuid, clock_timestamp())
+       ON CONFLICT (account_id) DO UPDATE
+         SET signed_balance = $2::bigint,
+             last_transaction_id = $3::uuid,
+             updated_at = clock_timestamp()`,
+      [input.accountId, input.signedBalance, input.transactionId]
+    );
+  }
+
+  public async readProjection(
+    context: TransactionContext,
+    accountId: LedgerAccountId
+  ): Promise<{ readonly signedBalance: string } | null> {
+    const result = await context.executeSql<{ signed_balance: string }>(
+      `SELECT signed_balance::text AS signed_balance
+         FROM account_balances WHERE account_id = $1::uuid`,
+      [accountId]
+    );
+    const row = result.rows[0];
+    return row === undefined ? null : { signedBalance: row.signed_balance };
+  }
+
+}
 export class PostgresLedgerTransactionRepository
   implements LedgerTransactionRepository
 {

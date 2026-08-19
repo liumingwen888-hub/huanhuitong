@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S3-3 实施完成（可重建读模型落地），等待外部复审
+
+- Create 3 / Modify 3；内核同事务投影、篡改-校验-重建闭环、无 DELETE 权限全部实证。
+- S3-3 spec 5/5；unit 223/223；db 299/302+27 skip；arch 0 违规。
+- 状态收敛：S3-3 `IMPLEMENTED`，等待用户外部复审；S3-4（横切最小合同）NOT_STARTED。
+
 ## 2026-08-17 — S3-3 详细计划 v1.0 完成，等待外部复审
 
 - 冻结合同：V4 account_balances（signed_balance 同内核符号约定）、内核过账同事务 UPSERT 投影、读服务 + recomputeAll/verifyProjection 重建校验、投影不参与防线的红线。
