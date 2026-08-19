@@ -330,12 +330,12 @@ describe('stage one migrations', () => {
   });
 
   it('M03 migrates an empty database through all versions', () => {
-    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1', '2', '3', '4', '5', '6']);
+    expect(migrationEvidence.firstMigrate.appliedVersions).toEqual(['1', '2', '3', '4', '5', '6', '7']);
     expect(migrationEvidence.firstMigrate.exitCode).toBe(0);
   });
 
   it('M04 applies no new version on the second migrate', () => {
-    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1', '2', '3', '4', '5', '6']);
+    expect(migrationEvidence.secondMigrate.appliedVersions).toEqual(['1', '2', '3', '4', '5', '6', '7']);
     expect(migrationEvidence.secondMigrate.exitCode).toBe(0);
   });
 
@@ -376,7 +376,7 @@ describe('stage one migrations', () => {
     );
   });
 
-  it('M07 creates exactly the thirty-one stage one to four tables', async () => {
+  it('M07 creates exactly the thirty-five stage one to five tables', async () => {
     expect(await fixture.tableNames()).toEqual([
       'account_balances',
       'account_openings',
@@ -387,6 +387,7 @@ describe('stage one migrations', () => {
       'audit_events',
       'chain_scan_checkpoints',
       'channel_bindings',
+      'claim_links',
       'config_versions',
       'confirmation_policies',
       'credential_policies',
@@ -405,9 +406,12 @@ describe('stage one migrations', () => {
       'outbox_messages',
       'payment_credentials',
       'recovery_cases',
+      'red_packet_claims',
+      'red_packets',
       'registration_idempotency',
       'risk_decisions',
       'security_locks',
+      'transfer_orders',
       'users'
     ]);
   });
@@ -441,6 +445,11 @@ describe('stage one migrations', () => {
       }),
       expect.objectContaining({
         version: '6',
+        success: true,
+        checksum: expect.any(Number)
+      }),
+      expect.objectContaining({
+        version: '7',
         success: true,
         checksum: expect.any(Number)
       })
@@ -640,8 +649,7 @@ describe('stage one migrations', () => {
     try {
       const stageOneTables = [
         'users', 'memberships', 'identity_profiles', 'channel_bindings',
-        'registration_idempotency',
-      'risk_decisions', 'inbox_messages', 'outbox_messages',
+        'registration_idempotency', 'inbox_messages', 'outbox_messages',
         'durable_jobs', 'audit_events'
       ];
       const result = await pool.query<{ readonly count: string }>(

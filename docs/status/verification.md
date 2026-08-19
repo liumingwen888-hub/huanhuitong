@@ -1,5 +1,13 @@
 # 最近验证
 
+## 2026-08-17 — S5-1 转账领域合同与 V7 迁移实施（macOS/arm64 本地）
+
+- 授权：用户复审 S5-1 v1.0 通过并显式授权 V7 migration。
+- 写入：Create 5（V7__stage_5_transfers_redpackets.sql、contracts/transfers.ts、platform transfers domain/application/infrastructure 三层、database spec）+ Modify（contracts index）。
+- **V7 四表**：transfer_orders（UNIQUE(order_ref) 幂等 + FK 链 + 执行形状 CHECK）；claim_links（UNIQUE(claim_code) 一次性 + 过期检测）；red_packets + red_packet_claims（UNIQUE(packet_id, claimer_uid) 同一用户唯一领取 + ON CONFLICT DO NOTHING）。
+- 验证：S5-1 spec 6/6——幂等创建（01）、同 sender/recipient 拒绝（02）、claim 链接一次性（03）、过期检测（04）、红包同用户唯一（05-06）、worker 只读（07）。全量 unit 223/223、db 354/389（M06/M14/M16 已知边界）、architecture 0 违规（140 模块）、三锁无漂移。
+- 实施期修正（如实登记）：① FK 约束——测试中用 dummy ledger_transactions 行满足 FK（claim_links 和 red_packet_claims 均引用 ledger_transactions）；② claimPacket 加 ON CONFLICT DO NOTHING（UNIQUE 违约返回 false 而非异常）。
+
 ## 2026-08-17 — S4-8 阶段 4 验收（macOS/arm64 本地）
 
 - **7 个测试块（14 项验收 S4A01–14）全部 PASS**：地址确定性/唯一/轮换（01-03）、检测记录+RETIRED跳过（04-05）、确认CAS+重组+幂等（06-08）、入账+余额+通知+自动开户（09-11）、归集广播+过账（12）、链上对账差异+告警（13）、deposits 零渠道依赖（14）。

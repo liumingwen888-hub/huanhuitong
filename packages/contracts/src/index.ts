@@ -7,4 +7,5 @@ export * from './ledger.js';
 export * from './inbox-digest.js';
 export * from './observability.js';
 export * from './reliability.js';
+export * from './transfers.js';
 export * from './telegram.js';

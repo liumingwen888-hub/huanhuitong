@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 5 总体规划 v1.0 READY（四项设计决策已裁决）。S5-1"转账领域合同与 V7 迁移"详细计划 v1.0 已完成（`docs/plans/s5-1-transfer-contracts/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 5 S5-1"转账领域合同与 V7 迁移"已实施（Create 5 / Modify 1；spec 6/6）。S5-1 代码 `IMPLEMENTED`，等待用户外部复审。
 
-复审重点：V7 三张表设计（transfer_orders/claim_links/red_packets + red_packet_claims）、领取链接一次性 UNIQUE、红包同一用户唯一领取约束。复审通过并显式授权 V7 后实施。
+复审通过前不实施 S5-2（转账执行服务——余额校验→模板→过账→状态→通知）。
