@@ -1,5 +1,3 @@
 # 下一步
 
-阶段 4 S4-1"地址领域合同与 V6 迁移"已实施（Create 5 / Modify 1；spec 7/7；确认策略种子+地址确定性+检测幂等全链可证）。S4-1 代码 `IMPLEMENTED`，等待用户外部复审实施结果（含两项修正：复合 PK、GRANT 列修正）。
-
-复审通过前不实施 S4-2（地址生成与分配服务）。
+阶段 4 S4-2"地址生成与分配服务"详细计划 v1.0 已完成（`docs/plans/s4-2-address-service/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：地址复用裁决（与主流交易所一致）、retire/compromise 语义区分、资产→网络映射。复审通过后实施（无新迁移）。

@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S4-2 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：getOrCreateAddress find-or-create + 地址复用 + retire/compromise CAS + 资产→网络映射 + 并发安全。
+- 冻结 Create 2 / Modify 0（无新迁移）。
+- 唯一下一步：等待用户外部复审 S4-2 v1.0。
+
+## 2026-08-17 — S4-1 复审通过与 VERIFIED 收敛，进入 S4-2 规划
+
+- 用户裁决：S4-1 EXTERNAL REVIEW PASS；两项修正 ACCEPT。S4-1 转 VERIFIED；提交 `45b3bc7` 已推送。
+- S4-2"地址生成与分配服务"详细计划 DESIGNING。
+
 ## 2026-08-17 — S4-1 实施完成（V6 地址合同落地），等待外部复审
 
 - Create 5 / Modify 1；V6 五表 + fake HD 派生 + 检测幂等 UPSERT + 确认策略版本化全部可证。
