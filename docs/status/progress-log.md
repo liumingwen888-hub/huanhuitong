@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S6-3 Maker-Checker 审批流详细计划完成，等待外部复审
+
+- 三段分级：自动轨（S6-2 已交付）/ 单审批 / 双审批（不同管理员），阈值 dualApprovalThreshold 走 ConfigStore 版本化配置，缺失即 fail-closed 全双审。
+- 必需角色 FINANCE_OFFICER；SUPER_ADMIN 只授角色不直接审批（职责分离）。同管理员重复投票由 V8 UNIQUE 拒绝。
+- 批准/拒绝均 CAS 迁移，并发双批恰好一次 APPROVED。S6WB01-08 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S6-2 提现申请与冻结服务实施完成
 
 - 复审通过并授权实施；交付 WithdrawalRequestService：证明绑定七维度校验 → 幂等前置 → 策略 fail-closed → RiskGate → 冻结过账 → 订单创建 → 双轨路由 → Outbox 双通知。
