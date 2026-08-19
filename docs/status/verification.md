@@ -1,5 +1,17 @@
 # 最近验证
 
+## 2026-08-17 — S4-2 地址生成与分配服务实施（macOS/arm64 本地）
+
+- 写入：Create 2（deposit-address.service.ts、database spec）。Modify 0。
+- **DepositAddressService**：
+  - getOrCreateAddress find-or-create + 地址复用（同 uid+asset 恒同 ACTIVE 地址）；
+  - 并发安全（S4AS02 双连接真并发恰得一地址）；
+  - 资产→网络映射（USDT-TRC20→TRON / USDT-ERC20+ETH→ETHEREUM / BTC→BITCOIN / USD-FIAT→DEPOSIT_NETWORK_UNSUPPORTED 拒绝）；
+  - retireAddress（轮换）/ markCompromised（安全事件）→ 下次 getOrCreate 自动新地址（索引递增）；
+  - CAS 状态转换（重复 retire 返回 false）。
+- 验证：S4-2 spec 4/4。全量 unit 223/223、db 329/357（M06/M14/M16 已知边界）、architecture 0 违规（127 模块）、三锁无漂移。
+- 实施期修正（如实登记）：法币资产拒绝断言改为 DEPOSIT_NETWORK_UNSUPPORTED（原误写 TRANSACTION_CALLBACK_FAILED——UoW 外抛错不包装）。
+
 ## 2026-08-17 — S4-1 地址领域合同与 V6 迁移实施（macOS/arm64 本地）
 
 - 授权：用户复审 S4-1 v1.0 通过并显式授权 V6 migration。

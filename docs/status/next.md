@@ -1,3 +1,5 @@
 # 下一步
 
-阶段 4 S4-2"地址生成与分配服务"详细计划 v1.0 已完成（`docs/plans/s4-2-address-service/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：地址复用裁决（与主流交易所一致）、retire/compromise 语义区分、资产→网络映射。复审通过后实施（无新迁移）。
+阶段 4 S4-2"地址生成与分配服务"已实施（Create 2；spec 4/4；地址复用+并发+轮换全链可证）。S4-2 代码 `IMPLEMENTED`，等待用户外部复审实施结果。
+
+复审通过前不实施 S4-3（充值检测 Worker）。

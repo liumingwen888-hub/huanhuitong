@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-17 — S4-2 实施完成（地址服务落地），等待外部复审
+
+- Create 2；find-or-create + 地址复用 + retire/compromise CAS + 资产映射 + 并发安全全部可证。
+- S4-2 spec 4/4；unit 223/223；db 329/357；arch 0 违规（127 模块）。
+- 状态收敛：S4-2 `IMPLEMENTED`，等待用户外部复审；S4-3（充值检测 Worker）NOT_STARTED。
+
 ## 2026-08-17 — S4-2 详细计划 v1.0 完成，等待外部复审
 
 - 冻结合同：getOrCreateAddress find-or-create + 地址复用 + retire/compromise CAS + 资产→网络映射 + 并发安全。
