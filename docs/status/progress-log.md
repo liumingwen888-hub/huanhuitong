@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S4-7 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：单地址对账 + 批量对账 + 差异告警（幂等）+ ChainScannerPort 补 getAddressBalance。
+- 冻结 Create 2 / Modify 2（scanner 接口扩展）。
+- 唯一下一步：等待用户外部复审 S4-7 v1.0。
+
+## 2026-08-17 — S4-6 复审通过与 VERIFIED 收敛，进入 S4-7 规划
+
+- 用户裁决：S4-6 EXTERNAL REVIEW PASS。S4-6 转 VERIFIED；提交 `0e9424e` 已推送。
+- S4-7"链上对账"详细计划 DESIGNING。
+
 ## 2026-08-17 — S4-6 实施完成（归集服务落地），等待外部复审
 
 - Create 3；阈值候选 + 广播接口 + 归集过账 + fake 广播全链可证。
