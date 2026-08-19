@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S3-4 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：V5 五表（fee_schedules 版本化/risk_decisions 追加幂等/operation_limits/config_versions/admin_principals+grants）、四接口（FeeCalculator/RiskGate/ConfigStore/AdminAuthorizer）、fail-closed 与独立管理员红线。
+- 冻结 Create 8 / Modify 0。
+- 唯一下一步：等待用户外部复审 S3-4 v1.0（通过时 V5 migration 需显式授权）。
+
+## 2026-08-17 — S3-3 复审通过与 VERIFIED 收敛，进入 S3-4 规划
+
+- 用户裁决：S3-3 EXTERNAL REVIEW PASS；两项修正 ACCEPT。S3-3 转 VERIFIED；提交 `0aa9612` 已推送。
+- S3-4"横切最小合同"详细计划 DESIGNING。
+
 ## 2026-08-17 — S3-3 实施完成（可重建读模型落地），等待外部复审
 
 - Create 3 / Modify 3；内核同事务投影、篡改-校验-重建闭环、无 DELETE 权限全部实证。
