@@ -1,6 +1,6 @@
 # S6-7 Telegram UX 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（UX 编排层，资金逻辑全部下沉已验证服务）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S6-7 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（UX 编排层，资金逻辑全部下沉已验证服务）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过并授权实施）。S6-7 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -32,6 +32,14 @@
 
 `telegram.withdrawal-{requested,approved,rejected,broadcast,succeeded,failed,refunded}.v1` 七主题 → 单处理器按主题映射常量文案 → 经 Bot 网关按 uid 绑定投递；payload 含状态但**文案不插值**（类别化）。注册进 `create-worker` 的 topicHandlers。
 
+## 实施裁决记录（2026-08-19）
+
+1. **共享流程注册表**：数字收集仍由 security-command.handler 独占，新增 `SecurityFlowRegistry`（显式共享实例）让 /withdraw 开的授权流可被安全处理器驱动；安全处理器构造函数向后兼容（注册表缺省自建）。
+2. **授权续体（continuation）**：安全处理器新增可选 `onAuthorized`——证明签发后回调，返回 `{replyKey, text}`；prompt 通道统一为 `{chatRef, replyKey, text}`（不再限定 SecurityReply 词表），零插值不变量由静态测试守护。
+3. **DEMO 占位路径的处置**：`/authorize` 旧路径保留原样——其对提现天然失效（amountSummary '0' 与真实金额永不匹配 S6-2 绑定校验），真实路径全部走 /withdraw 旁路开仓。
+4. worker 通知文案按**注入模式**（同 MainMenuContent 先例）：`WithdrawalNotificationHandler` 接收主题→静态文案映射，不由 worker 导入平台源码；网关关闭时七主题与主菜单同样落 WAITING_CONFIGURATION 停车（F-06 同型）。
+5. 静态零插值检查分层：回复常量文件全面禁 `${`/反引号；处理器源码禁从 `message.text`/payload 值拼文本（内部 orderRef 模板字面量合法）。
+
 ## 冻结未来工程矩阵
 
 Create：`telegram/application/{withdrawal-commands.ts, withdrawal-replies.ts, withdrawal-command.handler.ts}`、`apps/worker/src/outbox/withdrawal-notification.handler.ts`、`apps/platform/test/unit/withdrawal-commands.spec.ts`（S6WU）。Modify：`telegram/application/security-command.handler.ts`（begin-authorize 的 DEMO 占位路由到真实绑定值或由新处理器旁路）、`apps/worker/src/bootstrap/create-worker.ts`（注册主题处理器）。
@@ -49,6 +57,13 @@ Create：`telegram/application/{withdrawal-commands.ts, withdrawal-replies.ts, w
 
 - 不做新资金逻辑（全部调用 S6-2 已验证服务）；不做按钮/向导 UI（文本命令即可，阶段 9 管理后台另议）；不做审批人通知的 UI（管理侧事件 S6-3 已发，管理后台阶段 9 消费）。
 - 密码输入仍走既有安全流程（不回显、短期内存、超时清理——阶段 2 已验证，本任务只接证明消费）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（159 模块、185 依赖）。
+- unit 29 文件 235/235 PASS（含 S6WU 7 项：解析矩阵、真实绑定值开仓 + 注册表登记 + 未绑定拒绝、七类结果常量映射 + 零服务调用路径、十态状态映射 + 他人订单不可见、七主题通知静态文案 + 非法形状永久失败 + 绑定缺失、分层零插值静态检查）。
+- 数据库回归 440/443（M06/M14/M16 已知环境边界项；S6-2～S6-6 集成规格全数复跑通过）。
+- 交付物：`telegram/application/{withdrawal-commands, withdrawal-replies, withdrawal-command.handler, security-flow.registry}.ts`、`worker/src/outbox/withdrawal-notification.handler.ts`；Modify：`security-command.handler.ts`（注册表注入 + 续体 + 通道拓宽）、`create-worker.ts`（七主题注册 + 关闭停车）。
 
 ## 停止条件
 

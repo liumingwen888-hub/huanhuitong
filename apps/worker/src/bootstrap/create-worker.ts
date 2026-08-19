@@ -1,5 +1,9 @@
 import type { OutboxHandler } from '@xht/contracts';
 import { TelegramMainMenuHandler } from '../outbox/telegram-main-menu.handler.js';
+import {
+  WithdrawalNotificationHandler,
+  WITHDRAWAL_NOTIFICATION_TOPICS
+} from '../outbox/withdrawal-notification.handler.js';
 import type { BindingLookup } from '../outbox/telegram-main-menu.handler.js';
 import type { TelegramBotGateway } from '../infrastructure/telegram/telegram-bot.gateway.js';
 import { TelegramConnectionDisabledError } from '../infrastructure/telegram/external-connection-disabled.gateway.js';
@@ -42,6 +46,12 @@ export interface CreateWorkerOptions {
     readonly enabled: boolean;
     readonly gateway: TelegramBotGateway;
     readonly bindings: BindingLookup;
+    readonly withdrawalNotifications?: {
+      readonly bindings: {
+        findExternalUserIdByUid(uid: string): Promise<string | null>;
+      };
+      readonly texts: ReadonlyMap<string, string>;
+    };
     readonly menu: {
       readonly text: string;
       readonly buttons: readonly {
@@ -120,6 +130,17 @@ export function createWorker(options: CreateWorkerOptions): WorkerRuntime {
       };
       topicHandlers.set('telegram.security-prompt.v1', { handle: promptHandler });
     }
+    const withdrawal = options.telegramGateway.withdrawalNotifications;
+    if (withdrawal !== undefined) {
+      const handler = new WithdrawalNotificationHandler(
+        options.telegramGateway.gateway,
+        withdrawal.bindings,
+        withdrawal.texts
+      );
+      for (const topic of WITHDRAWAL_NOTIFICATION_TOPICS) {
+        topicHandlers.set(topic, handler);
+      }
+    }
   } else if (options.telegramGateway?.enabled === false) {
     // F-06: a disabled external connection must park menu messages in
     // WAITING_CONFIGURATION (not PERMANENT dead letters) until explicit
@@ -129,6 +150,13 @@ export function createWorker(options: CreateWorkerOptions): WorkerRuntime {
         throw new TelegramConnectionDisabledError();
       }
     });
+    for (const topic of WITHDRAWAL_NOTIFICATION_TOPICS) {
+      topicHandlers.set(topic, {
+        handle: async () => {
+          throw new TelegramConnectionDisabledError();
+        }
+      });
+    }
   }
   const outbox = new OutboxWorkerClass(new PostgresOutboxStore(connections), {
     handler:

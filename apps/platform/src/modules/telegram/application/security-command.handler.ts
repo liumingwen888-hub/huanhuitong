@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type {
+  AuthorizePaymentProofV1,
   InboxDigestSet,
   Uid
 } from '@xht/contracts';
@@ -11,6 +12,10 @@ import type { OutboxRepository } from '../../reliability/outbox/outbox.repositor
 import type { InboxRepository } from '../../reliability/inbox/inbox.types.js';
 import type { CredentialSessionService } from '../../security/application/credential-session.service.js';
 import type { SecurityCommand } from './security-commands.js';
+import {
+  SecurityFlowRegistry,
+  type OpenSecurityFlow
+} from './security-flow.registry.js';
 import {
   SECURITY_REPLIES,
   securityReplyText,
@@ -34,13 +39,37 @@ export interface SecurityCommandOutcome {
     | 'digest_key_unavailable';
 }
 
-interface OpenFlow {
-  readonly sessionId: string;
-  readonly phase: 'primary' | 'confirmation';
-  readonly mode: 'setup' | 'authorize';
+type OpenFlow = OpenSecurityFlow;
+
+export interface AuthorizedContinuationInput {
+  readonly uid: Uid;
+  readonly externalUserId: string;
+  readonly proof: AuthorizePaymentProofV1;
 }
 
+export interface AuthorizedContinuationOutcome {
+  readonly replyKey: string;
+  readonly text: string;
+}
+
+export type AuthorizedContinuation = (
+  input: AuthorizedContinuationInput
+) => Promise<AuthorizedContinuationOutcome>;
+
 const SECURITY_PROMPT_TOPIC = 'telegram.security-prompt.v1';
+
+interface PromptDispatch {
+  readonly chatRef: string;
+  readonly replyKey: string;
+  readonly text: string;
+}
+
+function promptDispatch(
+  chatRef: string,
+  reply: SecurityReply
+): PromptDispatch {
+  return { chatRef, replyKey: reply, text: securityReplyText(reply) };
+}
 
 /**
  * Orchestrates security UX commands inside one UoW: the security update is
@@ -54,11 +83,21 @@ export class SecurityCommandHandler {
   readonly #sessions: CredentialSessionService;
   readonly #inbox: InboxRepository = new PostgresInboxRepository();
   readonly #outbox: OutboxRepository = new PostgresOutboxRepository();
-  readonly #flows = new Map<string, OpenFlow>();
+  readonly #flows: SecurityFlowRegistry;
+  readonly #onAuthorized: AuthorizedContinuation | null;
 
-  constructor(unitOfWork: UnitOfWork, sessions: CredentialSessionService) {
+  constructor(
+    unitOfWork: UnitOfWork,
+    sessions: CredentialSessionService,
+    dependencies?: {
+      readonly flows?: SecurityFlowRegistry;
+      readonly onAuthorized?: AuthorizedContinuation;
+    }
+  ) {
     this.#unitOfWork = unitOfWork;
     this.#sessions = sessions;
+    this.#flows = dependencies?.flows ?? new SecurityFlowRegistry();
+    this.#onAuthorized = dependencies?.onAuthorized ?? null;
   }
 
   public async execute(input: SecurityCommandInput): Promise<SecurityCommandOutcome> {
@@ -85,7 +124,7 @@ export class SecurityCommandHandler {
     const uid = await this.#unitOfWork.execute((transaction) =>
       this.#resolveUid(transaction, input.externalUserId)
     );
-    let handled: { reply: SecurityReply; prompt: { readonly chatRef: string; readonly reply: SecurityReply } | null };
+    let handled: { reply: SecurityReply; prompt: PromptDispatch | null };
     if (uid === null) {
       handled = { reply: 'notInSession', prompt: null };
     } else {
@@ -105,7 +144,7 @@ export class SecurityCommandHandler {
     input: SecurityCommandInput
   ): Promise<{
     reply: SecurityReply;
-    prompt: { readonly chatRef: string; readonly reply: SecurityReply } | null;
+    prompt: PromptDispatch | null;
   }> {
     const command = input.command;
     try {
@@ -116,7 +155,7 @@ export class SecurityCommandHandler {
           phase: 'primary',
           mode: 'setup'
         });
-        return { reply: 'setupStarted', prompt: { chatRef: input.externalUserId, reply: 'setupStarted' } };
+        return { reply: 'setupStarted', prompt: promptDispatch(input.externalUserId, 'setupStarted') };
       }
       if (command.kind === 'begin-authorize') {
         const begun = await this.#sessions.beginAuthorization({
@@ -131,7 +170,7 @@ export class SecurityCommandHandler {
           phase: 'primary',
           mode: 'authorize'
         });
-        return { reply: 'authorizePrompt', prompt: { chatRef: input.externalUserId, reply: 'authorizePrompt' } };
+        return { reply: 'authorizePrompt', prompt: promptDispatch(input.externalUserId, 'authorizePrompt') };
       }
       const flow = this.#flows.get(input.externalUserId);
       if (command.kind === 'cancel') {
@@ -139,7 +178,7 @@ export class SecurityCommandHandler {
           await this.#sessions.cancel(flow.sessionId);
           this.#flows.delete(input.externalUserId);
         }
-        return { reply: 'cancelled', prompt: { chatRef: input.externalUserId, reply: 'cancelled' } };
+        return { reply: 'cancelled', prompt: promptDispatch(input.externalUserId, 'cancelled') };
       }
       if (flow === undefined) {
         return { reply: 'notInSession', prompt: null };
@@ -161,18 +200,33 @@ export class SecurityCommandHandler {
         this.#flows.delete(input.externalUserId);
         const reply: SecurityReply =
           result.kind === 'authorized' ? 'authorized' : 'rejected';
-        return { reply, prompt: { chatRef: input.externalUserId, reply } };
+        if (result.kind === 'authorized' && this.#onAuthorized !== null) {
+          const outcome = await this.#onAuthorized({
+            uid,
+            externalUserId: input.externalUserId,
+            proof: result.proof
+          });
+          return {
+            reply,
+            prompt: {
+              chatRef: input.externalUserId,
+              replyKey: outcome.replyKey,
+              text: outcome.text
+            }
+          };
+        }
+        return { reply, prompt: promptDispatch(input.externalUserId, reply) };
       }
       if (flow.phase === 'primary') {
         this.#flows.set(input.externalUserId, {
           ...flow,
           phase: 'confirmation'
         });
-        return { reply: 'confirmPhase', prompt: { chatRef: input.externalUserId, reply: 'confirmPhase' } };
+        return { reply: 'confirmPhase', prompt: promptDispatch(input.externalUserId, 'confirmPhase') };
       }
       await this.#sessions.confirmSetup(flow.sessionId);
       this.#flows.delete(input.externalUserId);
-      return { reply: 'setupSuccess', prompt: { chatRef: input.externalUserId, reply: 'setupSuccess' } };
+      return { reply: 'setupSuccess', prompt: promptDispatch(input.externalUserId, 'setupSuccess') };
     } catch (error) {
       return this.#mapError(error, input.externalUserId);
     }
@@ -183,33 +237,30 @@ export class SecurityCommandHandler {
     chatRef: string
   ): {
     reply: SecurityReply;
-    prompt: { readonly chatRef: string; readonly reply: SecurityReply } | null;
+    prompt: PromptDispatch | null;
   } {
     const message = error instanceof Error ? error.message : String(error);
     if (message === 'SESSION_ALREADY_OPEN') {
-      return { reply: 'sessionAlreadyOpen', prompt: { chatRef, reply: 'sessionAlreadyOpen' } };
+      return { reply: 'sessionAlreadyOpen', prompt: promptDispatch(chatRef, 'sessionAlreadyOpen') };
     }
     if (message === 'SESSION_RATE_LIMITED') {
-      return { reply: 'rateLimited', prompt: { chatRef, reply: 'rateLimited' } };
+      return { reply: 'rateLimited', prompt: promptDispatch(chatRef, 'rateLimited') };
     }
     if (message === 'ENTRIES_MISMATCH') {
       this.#flows.delete(chatRef);
-      return { reply: 'entriesMismatch', prompt: { chatRef, reply: 'entriesMismatch' } };
+      return { reply: 'entriesMismatch', prompt: promptDispatch(chatRef, 'entriesMismatch') };
     }
     if (message === 'DIGITS_OUT_OF_POLICY_RANGE') {
       this.#flows.delete(chatRef);
-      return { reply: 'outOfRange', prompt: { chatRef, reply: 'outOfRange' } };
+      return { reply: 'outOfRange', prompt: promptDispatch(chatRef, 'outOfRange') };
     }
     if (message === 'CREDENTIAL_DIGIT_INVALID' || message === 'SESSION_NONCE_REUSED') {
       return { reply: 'notInSession', prompt: null };
     }
-    return { reply: 'internalError', prompt: { chatRef, reply: 'internalError' } };
+    return { reply: 'internalError', prompt: promptDispatch(chatRef, 'internalError') };
   }
 
-  async #enqueuePrompt(prompt: {
-    readonly chatRef: string;
-    readonly reply: SecurityReply;
-  }): Promise<void> {
+  async #enqueuePrompt(prompt: PromptDispatch): Promise<void> {
     await this.#unitOfWork.execute(async (transaction) => {
       const eventId = randomUUID();
       await this.#outbox.enqueue(transaction, {
@@ -222,8 +273,8 @@ export class SecurityCommandHandler {
           type: SECURITY_PROMPT_TOPIC,
           eventId,
           chatRef: prompt.chatRef,
-          replyKey: prompt.reply,
-          text: securityReplyText(prompt.reply)
+          replyKey: prompt.replyKey,
+          text: prompt.text
         }
       });
     });
