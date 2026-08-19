@@ -27,4 +27,15 @@ export interface ExchangeOrderRepository {
     context: TransactionContext,
     exchangeOrderId: string
   ): Promise<ExchangeOrderSnapshot | null>;
+  markExecuting(
+    context: TransactionContext,
+    exchangeOrderId: string
+  ): Promise<boolean>;
+  markSettled(
+    context: TransactionContext,
+    input: {
+      readonly exchangeOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean>;
 }

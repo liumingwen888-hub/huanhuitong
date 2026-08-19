@@ -204,7 +204,8 @@ export function exchangeFrozen(input: {
 
 export function exchangeSettled(input: {
   readonly sellFrozenAccountId: LedgerAccountId;
-  readonly clearingDiffAccountId: LedgerAccountId;
+  readonly sellClearingAccountId: LedgerAccountId;
+  readonly buyClearingAccountId: LedgerAccountId;
   readonly buyAvailableAccountId: LedgerAccountId;
   readonly sellAmount: string;
   readonly buyAmount: string;
@@ -218,8 +219,8 @@ export function exchangeSettled(input: {
     'EXCHANGE',
     [
       line(input.sellFrozenAccountId, 'DEBIT', input.sellAmount),
-      line(input.clearingDiffAccountId, 'CREDIT', input.sellAmount),
-      line(input.clearingDiffAccountId, 'DEBIT', input.buyAmount),
+      line(input.sellClearingAccountId, 'CREDIT', input.sellAmount),
+      line(input.buyClearingAccountId, 'DEBIT', input.buyAmount),
       line(input.buyAvailableAccountId, 'CREDIT', input.buyAmount)
     ]
   );

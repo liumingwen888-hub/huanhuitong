@@ -108,4 +108,37 @@ export class PostgresExchangeOrderRepository
     );
     return result.rows[0] ? toSnapshot(result.rows[0]) : null;
   }
+
+  public async markExecuting(
+    context: TransactionContext,
+    exchangeOrderId: string
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE exchange_orders SET status = 'EXECUTING',
+         updated_at = clock_timestamp()
+       WHERE exchange_order_id = $1::uuid
+         AND status = 'FUNDS_RESERVED'
+       RETURNING exchange_order_id`,
+      [exchangeOrderId]
+    );
+    return result.rows.length === 1;
+  }
+
+  public async markSettled(
+    context: TransactionContext,
+    input: {
+      readonly exchangeOrderId: string;
+      readonly settlementLedgerTransactionId: string;
+    }
+  ): Promise<boolean> {
+    const result = await context.executeSql(
+      `UPDATE exchange_orders SET status = 'SETTLED',
+         settlement_ledger_transaction_id = $2::uuid,
+         updated_at = clock_timestamp()
+       WHERE exchange_order_id = $1::uuid AND status = 'EXECUTING'
+       RETURNING exchange_order_id`,
+      [input.exchangeOrderId, input.settlementLedgerTransactionId]
+    );
+    return result.rows.length === 1;
+  }
 }

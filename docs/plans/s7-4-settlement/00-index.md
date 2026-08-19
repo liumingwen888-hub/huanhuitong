@@ -1,6 +1,6 @@
 # S7-4 执行与结算 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（换汇资金终态 + 模板修正）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S7-4 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（换汇资金终态 + 模板修正）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过，含模板修正授权）。S7-4 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -45,6 +45,20 @@ Create：`modules/exchange/application/exchange-settlement.service.ts`、`apps/p
 ## 边界与不做
 
 - 不做失败/过期释放（S7-5）；不做清算差价值对账（S7-6）；不做真实上游执行（生产）。
+
+## 实施裁决记录（2026-08-19）
+
+1. **发现并修复内核缺陷（第二个真实缺陷）**：`violatesNormalBalance` 缺少"不受限"集合——阶段 3 文档记录的"CLEARING_DIFF 不受限"修复从未落到内核；当年模板测试等额对倒（净额恒 0）从未暴露。双腿清算使买清算出现正余额（+buyAmount）即被误拒。修复：新增 `UNRESTRICTED_PURPOSES = {CLEARING_DIFF}`。全量回归确认无既有规格依赖旧的受限语义。
+2. 支付密码门裁决按计划落档：换汇确认不设（S7-8 威胁模型记录）。
+3. settle 的 FUNDS_RESERVED→EXECUTING CAS 失败后按快照分流（EXECUTING/SETTLED 重入，其余拒绝）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（172 模块、193 依赖）。
+- unit 30 文件 238/238 PASS。
+- S7XS01–S7XS05 全 PASS：同资产四账户终态（可用 −8M/冻结 0/买得 −1.99M/卖清算 −2M/买清算 +1.99M）、跨资产 BTC→USDT 各腿资产内平衡 + 借贷总平衡、EXECUTING 崩溃重入幂等 + 单笔 SETTLE、通知恰一条、非法状态与未知订单拒绝。
+- 阶段 3 模板测试适配后通过（同资产双清算参数传同账户的退化语义）；**内核修复后全量回归绿**：unit 238、database 462/465（M06/M14/M16 已知环境边界）、integration 97/97（一次负载抖动重跑通过）。
+- 交付物：模板拆双腿 + 适配、内核 UNRESTRICTED_PURPOSES 修复、订单仓储 markExecuting/markSettled CAS、ExchangeSettlementService、S7XS 集成规格。
 
 ## 停止条件
 

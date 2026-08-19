@@ -347,7 +347,8 @@ describe.sequential('S3-6 posting templates', () => {
     expect(await bal(user.available)).toBe('-500');
     const settle = exchangeSettled({
       sellFrozenAccountId: user.frozen as never,
-      clearingDiffAccountId: platform.clearingDiff as never,
+      sellClearingAccountId: platform.clearingDiff as never,
+      buyClearingAccountId: platform.clearingDiff as never,
       buyAvailableAccountId: recipient.available as never,
       sellAmount: '500',
       buyAmount: '500',

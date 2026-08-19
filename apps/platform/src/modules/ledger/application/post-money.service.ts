@@ -12,10 +12,15 @@ const DEBIT_NORMAL_PURPOSES = new Set([
   'UPSTREAM_COST'
 ]);
 
+const UNRESTRICTED_PURPOSES = new Set(['CLEARING_DIFF']);
+
 function violatesNormalBalance(
   purpose: string,
   signedBalance: bigint
 ): boolean {
+  if (UNRESTRICTED_PURPOSES.has(purpose)) {
+    return false;
+  }
   if (DEBIT_NORMAL_PURPOSES.has(purpose)) {
     return signedBalance < 0n;
   }

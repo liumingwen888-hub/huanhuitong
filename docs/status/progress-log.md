@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S7-4 执行与结算实施完成（含内核缺陷修复）
+
+- exchangeSettled 拆双腿清算（卖/买各自资产内平衡）；同资产场景向后兼容（阶段 3 测试适配通过）。
+- **修复内核缺陷**：violatesNormalBalance 缺 UNRESTRICTED_PURPOSES——CLEARING_DIFF 被误按贷方正常受限，阶段 3 文档记录的不受限语义从未落地（等额对倒测试从未暴露）；双腿清算的买方正余额触发发现。全量回归确认修复无回归。
+- ExchangeSettlementService：FUNDS_RESERVED→EXECUTING CAS（幂等重入）→ 双腿过账 → markSettled CAS → 通知。
+- 验证：build/typecheck/architecture(172 模块 0 违规)/unit 238/S7XS 5 项/database 462-465（已知三件套）/integration 97。
+
 ## 2026-08-19 — S7-4 执行与结算详细计划完成，等待外部复审
 
 - 发现并计划修正 S3-6 模板缺陷：单清算差账户在跨资产市场混淆两种资产单位；拆为卖/买双腿清算（各自资产内平衡），同资产向后兼容。
