@@ -1,5 +1,16 @@
 # 进展日志
 
+## 2026-08-17 — S5-5 详细计划 v1.0 完成，等待外部复审
+
+- 冻结合同：/transfer、/claim、/redpacket、/balance 四命令 + 回复常量 + 服务编排 + controller 扩展。
+- 冻结 Create 5 / Modify 1（controller 扩展）。
+- 唯一下一步：等待用户外部复审 S5-5 v1.0。
+
+## 2026-08-17 — S5-4 复审通过与 VERIFIED 收敛，进入 S5-5 规划
+
+- 用户裁决：S5-4 EXTERNAL REVIEW PASS。S5-4 转 VERIFIED；提交 `a80785b` 已推送。
+- S5-5"Telegram UX 接线"详细计划 DESIGNING。
+
 ## 2026-08-17 — S5-4 实施完成（红包服务落地），等待外部复审
 
 - Create 2；创建冻结→多次领取→DEPLETED→过期退剩余全链可证。

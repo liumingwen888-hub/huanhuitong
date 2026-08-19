@@ -1,5 +1,3 @@
 # 下一步
 
-阶段 5 S5-4"红包服务"已实施（Create 2；spec 5/5；创建冻结→多次领取→DEPLETED→过期退剩余全链可证）。S5-4 代码 `IMPLEMENTED`，等待用户外部复审。
-
-复审通过前不实施 S5-5（Telegram UX）。
+阶段 5 S5-5"Telegram UX 接线"详细计划 v1.0 已完成（`docs/plans/s55-telegram-ux/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。复审重点：命令格式设计、余额查询安全性。复审通过后实施。
