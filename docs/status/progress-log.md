@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S6-6 提现完成/失败结算详细计划完成，等待外部复审
+
+- 双收口：SETTLE:0（成功）与 RELEASE:0（释放）模板键动作互斥 + V8 CAS，数据库层杜绝并存。
+- 结算前服务自查链上状态（不信任调用方 ready 标记）；费用不可扣 → 停留 BROADCAST fail-closed（绝不部分收费、绝不推断成功）。
+- 过期 TTL 走 ConfigStore；无配置反向 fail-closed（不过期任何订单）。S6WF01-08 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S6-5 广播与确认监控实施完成
 
 - 交付 WithdrawalBroadcastService：broadcast（状态门→签名→广播→CAS 落 txid→受理通知；UNKNOWN 零状态写入）与 checkOnChainStatus（PENDING 停留/CONFIRMED 报 readyForSettlement/FAILED 权威迁移+通知）。
