@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S9-7 admin-web 前端实施完成
+
+- React 18 + Vite + TS SPA：五页（登录 MFA/审批台/对账/审计/配置）、零 UI 框架零状态库、令牌 sessionStorage、会话过期自动登出。
+- API 客户端纯函数四项单测（构造/解析/登出判定/游标）；构建 156 KB（gzip 50 KB）。
+- esbuild 构建批准裁决（allowBuilds 精确单依赖放行）。
+- 验证：typecheck/vite build/architecture(216 模块 0 违规)/unit 264(含 S9FE 4 项)/database 550-553（已知三件套）/integration 119-121（已知抖动）。
+
 ## 2026-08-19 — S9-7 admin-web 前端详细计划完成，等待外部复审
 
 - React 18 + Vite + TS SPA：零 UI 框架、零状态库（四依赖供应链面）；五页 tab 切换；令牌 sessionStorage。

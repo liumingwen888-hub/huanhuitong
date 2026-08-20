@@ -23,5 +23,10 @@
     "dependency-cruiser": "18.1.0",
     "typescript": "7.0.2",
     "vitest": "4.1.10"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

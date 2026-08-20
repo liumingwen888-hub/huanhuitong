@@ -1,6 +1,6 @@
 # S9-7 admin-web 前端 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（纯展示层，零资金逻辑）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S9-7 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（纯展示层，零资金逻辑）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过；含 react/vite 依赖授权）。S9-7 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -50,6 +50,19 @@ apps/admin-web/
 ## 边界与不做
 
 - 不做 SSR/路由库（五页 tab 切换）；不做国际化（中文固定）；不做主题（一份 CSS）；不做 Playwright E2E（阶段 10）。
+
+## 实施裁决记录（2026-08-19）
+
+1. esbuild 构建批准：pnpm 11 严格构建门禁拦截 vite 底层依赖的 postinstall——pnpm-workspace.yaml 增 `allowBuilds: {esbuild: true}`（精确单依赖放行，供应链面最小）。
+2. 测试文件须落 `test/unit/` 目录（vitest unit 项目按目录而非通配根拾取）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `tsc --noEmit` exit 0（exactOptionalPropertyTypes 严格模式）；`vite build` 成功（156 KB gzip 50 KB——零框架依赖的体积证明）。
+- `pnpm architecture:check` 0 违规（216 模块、221 依赖——admin-web 纳入巡航图）。
+- unit 34 文件 264/264 PASS（含 S9FE 4 项：Bearer/JSON/query 构造、响应解析与错误码映射、会话过期自动登出判定、游标翻页拼接）。
+- 数据库回归 550/553（M06/M14/M16 已知环境边界项）；integration 119–121（registration-concurrency 已知负载敏感抖动，历次隔离复跑均通过）。
+- 交付物：`apps/admin-web`（五页 + API 客户端 + 端点模块 + styles + index.html + tsconfig + vite 配置）、S9FE 规格。
 
 ## 停止条件
 

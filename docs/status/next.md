@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 9 进行中（S9-1～S9-6 已实施 VERIFIED，2026-08-19，Admin API 层收官）。S9-7"admin-web 前端"详细计划 v1.0 已完成（`docs/plans/s9-7-admin-web/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 9 进行中（阶段 1–8 VERIFIED，S9-1～S9-7 已实施 VERIFIED，2026-08-19）。
 
-复审重点：零 UI 框架/零状态库裁决（最小供应链面——后台是高价值目标）、令牌存 sessionStorage 而非 localStorage、E2E 测试延后阶段 10 的安排（Playwright 届时接入）。复审通过后实施（含 react/vite 依赖新增授权）。
+下一步：**S9-8 威胁模型与验收**——后台全链路验收（认证锁定/RBAC 默认拒绝/自审拒绝/审计不可删/配置发布恰一次），阶段 9 收官任务。等待用户"继续下一步工作"启动。

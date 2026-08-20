@@ -1,0 +1,138 @@
+:root {
+  font-family: 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #f5f6f8;
+  color: #1a1a1a;
+}
+
+.app { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid #d8dae0;
+}
+
+.app-header h1 { font-size: 18px; margin: 0; }
+
+.tabs { display: flex; gap: 8px; flex: 1; }
+
+.tab {
+  padding: 6px 16px;
+  border: 1px solid #c6c9d0;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tab.active { background: #1f4f8f; color: #fff; border-color: #1f4f8f; }
+
+.session-info { display: flex; align-items: center; gap: 12px; font-size: 13px; }
+
+.notice {
+  background: #eef4ff;
+  border: 1px solid #b6cdf5;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 12px 0;
+}
+
+.error {
+  color: #b3261e;
+  background: #fdecea;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #d8dae0;
+  border-radius: 6px;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+th, td { padding: 8px 12px; border-bottom: 1px solid #e8eaee; text-align: left; }
+
+th { background: #f0f1f4; }
+
+button {
+  padding: 6px 14px;
+  border: 1px solid #1f4f8f;
+  background: #1f4f8f;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+button:disabled { opacity: 0.5; cursor: default; }
+
+.cards { display: flex; gap: 12px; margin: 12px 0; }
+
+.card {
+  flex: 1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  border: 1px solid #d8dae0;
+}
+
+.card.ok { background: #eaf7ec; border-color: #a8d5b0; }
+.card.bad { background: #fdecea; border-color: #e6b3af; }
+
+.meta { color: #666; font-size: 13px; }
+
+.login-wrap {
+  display: flex;
+  justify-content: center;
+  padding-top: 12vh;
+}
+
+.login-card {
+  width: 360px;
+  background: #fff;
+  border: 1px solid #d8dae0;
+  border-radius: 10px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-card h1 { font-size: 18px; text-align: center; }
+
+label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+
+input, select, textarea {
+  padding: 8px;
+  border: 1px solid #c6c9d0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+textarea { font-family: ui-monospace, monospace; }
+
+.filter-form, .config-form, .reject-form {
+  background: #fff;
+  border: 1px solid #d8dae0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 520px;
+}
+
+.filter-form { flex-direction: row; flex-wrap: wrap; max-width: none; }
+
+.reject-form h3, .config-form h3 { margin: 0; }
