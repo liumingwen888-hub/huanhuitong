@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — 阶段 9 总体规划 v1.0 READY + S9-1 详细计划完成，等待外部复审
+
+- 五项裁决：React+Vite、argon2+TOTP 强制+30 分钟会话+重认证、四页（Break-Glass 延后）、platform 内 REST、approval_requests 编排层。
+- S9-1 冻结：V14 两表（credentials 1:1 附体 + sessions 哈希存储）、hash-wasm argon2id、TotpSecretPort 引用解析、锁定 fail-closed。S9AM01-07 冻结。唯一下一步：等待用户外部复审（通过时 V14 需显式授权）。
+
 ## 2026-08-19 — 阶段 8 用户验收通过（VERIFIED）；阶段 9 总体规划草案 v0.1 启动
 
 - 用户经"继续下一步工作"验收阶段 8：roadmap 转 VERIFIED，阶段 1–8 全部落地（充值/转账/红包/提现/换汇/法币代付六条管线）。

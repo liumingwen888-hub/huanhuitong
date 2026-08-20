@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 8 VERIFIED（2026-08-19 用户验收通过）。阶段 9"完整管理后台、风险/费用运营、配置发布和审计查询"总体规划草案 v0.1 已完成（`docs/plans/2026-08-19-stage-9-admin-master-plan.md`），`DRAFT / 需求确认中`。
+阶段 9 总体规划 v1.0 READY（五项设计决策已裁决）。S9-1"管理员认证与 V14 迁移"详细计划 v1.0 已完成（`docs/plans/s9-1-admin-auth/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
 
-待用户裁决五项设计决策：前端技术（建议：React 18 + Vite + TS）、管理员认证（建议：argon2 密码 + TOTP 强制 + 30 分钟短会话 + 高风险重认证）、首批页面（建议：审批/对账/审计/配置四页，Break-Glass 延后阶段 10）、API 形态（建议：platform 内 REST/JSON + Bearer）、审批统一实体（建议：approval_requests 编排层，不动已验证双审服务）。回复"继续"即按建议值全部通过并冻结 v1.0。
+复审重点：会话令牌只在登录响应出现一次（库中仅 sha256）、TOTP secret 经 TotpSecretPort 引用解析（本体不落库，与 callback 同型）、argon2 参数按 OWASP、锁定 fail-closed（15 分钟窗口不可绕过）。复审通过并显式授权 V14 后实施（含 hash-wasm 依赖新增）。
