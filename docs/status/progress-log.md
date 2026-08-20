@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S10-2 完整观测详细计划完成，等待外部复审
+
+- MetricsPort 纯接口（12 计数器 + 2 直方图封闭枚举）；LoggingMetrics 合成实现（60 秒聚合冲刷）；生产 OTel 同接口换底。
+- 六域服务可选注入（默认 no-op 不动既有测试）；告警规则 yml 声明式。S10OB01-06 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S10-1 全栈本地编排实施完成
 
 - 五服务 Compose（postgres/migrate/platform/worker/admin-web）：健康门控链（postgres healthy → migrate completed → platform healthy → admin-web）；必填变量 `${VAR:?required}` fail-fast。
