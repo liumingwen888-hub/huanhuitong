@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S9-3 统一审批工作台 API 详细计划完成，等待外部复审
+
+- 无表编排裁决：决定事实已在 withdrawal_approvals/callback_inbox 等域权威表，再造 approval_requests 表即第二决定源——统一层只做聚合读模型 + 端点路由。
+- 两类待审来源（提现 PENDING_APPROVAL / 代付 UNKNOWN 查询裁决）；清单 AUDITOR 可读、决定 FINANCE_OFFICER+ELEVATED。S9AP01-07 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S9-2 Admin API 基座与 RBAC 中间件实施完成
 
 - AdminApiRouter：显式注册路由表（未注册即 404 默认拒绝）；固定链 会话→角色→提升→审计→业务；拒绝路径（401/403/404）全审计。
