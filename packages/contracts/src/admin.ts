@@ -47,3 +47,19 @@ export interface ApprovalItem {
   readonly status: string;
   readonly createdAt: string;
 }
+
+export type WatchItemKind =
+  | 'SETTLE_PENDING'
+  | 'RELEASE_PENDING'
+  | 'UNKNOWN';
+
+export interface WatchItem {
+  readonly itemId: string;
+  readonly kind: WatchItemKind;
+  readonly domain: 'WITHDRAWAL' | 'EXCHANGE' | 'PAYOUT';
+  readonly uid: string;
+  readonly amount: string;
+  readonly assetOrRoute: string;
+  readonly status: string;
+  readonly ageMinutes: number;
+}

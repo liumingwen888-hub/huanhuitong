@@ -97,6 +97,10 @@ export interface WithdrawalOrderRepository {
     context: TransactionContext,
     limit: number
   ): Promise<readonly WithdrawalOrderSnapshot[]>;
+  findByStatuses(
+    context: TransactionContext,
+    input: { readonly statuses: readonly string[]; readonly limit: number }
+  ): Promise<readonly WithdrawalOrderSnapshot[]>;
 }
 
 export interface WithdrawalApprovalRepository {

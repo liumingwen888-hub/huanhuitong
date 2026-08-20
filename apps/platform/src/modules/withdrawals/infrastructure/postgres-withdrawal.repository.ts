@@ -274,6 +274,20 @@ export class PostgresWithdrawalOrderRepository
     return result;
   }
 
+  public async findByStatuses(
+    context: TransactionContext,
+    input: { readonly statuses: readonly string[]; readonly limit: number }
+  ): Promise<readonly WithdrawalOrderSnapshot[]> {
+    const result = await context.executeSql<WithdrawalRow>(
+      `${WITHDRAWAL_SELECT}
+       WHERE status = ANY($1::text[])
+       ORDER BY created_at
+       LIMIT $2`,
+      [input.statuses, input.limit]
+    );
+    return result.rows.map(toWithdrawalSnapshot);
+  }
+
   public async findPendingApprovals(
     context: TransactionContext,
     limit: number

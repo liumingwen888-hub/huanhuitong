@@ -57,4 +57,8 @@ export interface ExchangeOrderRepository {
     context: TransactionContext,
     input: { readonly staleBefore: Date; readonly limit: number }
   ): Promise<readonly ExchangeOrderSnapshot[]>;
+  findByStatuses(
+    context: TransactionContext,
+    input: { readonly statuses: readonly string[]; readonly limit: number }
+  ): Promise<readonly ExchangeOrderSnapshot[]>;
 }

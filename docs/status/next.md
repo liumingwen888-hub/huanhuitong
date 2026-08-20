@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 9 进行中（S9-1～S9-3 已实施 VERIFIED，2026-08-19）。S9-4"对账与运营视图 API"详细计划 v1.0 已完成（`docs/plans/s9-4-reconciliation-views/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 9 进行中（阶段 1–8 VERIFIED，S9-1～S9-4 已实施 VERIFIED，2026-08-19）。
 
-复审重点：三域对账报告合并透传（API 层零修复零加工）、观察清单三分类（SETTLE_PENDING/RELEASE_PENDING/UNKNOWN）的覆盖完整性、只读红线（全部表行数不变断言）。复审通过后实施（无迁移、只读层）。
+下一步：**S9-5 审计查询 API**详细计划——追加式审计事件检索（时间/主体/类别过滤；不可删；字段脱敏规则）。等待用户"继续下一步工作"启动。

@@ -193,6 +193,18 @@ export class PostgresExchangeOrderRepository
     return result.rows.length === 1;
   }
 
+  public async findByStatuses(
+    context: TransactionContext,
+    input: { readonly statuses: readonly string[]; readonly limit: number }
+  ): Promise<readonly ExchangeOrderSnapshot[]> {
+    const result = await context.executeSql<ExchangeOrderRow>(
+      `${ORDER_SELECT} WHERE status = ANY($1::text[])
+       ORDER BY created_at LIMIT $2`,
+      [input.statuses, input.limit]
+    );
+    return result.rows.map(toSnapshot);
+  }
+
   public async findExpirable(
     context: TransactionContext,
     input: { readonly staleBefore: Date; readonly limit: number }

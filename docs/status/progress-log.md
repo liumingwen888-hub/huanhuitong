@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S9-4 对账与运营视图 API 实施完成
+
+- OpsViewService：三域对账合并报告（零加工透传）+ 三域观察清单（SETTLE_PENDING/RELEASE_PENDING/UNKNOWN + ageMinutes）。
+- 三域仓储增 findByStatuses 通用状态查询；两端点挂载（只读红线全表行数断言）。
+- 验证：build/typecheck/architecture(211 模块 0 违规)/unit 260/S9OV 6 项/database 537-540（已知三件套）/integration 120-121（已知抖动项）。
+
 ## 2026-08-19 — S9-4 对账与运营视图 API 详细计划完成，等待外部复审
 
 - 两端点：三域对账合并报告（discrepancies 原样透传）+ 观察清单（三类：待结算/待释放/UNKNOWN）。

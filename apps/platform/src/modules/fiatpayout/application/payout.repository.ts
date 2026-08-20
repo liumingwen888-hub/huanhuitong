@@ -41,6 +41,10 @@ export interface PayoutOrderRepository {
     context: TransactionContext,
     limit: number
   ): Promise<readonly PayoutOrderSnapshot[]>;
+  findByStatuses(
+    context: TransactionContext,
+    input: { readonly statuses: readonly string[]; readonly limit: number }
+  ): Promise<readonly PayoutOrderSnapshot[]>;
   markSubmitting(
     context: TransactionContext,
     payoutOrderId: string

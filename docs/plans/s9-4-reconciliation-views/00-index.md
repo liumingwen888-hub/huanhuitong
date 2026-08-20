@@ -1,6 +1,6 @@
 # S9-4 对账与运营视图 API 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（只读视图层）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S9-4 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（只读视图层）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S9-4 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -37,6 +37,14 @@ Create：`modules/admin/http/admin-ops.routes.ts`、`modules/admin/application/o
 ## 边界与不做
 
 - 不做对账修复动作；不做跨域汇总报表（计值等域内逻辑已由各域报告携带）；不做分页（limit 100 固定）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（211 模块、221 依赖）。
+- unit 33 文件 260/260 PASS。
+- S9OV01–S9OV06 全 PASS：三域合并报告（零差异基线 + checkedAt）、观察清单三类齐全（SETTLE_PENDING/RELEASE_PENDING/UNKNOWN + ageMinutes + 金额/域字段）、终态订单退出清单、坏令牌 401、审计 GRANTED 落档、业务表行数不变（只读红线断言）。
+- 数据库回归 537/540（M06/M14/M16 已知环境边界项）；integration 120–121（registration-concurrency 已知负载敏感抖动项，今日多轮全绿后偶发）。
+- 交付物：`ops-view.service.ts`（合并报告 + 三域观察清单）、`admin-ops.routes.ts`（两端点）、三域仓储 findByStatuses 通用查询、contracts WatchItem、S9OV 集成规格。
 
 ## 停止条件
 
