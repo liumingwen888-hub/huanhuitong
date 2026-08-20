@@ -149,3 +149,19 @@ Task 4 已实现并验证单连接 Unit of Work、TransactionContext 禁止逃�
 | 跨类证明挪用 | operationType='fiat-payout' 七维绑定（assetSummary 绑路线） | S8PR01 |
 | 供应商配置漂移 | provider_configs 版本化只增不改 + 订单快照版本 | S8PO05 |
 | 费用边界挪用 | 结算费用 fail-closed（停留 ACCEPTED 待运营） | S8ST06 |
+
+## 阶段 9 威胁模型增补（2026-08-19，S9-8）
+
+| 威胁 | 控制 | 证据 |
+|---|---|---|
+| 管理员凭据暴力破解 | argon2id（OWASP 参数）+ 5 次失败锁 15 分钟 fail-closed | S9AM02、S9A01 |
+| 会话令牌窃取/重放 | 原始令牌只出现一次（库中仅 sha256）+ 30 分钟短会话 | S9AM01、S9A10 |
+| TOTP 密钥泄露 | vault: 引用（本体不落库）+ TotpSecretPort 解析 | S9AM07 |
+| 越权 API 访问 | 默认拒绝路由表（未注册 404）+ 三级中间件（会话/角色/提升） | S9RB02、S9A02 |
+| 角色提权（操作者审自己） | 自审拒绝服务层强制（配置 maker≠checker；审批 AUDITOR 只读） | S9CR02、S9A11 |
+| 审批权滥用（单人双批） | UNIQUE(withdrawal_id, admin_id) + 不同管理员双审 | S9AP07、S9A03 |
+| 审计篡改/删除 | audit_events 仅 INSERT 权限 + 元审计（检索自身落档） | S9A09、S9AQ06 |
+| 配置未审发布 | 草稿→复核→发布 Maker-Checker + 恰一次结算（最新版本判定） | S9CR04、S9A08 |
+| 前端供应链攻击 | 零 UI 框架/零状态库四依赖 + esbuild 精确构建批准 | S9FE、实施裁决 |
+| 前端令牌持久化泄露 | sessionStorage（标签页级）而非 localStorage | S9FE03 |
+| 注入（审计检索 LIKE） | 类别前缀白名单 + actor 字符集校验 | S9AQ03 |
