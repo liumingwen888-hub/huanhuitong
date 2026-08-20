@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S9-6 配置发布流详细计划完成，等待外部复审
+
+- 草稿→复核→发布三步：草稿存 config_versions 的 draft. 前缀键（payload 内嵌状态，零 UPDATE）；发布 = 提取 payload 经目标域 insert 方法写入（version=max+1）。
+- 自审拒绝服务层强制；四表白名单（market/provider/signer/configstore）；回滚 = 发布旧参数为新版本。S9CR01-07 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S9-5 审计查询 API 实施完成
 
 - AuditQueryService：时间/主体/类别白名单三过滤 + (occurred_at, id) 元组 keyset 分页 + limit 200 强制；检索零写入。
