@@ -37,6 +37,10 @@ export interface PayoutOrderRepository {
     context: TransactionContext,
     providerIdempotencyKey: string
   ): Promise<PayoutOrderSnapshot | null>;
+  findUncertain(
+    context: TransactionContext,
+    limit: number
+  ): Promise<readonly PayoutOrderSnapshot[]>;
   markSubmitting(
     context: TransactionContext,
     payoutOrderId: string

@@ -274,6 +274,20 @@ export class PostgresWithdrawalOrderRepository
     return result;
   }
 
+  public async findPendingApprovals(
+    context: TransactionContext,
+    limit: number
+  ): Promise<readonly WithdrawalOrderSnapshot[]> {
+    const result = await context.executeSql<WithdrawalRow>(
+      `${WITHDRAWAL_SELECT}
+       WHERE status = 'PENDING_APPROVAL'
+       ORDER BY created_at
+       LIMIT $1`,
+      [limit]
+    );
+    return result.rows.map(toWithdrawalSnapshot);
+  }
+
   public async findExpirable(
     context: TransactionContext,
     input: { readonly staleBefore: Date; readonly limit: number }

@@ -33,3 +33,17 @@ export interface AdminApiResponse {
   readonly status: number;
   readonly body: unknown;
 }
+
+export type ApprovalItemKind =
+  | 'WITHDRAWAL_APPROVAL'
+  | 'PAYOUT_UNKNOWN';
+
+export interface ApprovalItem {
+  readonly itemId: string;
+  readonly kind: ApprovalItemKind;
+  readonly uid: string;
+  readonly amount: string;
+  readonly assetOrRoute: string;
+  readonly status: string;
+  readonly createdAt: string;
+}

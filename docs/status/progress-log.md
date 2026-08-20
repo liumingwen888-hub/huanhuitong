@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S9-3 统一审批工作台 API 实施完成
+
+- 无表编排落地：ApprovalWorkbenchService 聚合双域待审（WDL:/PO: 编号），决定路由至已验证服务（WithdrawalApprovalService/PayoutQueryService 查询优先）。
+- AdminApiRouter 增 :param 匹配；三端点挂载（清单/提现决定/代付裁决）；审计逐请求落档。
+- 实施发现：audit_events.occurred_at 无默认值（补 clock_timestamp）。
+- 验证：build/typecheck/architecture(209 模块 0 违规)/unit 260/S9AP 7 项/database 531-534（已知三件套）/integration 121。
+
 ## 2026-08-19 — S9-3 统一审批工作台 API 详细计划完成，等待外部复审
 
 - 无表编排裁决：决定事实已在 withdrawal_approvals/callback_inbox 等域权威表，再造 approval_requests 表即第二决定源——统一层只做聚合读模型 + 端点路由。

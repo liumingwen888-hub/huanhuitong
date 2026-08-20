@@ -1,6 +1,6 @@
 # S9-3 统一审批工作台 API 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（编排层，决定逻辑全部下沉已验证服务）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S9-3 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（编排层，决定逻辑全部下沉已验证服务）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S9-3 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -48,6 +48,20 @@ Create：`modules/admin/http/admin-approval.routes.ts`、`modules/admin/applicat
 ## 边界与不做
 
 - 不做前端（S9-7）；不做 exchange 域审批（限额内无人工门）；不做批量决定（逐单可审计）。
+
+## 实施裁决记录（2026-08-19）
+
+1. 清单可见性落地为"任何已认证管理员可读"（计划文本 AUDITOR 的放宽）：五角色均为内部受信角色，AUDITOR-only 反而使 FINANCE 无法在工作台看到待审；决定权仍 FINANCE_OFFICER+ELEVATED 不变。
+2. AdminApiRouter 增单段 `:param` 路径匹配（精确匹配优先，参数段提取后传处理器）——路由能力最小扩展，默认拒绝语义不变。
+3. AuditRecorder 补 occurred_at（audit_events 无默认值——实现期发现）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（209 模块、221 依赖）。
+- unit 33 文件 260/260 PASS（S9RB 基座回归全过）。
+- S9AP01–S9AP07 全 PASS：清单双域聚合并按时间序（WDL:×/PO:× 编号 + kind 标注）、提现决定全链（APPROVE→AWAITING_SECOND→第二人 REJECT→REJECTED）、角色门（plain-token 403 ROLE_DENIED + 非法决定体 400）、代付 resolve 触发供应商查询（SUCCEEDED_REPORTED）、未知 id 404、审计落档（event_type/outcome/actor_ref 断言）、同管理员重复投票 409 WITHDRAWAL_DUPLICATE_APPROVAL。
+- 数据库回归 531/534（M06/M14/M16 已知环境边界项）；integration 121/121。
+- 交付物：`approval-workbench.service.ts`、`admin-approval.routes.ts`（三端点）、router :param 匹配、withdrawal/payout 仓储只读查询（findPendingApprovals/findUncertain）、contracts ApprovalItem、S9AP 集成规格。
 
 ## 停止条件
 

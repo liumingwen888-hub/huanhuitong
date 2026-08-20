@@ -93,6 +93,10 @@ export interface WithdrawalOrderRepository {
     context: TransactionContext,
     input: { readonly staleBefore: Date; readonly limit: number }
   ): Promise<readonly WithdrawalOrderSnapshot[]>;
+  findPendingApprovals(
+    context: TransactionContext,
+    limit: number
+  ): Promise<readonly WithdrawalOrderSnapshot[]>;
 }
 
 export interface WithdrawalApprovalRepository {

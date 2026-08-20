@@ -144,6 +144,20 @@ export class PostgresPayoutOrderRepository implements PayoutOrderRepository {
     return result.rows[0] ? toOrderSnapshot(result.rows[0]) : null;
   }
 
+  public async findUncertain(
+    context: TransactionContext,
+    limit: number
+  ): Promise<readonly PayoutOrderSnapshot[]> {
+    const result = await context.executeSql<PayoutOrderRow>(
+      `${ORDER_SELECT}
+       WHERE status IN ('UNKNOWN', 'SUBMITTING')
+       ORDER BY created_at
+       LIMIT $1`,
+      [limit]
+    );
+    return result.rows.map(toOrderSnapshot);
+  }
+
   public async markSubmitting(
     context: TransactionContext,
     payoutOrderId: string

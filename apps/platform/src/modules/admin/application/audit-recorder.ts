@@ -27,8 +27,8 @@ export class AuditRecorder {
       context.executeSql(
         `INSERT INTO audit_events
            (event_type, actor_type, actor_ref, subject_ref, outcome,
-            correlation_id)
-         VALUES ($1, $2, $3, $4, $5, $6::uuid)`,
+            correlation_id, occurred_at)
+         VALUES ($1, $2, $3, $4, $5, $6::uuid, clock_timestamp())`,
         [
           input.eventType,
           input.actorType,

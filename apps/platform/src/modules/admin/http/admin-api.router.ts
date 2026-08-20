@@ -18,10 +18,12 @@ export interface AdminRouteContext {
   readonly session: AdminSessionSnapshot;
   readonly body: unknown;
   readonly bearerToken: string;
+  readonly params: Readonly<Record<string, string>>;
 }
 
 export interface PublicRouteContext {
   readonly body: unknown;
+  readonly params: Readonly<Record<string, string>>;
 }
 
 export interface RouteDefinition {
@@ -69,11 +71,51 @@ export class AdminApiRouter {
     this.#routes.set(`${method} ${path}`, definition);
   }
 
+  /** Exact match first, then single-segment :param patterns. */
+  #match(
+    method: AdminApiRequest['method'],
+    path: string
+  ): { definition: RouteDefinition; params: Record<string, string> } | undefined {
+    const exact = this.#routes.get(`${method} ${path}`);
+    if (exact !== undefined) {
+      return { definition: exact, params: {} };
+    }
+    const segments = path.split('/').filter((part) => part !== '');
+    for (const [key, definition] of this.#routes) {
+      const [routeMethod, routePath] = key.split(' ');
+      if (routeMethod !== method || routePath === undefined) {
+        continue;
+      }
+      const routeSegments = routePath
+        .split('/')
+        .filter((part) => part !== '');
+      if (routeSegments.length !== segments.length) {
+        continue;
+      }
+      const params: Record<string, string> = {};
+      let matched = true;
+      for (const [index, routeSegment] of routeSegments.entries()) {
+        if (routeSegment.startsWith(':')) {
+          params[routeSegment.slice(1)] = segments[index]!;
+        } else if (routeSegment !== segments[index]) {
+          matched = false;
+          break;
+        }
+      }
+      if (matched) {
+        return { definition, params };
+      }
+    }
+    return undefined;
+  }
+
   public async dispatch(
     request: AdminApiRequest
   ): Promise<AdminApiResponse> {
     const correlationId = randomUUID();
-    const route = this.#routes.get(`${request.method} ${request.path}`);
+    const match = this.#match(request.method, request.path);
+    const route = match?.definition;
+    const params = match?.params ?? {};
     if (route === undefined) {
       await this.#audit.record({
         eventType: `ADMIN_API_${request.method}_NOT_FOUND`,
@@ -86,7 +128,10 @@ export class AdminApiRouter {
       return { status: 404, body: { code: 'ADMIN_API_NOT_FOUND' } };
     }
     if (route.publicHandler !== undefined) {
-      const response = await route.publicHandler({ body: request.body });
+      const response = await route.publicHandler({
+        body: request.body,
+        params
+      });
       return response;
     }
     const token = request.bearerToken;
@@ -141,7 +186,8 @@ export class AdminApiRouter {
     const response = await route.handler({
       session: check.session,
       body: request.body,
-      bearerToken: token
+      bearerToken: token,
+      params
     });
     await this.#audit.record({
       eventType: route.eventType,
