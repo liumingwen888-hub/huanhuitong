@@ -1,6 +1,6 @@
 # S8-7 对账 + Telegram UX 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（只读对账 + UX 编排层）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S7-7 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（只读对账 + UX 编排层）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S8-7 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -55,6 +55,14 @@ S8PU（单元 + Fake，S7-7 同型）：
 ## 边界与不做
 
 - 不做对账自动修复；不做真实供应商对账（生产）；不做按钮 UI。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（197 模块、215 依赖）。
+- unit 32 文件 253/253 PASS（含 S8PU 7 项：解析矩阵、开仓真实绑定值（assetSummary=US:USD）、续体七类映射 + 事实参数、预估渲染（含"以实际为准"标注）、能力渲染、八态 + route 白名单双向（US:USD 过 / 小写与超长拒）、六通知主题静态文案 + 源码保证扫描）。
+- S8RC01–S8RC05 全 PASS：三路径干净账本（成功/释放/冲正）零差异、重复 SETTLE → settle=2 链接差异、报 FAILED + 订单 SUCCEEDED → REPORT_ORDER_MISMATCH、孤儿报告、只读性（六表行数不变）。
+- 数据库回归 517/520（M06/M14/M16 已知环境边界项）；integration 107–109（registration-concurrency 已知负载敏感抖动，今日多次全绿后在本轮持续负载下抖动，identity 代码未动——S8-8 验收时聚焦复核）。
+- 交付物：`payout-reconciliation.service.ts`（链接矩阵含 REVERSED 三动作 + 报告一致性）、`telegram/application/{payout-commands, payout-replies, payout-command.handler}.ts`、renderNumeric route/payoutOrderRef 种类、S8RC + S8PU 规格。
 
 ## 停止条件
 

@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S8-7 对账 + Telegram UX 实施完成
+
+- PayoutReconciliationService：订单↔账本链接矩阵（REVERSED 三动作）+ 供应商报告一致性（报 FAILED + 已 SUCCEEDED = 最严重分叉）+ 孤儿报告；只读红线。
+- /payout 命令族四命令 + 证明续体（assetSummary 绑 route）；renderNumeric 增 route/payoutOrderRef 种类；六通知主题接入泛化注册。
+- 验证：build/typecheck/architecture(197 模块 0 违规)/unit 253(含 S8PU 7 项)/S8RC 5 项/database 517-520（已知三件套）/integration 107-109（已知并发抖动，S8-8 聚焦复核）。
+
 ## 2026-08-19 — S8-7 对账 + Telegram UX 详细计划完成，等待外部复审
 
 - 三层只读对账（链接矩阵含 REVERSED 三动作、报告一致性、孤儿报告）；/payout 四命令复用证明续体模式（assetSummary=route）。

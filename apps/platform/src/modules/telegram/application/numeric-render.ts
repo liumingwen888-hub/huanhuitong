@@ -1,11 +1,19 @@
-export type NumericKind = 'amount' | 'marketKey' | 'quoteId' | 'orderRef';
+export type NumericKind =
+  | 'amount'
+  | 'marketKey'
+  | 'quoteId'
+  | 'orderRef'
+  | 'route'
+  | 'payoutOrderRef';
 
 const PATTERNS: Readonly<Record<NumericKind, RegExp>> = Object.freeze({
   amount: /^[0-9]{1,18}$/u,
   marketKey: /^[A-Z0-9-]{1,16}:[A-Z0-9-]{1,16}$/u,
   quoteId:
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/u,
-  orderRef: /^XCHG:[0-9a-f-]{10,40}$/u
+  orderRef: /^XCHG:[0-9a-f-]{10,40}$/u,
+  route: /^[A-Z]{2}:[A-Z]{3}$/u,
+  payoutOrderRef: /^PO:TG:[0-9A-F]{8}$/u
 });
 
 export class NumericRenderError extends Error {

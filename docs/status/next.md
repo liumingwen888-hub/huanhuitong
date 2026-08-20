@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 8 进行中（S8-1～S8-6 已实施 VERIFIED，2026-08-19）。S8-7"对账 + Telegram UX"详细计划 v1.0 已完成（`docs/plans/s8-7-reconciliation-ux/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 8 进行中（阶段 1–7 VERIFIED，S8-1～S8-7 已实施 VERIFIED，2026-08-19）。
 
-复审重点：REVERSED 态的链接矩阵（FREEZE+SETTLE+REVERSE 三动作）、报告一致性方向规则（报 FAILED 但订单已 SUCCEEDED = 最严重的状态分叉信号）、UX 证明续体复用（assetSummary 绑 route）。复审通过后实施（无迁移）。
+下一步：**S8-8 威胁模型与验收**——代付全链路验收（申请→提交→回调/查询→结算/释放/冲正，含 UNKNOWN、验真、防重付、并发）+ 已知并发抖动的聚焦复核，阶段 8 收官。等待用户"继续下一步工作"启动。
