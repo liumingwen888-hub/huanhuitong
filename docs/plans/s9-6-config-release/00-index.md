@@ -4,7 +4,7 @@
 
 ## 权威需求来源
 
-[阶段 9 总体规划 v1.0](../2026-08-19-stage-9-admin-master-plan.md)（S9-6 任务行）、[admin-and-audit 领域](../../domains/admin-and-audit.md)（Maker-Checker、配置版本、配置签名/版本）、[三张版本表](../../../database/migrations/)（market_configs V9 / provider_configs V12 / signer_policies V8）、[ConfigStore](../../../apps/platform/src/modules/crosscutting/application/crosscutting.services.ts)（config_versions，V5）。
+[阶段 9 总体规划 v1.0](../2026-08-19-stage-9-admin-master-plan.md)（S9-6 任务行）、[admin-and-audit 领域](../../domains/admin-and-audit.md)（Maker-Checker、配置版本、配置签名/版本）、三张版本表（market_configs V9 / provider_configs V12 / signer_policies V8）（market_configs V9 / provider_configs V12 / signer_policies V8）、[ConfigStore](../../../apps/platform/src/modules/crosscutting/application/crosscutting.services.ts)（config_versions，V5）。
 
 ## 目标
 
