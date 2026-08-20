@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S9-7 admin-web 前端详细计划完成，等待外部复审
+
+- React 18 + Vite + TS SPA：零 UI 框架、零状态库（四依赖供应链面）；五页 tab 切换；令牌 sessionStorage。
+- API 客户端纯函数单测（S9FE01-04）；组件 E2E 延后阶段 10 Playwright。唯一下一步：等待用户外部复审（含 react/vite 依赖授权）。
+
 ## 2026-08-19 — S9-6 配置发布流实施完成（Admin API 层收官）
 
 - ConfigReleaseService：草稿（draft. 键 + payload 内嵌状态零 UPDATE）→ 复核发布（最新版本判定恰一次）→ 四表写入路由（各域 insert 方法）。
