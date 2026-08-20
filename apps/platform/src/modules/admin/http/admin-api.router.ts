@@ -19,6 +19,7 @@ export interface AdminRouteContext {
   readonly body: unknown;
   readonly bearerToken: string;
   readonly params: Readonly<Record<string, string>>;
+  readonly query: Readonly<Record<string, string>>;
 }
 
 export interface PublicRouteContext {
@@ -187,7 +188,8 @@ export class AdminApiRouter {
       session: check.session,
       body: request.body,
       bearerToken: token,
-      params
+      params,
+      query: request.query ?? {}
     });
     await this.#audit.record({
       eventType: route.eventType,

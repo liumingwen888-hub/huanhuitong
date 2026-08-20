@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S9-5 审计查询 API 实施完成
+
+- AuditQueryService：时间/主体/类别白名单三过滤 + (occurred_at, id) 元组 keyset 分页 + limit 200 强制；检索零写入。
+- GET /admin/audit/events：AUDITOR 专职（操作权与审查权分离）；元审计（检索请求落档）。
+- AdminApiRouter 增 query 传递。验证：build/typecheck/architecture(213 模块 0 违规)/unit 260/S9AQ 6 项/database 543-546（已知三件套）/integration 121。
+
 ## 2026-08-19 — S9-5 审计查询 API 详细计划完成，等待外部复审
 
 - 检索端点：时间/主体/类别三过滤 + keyset 分页 + limit 上限 200；AUDITOR 专职（资金操作权与审计查询权分离）。

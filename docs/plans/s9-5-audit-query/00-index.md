@@ -1,6 +1,6 @@
 # S9-5 审计查询 API 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（只读检索层）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S9-5 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（只读检索层）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S9-5 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -37,6 +37,20 @@ Create：`modules/admin/application/audit-query.service.ts`、`modules/admin/htt
 ## 边界与不做
 
 - 不做审计导出/流式下载（数据量大时属阶段 10 运维工具）；不做自由文本搜索（event_type 为枚举类别码）；不做删除/修改（表结构即不允许）。
+
+## 实施裁决记录（2026-08-19）
+
+1. AdminApiRouter 增 query 参数传递（GET 端点的查询串直达处理器）——路由能力最小扩展。
+2. Keyset 复合游标实现为 (occurred_at, audit_event_id) 元组比较——row-wise comparison 语义精确，避免 OFFSET。
+3. 元审计的测试隔离：检索请求自身的审计事件在同测试内污染后续断言——断言改用类别过滤隔离。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（213 模块、221 依赖）。
+- unit 33 文件 260/260 PASS。
+- S9AQ01–S9AQ06 全 PASS：时间窗过滤精确（含非法日期 400）、actor 精确匹配（含注入尝试 400）、类别白名单前缀（含注入尝试 400）、keyset 分页零重叠零遗漏（60+ 行两页验证 + limit 200 强制）、AUDITOR 专职（无角色 403/有角色 200）、检索自身落审计（元审计）。
+- 数据库回归 543/546（M06/M14/M16 已知环境边界项）；integration 121/121。
+- 交付物：`audit-query.service.ts`（三过滤 + keyset 分页 + 白名单）、`admin-audit.routes.ts`（AUDITOR 专职端点）、router query 传递、contracts AuditEventItem/QueryParams/Result、S9AQ 集成规格。
 
 ## 停止条件
 

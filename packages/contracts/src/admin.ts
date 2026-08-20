@@ -27,6 +27,7 @@ export interface AdminApiRequest {
   readonly path: string;
   readonly bearerToken?: string;
   readonly body?: unknown;
+  readonly query?: Readonly<Record<string, string>>;
 }
 
 export interface AdminApiResponse {
@@ -62,4 +63,29 @@ export interface WatchItem {
   readonly assetOrRoute: string;
   readonly status: string;
   readonly ageMinutes: number;
+}
+
+export interface AuditEventItem {
+  readonly auditEventId: string;
+  readonly eventType: string;
+  readonly actorType: string;
+  readonly actorRef: string;
+  readonly subjectRef: string;
+  readonly outcome: string;
+  readonly correlationId: string;
+  readonly occurredAt: string;
+}
+
+export interface AuditQueryParams {
+  readonly from?: string;
+  readonly to?: string;
+  readonly actor?: string;
+  readonly category?: string;
+  readonly cursor?: string;
+  readonly limit?: number;
+}
+
+export interface AuditQueryResult {
+  readonly items: readonly AuditEventItem[];
+  readonly nextCursor: string | null;
 }
