@@ -134,3 +134,18 @@ Task 4 已实现并验证单连接 Unit of Work、TransactionContext 禁止逃�
 | 换汇确认冒用（无支付门裁决的补偿控制） | resolveUid 身份绑定 + 订单绑定 uid + 资金不出平台边界 | S7EU03、S7-4 裁决 |
 | 清算账户被绕过写入/篡改 | 对账累计 vs 权威重算 + schema FK/形状 CHECK 双层 | S7RC02/04 |
 | 数字显示注入（UX 层） | 受控数值渲染字符集白名单（金额纯数字/市场键大写连字符） | S7EU06 |
+
+## 阶段 8 威胁模型增补（2026-08-19，S8-8）
+
+| 威胁 | 控制 | 证据 |
+|---|---|---|
+| 伪造/篡改供应商回调 | HMAC 验真端口（Fake 真实运算+常量时间比较）；验真失败永久拒绝零写入 | S8A07、S8CB02 |
+| 回调重放 | callback_inbox (provider, eventId) UNIQUE 去重锚 | S8A08、S8CB03 |
+| 双付（提交重试/崩溃窗口） | 确定性键派生 + V12 UNIQUE + 供应商按键去重三层 | S8A06、S8PS02 |
+| UNKNOWN 误判重付 | submit 抛错零状态写入 + 查询优先裁决 | S8A09、S8PS04 |
+| 收款人信息泄露 | token 引用 + SHA-256 摘要零明文（双形状 CHECK）；载荷无收款人字段 | S8PO04、S8A11 |
+| 验签密钥泄露 | callback_secret_ref 仅 vault: 引用；端口输入只有引用 | S8PO01、S8CB07 |
+| 状态分叉（报告 vs 订单） | 对账一致性（报 FAILED + 已 SUCCEEDED 为最严重信号，只浮现不修复） | S8RC03、S8A10 |
+| 跨类证明挪用 | operationType='fiat-payout' 七维绑定（assetSummary 绑路线） | S8PR01 |
+| 供应商配置漂移 | provider_configs 版本化只增不改 + 订单快照版本 | S8PO05 |
+| 费用边界挪用 | 结算费用 fail-closed（停留 ACCEPTED 待运营） | S8ST06 |
