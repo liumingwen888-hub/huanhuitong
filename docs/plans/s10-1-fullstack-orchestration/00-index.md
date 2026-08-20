@@ -4,7 +4,7 @@
 
 ## 权威需求来源
 
-[阶段 10 总体规划 v1.0](../2026-08-19-stage-10-production-master-plan.md)（决策 1）、[platform-operations 领域](../../domains/platform-operations.md)、[既有健康端点](../../../apps/platform/src/health/)（S1 已交付）。
+[阶段 10 总体规划 v1.0](../2026-08-19-stage-10-production-master-plan.md)（决策 1）、[platform-operations 领域](../../domains/platform-operations.md)、既有健康端点（`apps/platform/src/health/`——S1 已交付）。
 
 ## 目标
 
