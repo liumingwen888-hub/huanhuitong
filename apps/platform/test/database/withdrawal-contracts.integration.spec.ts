@@ -107,7 +107,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   for (const table of [
     'withdrawal_approvals', 'withdrawal_orders', 'signer_policies',
-    'admin_principals', 'users'
+    'admin_role_grants', 'admin_principals', 'users'
   ]) {
     await cleanupPool.query(`DELETE FROM ${table}`);
   }

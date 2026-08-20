@@ -1,6 +1,6 @@
 # S9-1 管理员认证与 V14 迁移 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（运营平面信任根）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S9-1 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（运营平面信任根）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过；同日显式授权 V14 迁移与 hash-wasm 依赖）。S9-1 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -47,6 +47,21 @@ Create：`database/migrations/V14__stage_9_admin_auth.sql`、`modules/admin/doma
 - S9AM05 logout 撤销后会话失效
 - S9AM06 角色矩阵：worker 对两表零权限；平台对 sessions 无 INSERT 旁路（列级）
 - S9AM07 哈希格式与安全：库中无明文密码/无 TOTP 本体（扫描断言）
+
+## 实施裁决记录（2026-08-19）
+
+1. **V14 两处 FK 改 ON DELETE CASCADE**（credentials/sessions → admin_principals）：种子 bootstrap 管理员的持续存在与既有规格"清 admin_principals 重建"的清理模式冲突（RESTRICT 挡删）；级联语义为"删主体即清除其凭据与会话"，主体删除本身仍是受控操作。
+2. 两个既有规格清理列表补 `admin_role_grants`（withdrawal-contracts/request）——V14 种子带 SUPER_ADMIN 授权后，从未清理 grants 的规格被 V5 FK 挡住；种子引入持续事实则依赖清理需覆盖其全部从属。
+3. argon2id 参数 m=19456/t=3/p=1（≥OWASP 建议）；bootstrap 哈希为迁移内常量（合成密码文档化）。
+4. 会话过期测试回填须同时回填 created_at（ck_admin_sessions_expiry 形状约束——与 S7 报价回填同型）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（204 模块、220 依赖）。
+- unit 32 文件 253/253 PASS。
+- S9AM01–S9AM07 全 PASS：登录返回原始令牌恰一次（库中仅 sha256 十六进制、非令牌本体）、五次失败锁 15 分钟（正确凭据锁定期内仍拒）、TOTP 错误计数拒绝、会话矩阵（未提升拒/提升后过/窗口过期拒/会话过期拒/未知令牌拒）、logout 永久失效、worker 对两表零权限 + 平台 INSERT 旁路被拒、零明文扫描（密码哈希非明文 + TOTP 引用格式）。
+- 数据库回归：512/515（M06/M14/M16 已知三件套）；integration 121/121。两规格（exchange-settlement/payout-callback）在全量并行时套件级 Flyway 抖动，隔离复跑 12/12 通过（已知容器负载敏感类）。
+- 交付物：`V14__stage_9_admin_auth.sql`（两表 + bootstrap 种子）、`modules/admin/domain/{totp-secret.port, fake-totp-secret.store}.ts`、`modules/admin/application/{admin-auth.service, admin-session.repository}.ts`、`modules/admin/infrastructure/postgres-admin-session.repository.ts`、contracts/admin.ts、hash-wasm 依赖、S9AM 规格、迁移钉 V14（46 表）+ 两规格清理修正。
 
 ## 停止条件
 

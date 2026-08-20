@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S9-1 管理员认证与 V14 迁移实施完成
+
+- V14：admin_credentials（argon2id 哈希 + TOTP vault 引用 + 失败锁定）+ admin_sessions（令牌哈希存储/30 分钟/提升窗口）；bootstrap 管理员种子（SUPER_ADMIN）。
+- AdminAuthService：登录（hash-wasm argon2id + S2 TOTP 复用 + 5 次锁 15 分钟 fail-closed）/登出/提升/会话校验；原始令牌只出现一次。
+- 实施中发现并修复种子与既有清理模式的冲突（FK 级联裁决 + 两规格清理补全）。
+- 验证：build/typecheck/architecture(204 模块 0 违规)/unit 253/S9AM 7 项/database 512-515（已知三件套 + 两规格负载抖动隔离过）/integration 121。
+
 ## 2026-08-19 — 阶段 9 总体规划 v1.0 READY + S9-1 详细计划完成，等待外部复审
 
 - 五项裁决：React+Vite、argon2+TOTP 强制+30 分钟会话+重认证、四页（Break-Glass 延后）、platform 内 REST、approval_requests 编排层。

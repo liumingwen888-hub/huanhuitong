@@ -1,4 +1,5 @@
 export const contractPackageName = '@xht/contracts' as const;
+export * from './admin.js';
 export * from './credentials.js';
 export * from './database.js';
 export * from './deposits.js';

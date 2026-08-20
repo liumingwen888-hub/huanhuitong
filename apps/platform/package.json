@@ -24,6 +24,7 @@
     "@xht/config": "workspace:0.1.0",
     "@xht/contracts": "workspace:0.1.0",
     "grammy": "1.45.1",
+    "hash-wasm": "4.12.0",
     "kysely": "0.29.4",
     "pg": "8.22.0",
     "pino": "10.3.1",

@@ -165,7 +165,8 @@ beforeAll(async () => {
 beforeEach(async () => {
   for (const table of [
     'outbox_messages', 'withdrawal_approvals', 'withdrawal_orders',
-    'signer_policies', 'admin_principals', 'risk_decisions',
+    'signer_policies', 'admin_role_grants', 'admin_principals',
+    'risk_decisions',
     'operation_limits', 'account_balances', 'ledger_entries',
     'account_openings', 'ledger_transactions', 'ledger_accounts', 'users'
   ]) {
