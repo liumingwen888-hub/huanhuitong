@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S9-5 审计查询 API 详细计划完成，等待外部复审
+
+- 检索端点：时间/主体/类别三过滤 + keyset 分页 + limit 上限 200；AUDITOR 专职（资金操作权与审计查询权分离）。
+- 裁决：字段最小化已由 schema 层完成（audit_events 无敏感载荷列），无需运行时脱敏。S9AQ01-06 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S9-4 对账与运营视图 API 实施完成
 
 - OpsViewService：三域对账合并报告（零加工透传）+ 三域观察清单（SETTLE_PENDING/RELEASE_PENDING/UNKNOWN + ageMinutes）。
