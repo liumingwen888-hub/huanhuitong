@@ -1,0 +1,106 @@
+name: hht-fullstack
+
+services:
+  postgres:
+    image: postgres:18@sha256:ceeef548e58f40d61c8b1fc17d69f81dd82ddc3051a0f6323b9e0dcbb55c00f6
+    environment:
+      POSTGRES_DB: hht
+      POSTGRES_USER: hht_owner
+      POSTGRES_PASSWORD: ${POSTGRES_OWNER_PASSWORD:?required}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../database/bootstrap:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hht_owner -d hht"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    networks:
+      - internal
+    # synthetic-debugging only: remove the port mapping in production
+    ports:
+      - "127.0.0.1:55432:5432"
+
+  migrate:
+    image: flyway/flyway:11-alpine
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ../database/migrations:/flyway/sql:ro
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/hht
+      FLYWAY_USER: hht_owner
+      FLYWAY_PASSWORD: ${POSTGRES_OWNER_PASSWORD:?required}
+      FLYWAY_DEFAULT_SCHEMA: public
+      FLYWAY_VALIDATE_MIGRATION_NAMING: true
+    networks:
+      - internal
+    restart: "no"
+
+  platform:
+    build:
+      context: ..
+      dockerfile: apps/platform/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_REF: ${DATABASE_URL_REF:?required}
+      TELEGRAM_WEBHOOK_SECRET_REF: ${TELEGRAM_WEBHOOK_SECRET_REF:?required}
+      INBOX_DIGEST_KEYRING_REF: ${INBOX_DIGEST_KEYRING_REF:?required}
+      INBOX_RETENTION_SECONDS: ${INBOX_RETENTION_SECONDS:-604800}
+      TELEGRAM_RETRY_WINDOW_SECONDS: ${TELEGRAM_RETRY_WINDOW_SECONDS:-86400}
+      OTEL_EXPORTER: ${OTEL_EXPORTER:-disabled}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      PORT: ${PLATFORM_PORT:-3000}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:$${PORT}/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks:
+      - internal
+
+  worker:
+    build:
+      context: ..
+      dockerfile: apps/worker/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_REF: ${DATABASE_URL_REF:?required}
+      TELEGRAM_WEBHOOK_SECRET_REF: ${TELEGRAM_WEBHOOK_SECRET_REF:?required}
+      INBOX_DIGEST_KEYRING_REF: ${INBOX_DIGEST_KEYRING_REF:?required}
+      INBOX_RETENTION_SECONDS: ${INBOX_RETENTION_SECONDS:-604800}
+      TELEGRAM_RETRY_WINDOW_SECONDS: ${TELEGRAM_RETRY_WINDOW_SECONDS:-86400}
+      OTEL_EXPORTER: ${OTEL_EXPORTER:-disabled}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+    networks:
+      - internal
+
+  admin-web:
+    build:
+      context: ..
+      dockerfile: apps/admin-web/Dockerfile
+    depends_on:
+      platform:
+        condition: service_healthy
+    ports:
+      - "${ADMIN_WEB_PORT:-8080}:80"
+    networks:
+      - internal
+
+networks:
+  internal:
+
+volumes:
+  pgdata:

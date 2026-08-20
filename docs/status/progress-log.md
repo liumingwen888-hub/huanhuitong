@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S10-1 全栈本地编排实施完成
+
+- 五服务 Compose（postgres/migrate/platform/worker/admin-web）：健康门控链（postgres healthy → migrate completed → platform healthy → admin-web）；必填变量 `${VAR:?required}` fail-fast。
+- 三 Dockerfile 多阶段构建（node slim 运行时/nginx 静态）；nginx SPA 回退 + /api 反代 + 安全头。
+- S10CO01/03/04 结构与合同 PASS；S10CO02 ENVIRONMENT_BOUNDARY（需 Docker 守护进程，生产实弹）。
+- 验证：build/architecture(216 模块 0 违规)/unit 267/S10CO 3 项/database 549-553（已知三件套 + 一次隔离复跑过）/integration 132-133（已知抖动隔离过）。
+
 ## 2026-08-19 — 阶段 10 总体规划 v1.0 READY + S10-1 详细计划完成，等待外部复审
 
 - 五项裁决：Compose 全栈、OTel 到日志、物理+逻辑双轨、自动化恢复演练含对账断言、release:gate 聚合。

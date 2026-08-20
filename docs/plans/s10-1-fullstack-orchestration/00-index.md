@@ -1,6 +1,6 @@
 # S10-1 全栈本地编排 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（编排与配置，无业务逻辑变更）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S10-1 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（编排与配置，无业务逻辑变更）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S10-1 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -43,6 +43,20 @@ Create：`deploy/docker-compose.yml`、`deploy/.env.example`（全部环境变�
 ## 边界与不做
 
 - 不做真实 TLS/域名/云（生产独立授权）；不做 CI 流水线（阶段 10 后由用户选择平台）；不做密钥真值（.env.example 只有引用与占位）。
+
+## 实施裁决记录（2026-08-19）
+
+1. 编排含第五个服务 `migrate`（Flyway 一次性容器）——数据库 schema 在应用启动前就绪，platform/worker 以 `service_completed_successfully` 门控。
+2. postgres 调试端口绑定 127.0.0.1（仅本机可达）并注释标注生产移除——比完全无端口更安全的调试形态。
+3. 文档守卫正则扩展至阶段 10（`/阶段 [2-9]|阶段 10/`——原正则不匹配两位数阶段号）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` exit 0；`pnpm architecture:check` 0 违规（216 模块）。
+- unit 35 文件 267/267 PASS（含 S10CO01/03/04：五服务结构 + 必填变量 fail-fast 语法 `${VAR:?required}` 钉住（默认值语法被显式拒绝）+ .env.example 全覆盖 + 无密钥真值）。
+- S10CO02 标记 ENVIRONMENT_BOUNDARY：`docker compose up` 全栈健康需 Docker 守护进程配合，结构验证已由 S10CO01 覆盖——生产首次部署时执行实弹验证。
+- 数据库回归 549/553（M06/M14/M16 已知三件套 + exchange-confirm 一次并发抖动隔离复跑通过）；integration 132/133（registration-concurrency 已知负载敏感，隔离 14/14 通过）。
+- 交付物：`deploy/docker-compose.yml`（五服务 + 内部网络 + 命名卷 + 健康门控链）、`deploy/.env.example`、三个 Dockerfile（多阶段：node 构建 → slim 运行时 / nginx 静态）、`nginx.conf`（SPA 回退 + /api 反代 + 安全头）。
 
 ## 停止条件
 
