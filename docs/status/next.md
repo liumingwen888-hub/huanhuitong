@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 9 VERIFIED（2026-08-19 用户验收通过）。阶段 10"生产级监控、备份、恢复演练和发布加固"总体规划草案 v0.1 已完成（`docs/plans/2026-08-19-stage-10-production-master-plan.md`），`DRAFT / 需求确认中`。
+阶段 10 总体规划 v1.0 READY（五项设计决策已裁决）。S10-1"全栈本地编排"详细计划 v1.0 已完成（`docs/plans/s10-1-fullstack-orchestration/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
 
-待用户裁决五项设计决策：本地编排（建议：Docker Compose 全栈）、观测（建议：OTel 指标补全导出到日志）、备份（建议：物理为主逻辑为辅双轨）、恢复演练（建议：自动化脚本含对账断言）、发布门禁（建议：pnpm release:gate 聚合）。回复"继续"即按建议值全部通过并冻结 v1.0。
+复审重点：环境变量 fail-fast（缺失即退出而非静默降级）、postgres 端口不对外暴露的生产语义（合成例外显式标注）、admin-web 经 nginx 反代 /api 的生产等价物。复审通过后实施（无迁移）。
