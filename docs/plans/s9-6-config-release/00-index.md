@@ -1,6 +1,6 @@
 # S9-6 配置发布流 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（配置变更影响资金参数）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S9-6 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（配置变更影响资金参数）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S9-6 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -55,6 +55,20 @@ Create：`modules/admin/application/config-release.service.ts`、`modules/admin/
 ## 边界与不做
 
 - 不做前端 UI（S9-7）；不做定时发布/灰度（阶段 10）；不做配置回滚端点（回滚 = 发布旧参数为新版本——版本化模型的自然操作，文档说明）。
+
+## 实施裁决记录（2026-08-19）
+
+1. Settle 以草稿键的**最新版本**判定可结算性——发布/拒绝后原行保留但新版本标记已结算，重放 settle 命中最新版即拒（恰一次语义）。
+2. 起草/发布端点的必需角色定为 RISK_OFFICER（费用与限额参数属风控域；FINANCE 可读清单——实施与计划文本的角色微调记录在案）。
+3. 实施期发现 config_versions 列名为 activated_at 非 created_at（清单查询修正）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（215 模块、221 依赖）。
+- unit 33 文件 260/260 PASS。
+- S9CR01–S9CR07 全 PASS：起草→发布 market_configs v2 生效（findActive 切换 spread 50→75）、自审拒绝（maker 发布自己 403 + 目标零写入）、拒绝路径（目标零写入 + 草稿清出待审清单）、恰一次结算（第二发布 404 + 目标单版本）、非白名单目标 400、审计双向（maker 与 checker 身份各自落档）、ConfigStore 业务键发布（withdrawal.approval v1 生效）。
+- 数据库回归 550/553（M06/M14/M16 已知环境边界项）；integration 120–121（registration-concurrency 已知负载敏感抖动，隔离 14/14 通过）。
+- 交付物：`config-release.service.ts`（草稿/清单/结算 + 四表写入路由）、`admin-config.routes.ts`（四端点）、S9CR 集成规格。
 
 ## 停止条件
 

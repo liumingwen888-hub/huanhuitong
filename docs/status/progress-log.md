@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S9-6 配置发布流实施完成（Admin API 层收官）
+
+- ConfigReleaseService：草稿（draft. 键 + payload 内嵌状态零 UPDATE）→ 复核发布（最新版本判定恰一次）→ 四表写入路由（各域 insert 方法）。
+- Maker-Checker 服务层强制（自审 403 语义级）；审计双向落档；非白名单目标 400。
+- 验证：build/typecheck/architecture(215 模块 0 违规)/unit 260/S9CR 7 项/database 550-553（已知三件套）/integration 120-121（已知抖动隔离过）。
+
 ## 2026-08-19 — S9-6 配置发布流详细计划完成，等待外部复审
 
 - 草稿→复核→发布三步：草稿存 config_versions 的 draft. 前缀键（payload 内嵌状态，零 UPDATE）；发布 = 提取 payload 经目标域 insert 方法写入（version=max+1）。
