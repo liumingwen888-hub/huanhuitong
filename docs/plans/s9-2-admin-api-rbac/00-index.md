@@ -1,6 +1,6 @@
 # S9-2 Admin API 基座与 RBAC 中间件 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L3`（运营平面 API 信任边界）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S9-2 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L3`（运营平面 API 信任边界）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S9-2 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -57,6 +57,13 @@ Create：`modules/admin/http/{admin-api.router.ts, admin-routes.ts}`、`apps/pla
 ## 边界与不做
 
 - 不做业务端点（S9-3~6）；不做真实 HTTP 服务器挂载（S9-7 前端联调时接 Nest/Express）；不做速率限制（复用登录锁定，API 级限流阶段 10）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（207 模块、221 依赖）。
+- unit 33 文件 260/260 PASS（含 S9RB 7 项：登录 200+令牌、未注册路径/错方法 404 默认拒绝（双审计 DENIED_NOT_FOUND）、无令牌/坏令牌/登出后 401（拒绝路径审计）、角色不足路径（经提升门先行拒绝实证链序）、提升门 403→elevate 后 200 GRANTED、登录失败 401 可见、whoami 快照 + logout 失效）。
+- 数据库回归 524/527（M06/M14/M16 已知环境边界项）；integration 121/121。
+- 交付物：`admin/http/{admin-api.router.ts, admin-routes.ts}`、`admin/application/audit-recorder.ts`、contracts AdminApi 类型、S9RB http 规格。
 
 ## 停止条件
 

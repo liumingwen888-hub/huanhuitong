@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S9-2 Admin API 基座与 RBAC 中间件实施完成
+
+- AdminApiRouter：显式注册路由表（未注册即 404 默认拒绝）；固定链 会话→角色→提升→审计→业务；拒绝路径（401/403/404）全审计。
+- registerAuthRoutes 四认证端点（登录 PUBLIC 自审计/登出/提升/whoami）；AuditRecorder 追加式写入 audit_events。
+- 验证：build/typecheck/architecture(207 模块 0 违规)/unit 260(含 S9RB 7 项)/database 524-527（已知三件套）/integration 121。
+
 ## 2026-08-19 — S9-2 Admin API 基座与 RBAC 中间件详细计划完成，等待外部复审
 
 - 框架无关纯路由器（沿用既有控制器形状，可无服务器测试）：默认拒绝路由表 → 会话 → 角色 → 提升级 → 审计 → 业务。
