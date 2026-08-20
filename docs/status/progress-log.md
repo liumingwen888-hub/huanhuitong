@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S9-4 对账与运营视图 API 详细计划完成，等待外部复审
+
+- 两端点：三域对账合并报告（discrepancies 原样透传）+ 观察清单（三类：待结算/待释放/UNKNOWN）。
+- 全部只读、零新表、零状态迁移。S9OV01-06 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S9-3 统一审批工作台 API 实施完成
 
 - 无表编排落地：ApprovalWorkbenchService 聚合双域待审（WDL:/PO: 编号），决定路由至已验证服务（WithdrawalApprovalService/PayoutQueryService 查询优先）。
