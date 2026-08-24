@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S10-6 发布门禁实施完成
+
+- scripts/release-gate.mjs：八门禁（build/typecheck/architecture/docs/unit/migration-pins/secret-scan/alert-rules）；fail-fast + BLOCKED 清单 + 无 --force 逃生口。
+- --summary-only 快速模式（四项 0.6 秒）；secret-scan 排除测试基建（文档化合成常量）。
+- 实弹：release:gate:quick PASS；unit 292(含 S10RG 5 项)。
+
 ## 2026-08-19 — S10-5 灾难模式预案实施完成
 
 - disaster-runbook.md：四场景（账本分叉/供应商异常/密钥泄露/数据丢失）× 五步（检测/止损/诊断/恢复/复盘）+ P0/P1/P2 升级矩阵。

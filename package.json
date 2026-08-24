@@ -16,17 +16,14 @@
     "test:db": "pnpm build && vitest run --project database",
     "test:integration": "pnpm build && vitest run --project integration",
     "architecture:check": "depcruise apps packages --config .dependency-cruiser.cjs",
-    "docs:check": "node scripts/check-docs.mjs"
+    "docs:check": "node scripts/check-docs.mjs",
+    "release:gate": "node scripts/release-gate.mjs",
+    "release:gate:quick": "node scripts/release-gate.mjs --summary-only"
   },
   "devDependencies": {
     "@types/node": "24.13.3",
     "dependency-cruiser": "18.1.0",
     "typescript": "7.0.2",
     "vitest": "4.1.10"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }
