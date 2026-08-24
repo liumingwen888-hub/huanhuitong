@@ -1,6 +1,11 @@
-import type { LedgerAccountId, PostMoneyCommand } from '@xht/contracts';
+import type {
+  LedgerAccountId,
+  MetricsPort,
+  PostMoneyCommand
+} from '@xht/contracts';
 import type { UnitOfWork } from '../../../infrastructure/database/unit-of-work.js';
 import { LedgerError } from '../domain/ledger.errors.js';
+import { NOOP_METRICS } from '../../../infrastructure/telemetry/compose-metrics.js';
 import { parsePostMoneyCommand } from '../domain/ledger.types.js';
 import type {
   LedgerAccountRepository,
@@ -42,15 +47,18 @@ export class PostMoneyService {
   readonly #unitOfWork: UnitOfWork;
   readonly #accounts: LedgerAccountRepository;
   readonly #transactions: LedgerTransactionRepository;
+  readonly #metrics: MetricsPort;
 
   constructor(
     unitOfWork: UnitOfWork,
     accounts: LedgerAccountRepository,
-    transactions: LedgerTransactionRepository
+    transactions: LedgerTransactionRepository,
+    metrics: MetricsPort = NOOP_METRICS
   ) {
     this.#unitOfWork = unitOfWork;
     this.#accounts = accounts;
     this.#transactions = transactions;
+    this.#metrics = metrics;
   }
 
   public async post(input: unknown): Promise<PostMoneyOutcome> {
@@ -58,7 +66,9 @@ export class PostMoneyService {
     if (command.transactionType === 'REVERSAL') {
       throw new LedgerError('LEDGER_COMMAND_INVALID');
     }
-    return this.#unitOfWork.execute(async (context) => {
+    const startedAt = Date.now();
+    try {
+      const result = await this.#unitOfWork.execute(async (context) => {
       const existing = await this.#transactions.findTransactionIdByIdempotencyKey(
         context,
         command.idempotencyKey
@@ -107,6 +117,19 @@ export class PostMoneyService {
         });
       }
       return { transactionId, posted: true };
-    });
+      });
+      this.#metrics.incrementCounter('ledger_posting_total', {
+        domain: 'ledger', outcome: 'posted'
+      });
+      this.#metrics.recordHistogram(
+        'ledger_posting_duration_ms', Date.now() - startedAt
+      );
+      return result;
+    } catch (error) {
+      this.#metrics.incrementCounter('ledger_posting_rejected_total', {
+        domain: 'ledger', outcome: 'rejected'
+      });
+      throw error;
+    }
   }
 }

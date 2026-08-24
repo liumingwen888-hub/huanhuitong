@@ -1,0 +1,40 @@
+# Declarative alert rules — translate to Prometheus/Grafana in production.
+# Synthetic phase: format completeness validated by the release gate.
+# Every rule MUST carry: name, metric, threshold, severity, description.
+
+rules:
+  - name: ledger-posting-rejected
+    metric: ledger_posting_rejected_total
+    threshold: "> 0 for 5m"
+    severity: P0
+    description: 账本内核拒绝了过账——有人动了不该动的账，立即排查
+
+  - name: admin-auth-brute-force
+    metric: admin_auth_failed_total
+    threshold: "> 20 for 10m"
+    severity: P1
+    description: 管理员认证短窗高频失败——暴力破解或凭据泄露
+
+  - name: admin-api-denied-spike
+    metric: admin_api_denied_total
+    threshold: "> 50 for 5m"
+    severity: P2
+    description: API 拒绝激增——越权探测或配置错误
+
+  - name: payout-provider-unavailable
+    metric: payout_provider_unavailable
+    threshold: "> 5 for 15m"
+    severity: P1
+    description: 代付供应商持续不可用——出金受阻，评估是否暂停新单
+
+  - name: outbox-backlog
+    metric: outbox_enqueued_total - outbox_delivered_total
+    threshold: "> 1000 for 10m"
+    severity: P2
+    description: Outbox 积压——投递 worker 异常
+
+  - name: posting-latency-degradation
+    metric: ledger_posting_duration_ms
+    threshold: "p99 > 2000 for 10m"
+    severity: P2
+    description: 过账耗时退化——数据库容量或锁竞争

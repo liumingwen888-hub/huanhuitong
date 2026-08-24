@@ -4,8 +4,10 @@ import type {
   LedgerAccountId,
   Uid,
   WithdrawalContractErrorCode,
-  WithdrawalOrderSnapshot
+  WithdrawalOrderSnapshot,
+  MetricsPort,
 } from '@xht/contracts';
+import { NOOP_METRICS } from '../../../infrastructure/telemetry/compose-metrics.js';
 import {
   UnitOfWorkError,
   type UnitOfWork
@@ -68,6 +70,8 @@ export class WithdrawalSettlementService {
   readonly #outbox: OutboxRepository;
   readonly #config: ConfigStore;
 
+  readonly #metrics: MetricsPort;
+
   constructor(
     unitOfWork: UnitOfWork,
     orders: WithdrawalOrderRepository,
@@ -75,7 +79,8 @@ export class WithdrawalSettlementService {
     poster: PostMoneyService,
     broadcaster: TransactionBroadcasterPort,
     outbox: OutboxRepository,
-    config: ConfigStore
+    config: ConfigStore,
+    metrics: MetricsPort = NOOP_METRICS
   ) {
     this.#unitOfWork = unitOfWork;
     this.#orders = orders;
@@ -84,6 +89,7 @@ export class WithdrawalSettlementService {
     this.#broadcaster = broadcaster;
     this.#outbox = outbox;
     this.#config = config;
+    this.#metrics = metrics;
   }
 
   public async settleConfirmed(
@@ -176,6 +182,9 @@ export class WithdrawalSettlementService {
         reasonCode: 'WITHDRAWAL_INVALID_TRANSITION'
       };
     }
+    this.#metrics.incrementCounter('withdrawal_settled_total', {
+      domain: 'withdrawal', outcome: 'confirmed'
+    });
     await this.#notifyUser('telegram.withdrawal-succeeded.v1', current);
     return { outcome: 'CONFIRMED', order: current };
   }

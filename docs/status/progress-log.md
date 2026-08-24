@@ -1,5 +1,12 @@
 # 进展日志
 
+## 2026-08-19 — S10-2 完整观测实施完成
+
+- MetricsPort 纯接口（12 计数器 + 2 直方图封闭枚举）；LoggingMetrics 聚合冲刷 + NOOP_METRICS 兜底；六域服务可选注入（既有测试零改动）。
+- post-money 插桩裁决：整体包裹 execute 而非内部分块提取（作用域完整性）。
+- 7 个新 SafeLogEvent 全走白名单治理；alert-rules.yml 六规则（P0 过账拒绝到 P2 时延退化）。
+- 验证：build/typecheck/architecture(218 模块 0 违规)/unit 273(含 S10OB 6 项)/database 550-553（已知三件套）/integration 132-133（已知抖动）。
+
 ## 2026-08-19 — S10-2 完整观测详细计划完成，等待外部复审
 
 - MetricsPort 纯接口（12 计数器 + 2 直方图封闭枚举）；LoggingMetrics 合成实现（60 秒聚合冲刷）；生产 OTel 同接口换底。

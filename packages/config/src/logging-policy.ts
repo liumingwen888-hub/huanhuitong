@@ -76,6 +76,41 @@ const eventPolicies = {
     required: ['route', 'outcome'],
     optional: ['correlation_id'],
     route: 'withdrawals', outcome: 'unknown'
+  },
+  ledger_posting_rejected: {
+    required: ['route', 'outcome', 'error_category'],
+    optional: ['correlation_id'],
+    route: 'ledger', outcome: 'rejected'
+  },
+  payout_provider_unavailable: {
+    required: ['route', 'outcome'],
+    optional: ['correlation_id'],
+    route: 'payouts', outcome: 'unknown'
+  },
+  backup_completed: {
+    required: ['route', 'outcome', 'duration_ms'],
+    optional: ['correlation_id'],
+    route: 'operations', outcome: 'success'
+  },
+  backup_failed: {
+    required: ['route', 'outcome', 'error_category'],
+    optional: ['correlation_id'],
+    route: 'operations', outcome: 'rejected'
+  },
+  restore_validated: {
+    required: ['route', 'outcome'],
+    optional: ['correlation_id', 'duration_ms'],
+    route: 'operations', outcome: 'success'
+  },
+  release_gate_passed: {
+    required: ['route', 'outcome'],
+    optional: ['correlation_id', 'duration_ms'],
+    route: 'operations', outcome: 'success'
+  },
+  release_gate_blocked: {
+    required: ['route', 'outcome', 'error_category'],
+    optional: ['correlation_id'],
+    route: 'operations', outcome: 'rejected'
   }
 } as const satisfies Record<SafeLogEvent, EventPolicy>;
 

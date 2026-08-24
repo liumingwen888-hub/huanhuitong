@@ -1,8 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import type {
   PayoutContractErrorCode,
-  PayoutOrderSnapshot
+  PayoutOrderSnapshot,
+  MetricsPort,
 } from '@xht/contracts';
+import { NOOP_METRICS } from '../../../infrastructure/telemetry/compose-metrics.js';
 import type { UnitOfWork } from '../../../infrastructure/database/unit-of-work.js';
 import type {
   PayoutProviderPort,
@@ -34,16 +36,20 @@ export class PayoutSubmissionService {
   readonly #provider: PayoutProviderPort;
   readonly #outbox: OutboxRepository;
 
+  readonly #metrics: MetricsPort;
+
   constructor(
     unitOfWork: UnitOfWork,
     orders: PayoutOrderRepository,
     provider: PayoutProviderPort,
-    outbox: OutboxRepository
+    outbox: OutboxRepository,
+    metrics: MetricsPort = NOOP_METRICS
   ) {
     this.#unitOfWork = unitOfWork;
     this.#orders = orders;
     this.#provider = provider;
     this.#outbox = outbox;
+    this.#metrics = metrics;
   }
 
   public async submit(payoutOrderId: string): Promise<PayoutSubmitResult> {
@@ -120,6 +126,9 @@ export class PayoutSubmissionService {
       }
       return { outcome: 'DENIED', reasonCode: 'PAYOUT_INVALID_TRANSITION' };
     }
+    this.#metrics.incrementCounter('payout_submitted_total', {
+      domain: 'payout', outcome: 'accepted'
+    });
     await this.#notify(current, 'telegram.payout-submitted.v1');
     return { outcome: 'ACCEPTED', order: current };
   }

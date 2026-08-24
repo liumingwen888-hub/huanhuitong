@@ -3,8 +3,10 @@ import type {
   LedgerAccountId,
   PayoutContractErrorCode,
   PayoutOrderSnapshot,
-  Uid
+  Uid,
+  MetricsPort,
 } from '@xht/contracts';
+import { NOOP_METRICS } from '../../../infrastructure/telemetry/compose-metrics.js';
 import {
   UnitOfWorkError,
   type UnitOfWork
@@ -48,18 +50,22 @@ export class PayoutSettlementService {
   readonly #poster: PostMoneyService;
   readonly #outbox: OutboxRepository;
 
+  readonly #metrics: MetricsPort;
+
   constructor(
     unitOfWork: UnitOfWork,
     orders: PayoutOrderRepository,
     accounts: LedgerAccountRepository,
     poster: PostMoneyService,
-    outbox: OutboxRepository
+    outbox: OutboxRepository,
+    metrics: MetricsPort = NOOP_METRICS
   ) {
     this.#unitOfWork = unitOfWork;
     this.#orders = orders;
     this.#accounts = accounts;
     this.#poster = poster;
     this.#outbox = outbox;
+    this.#metrics = metrics;
   }
 
   public async settle(payoutOrderId: string): Promise<PayoutSettlementOutcome> {
@@ -128,6 +134,9 @@ export class PayoutSettlementService {
     if (!succeeded && current.status !== 'SUCCEEDED') {
       return { outcome: 'DENIED', reasonCode: 'PAYOUT_INVALID_TRANSITION' };
     }
+    this.#metrics.incrementCounter('payout_succeeded_total', {
+      domain: 'payout', outcome: 'settled'
+    });
     await this.#notify(current, 'telegram.payout-succeeded.v1');
     return { outcome: 'SETTLED', order: current };
   }

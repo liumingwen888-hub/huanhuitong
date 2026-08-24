@@ -5,8 +5,10 @@ import type {
   Uid,
   WithdrawalCommand,
   WithdrawalCommandResult,
-  WithdrawalOrderSnapshot
+  WithdrawalOrderSnapshot,
+  MetricsPort,
 } from '@xht/contracts';
+import { NOOP_METRICS } from '../../../infrastructure/telemetry/compose-metrics.js';
 import {
   UnitOfWorkError,
   type UnitOfWork
@@ -41,6 +43,8 @@ export class WithdrawalRequestService {
   readonly #outbox: OutboxRepository;
   readonly #riskGate: RiskGate;
 
+  readonly #metrics: MetricsPort;
+
   constructor(
     unitOfWork: UnitOfWork,
     orders: WithdrawalOrderRepository,
@@ -48,7 +52,8 @@ export class WithdrawalRequestService {
     accounts: LedgerAccountRepository,
     poster: PostMoneyService,
     outbox: OutboxRepository,
-    riskGate: RiskGate
+    riskGate: RiskGate,
+    metrics: MetricsPort = NOOP_METRICS
   ) {
     this.#unitOfWork = unitOfWork;
     this.#orders = orders;
@@ -57,6 +62,7 @@ export class WithdrawalRequestService {
     this.#poster = poster;
     this.#outbox = outbox;
     this.#riskGate = riskGate;
+    this.#metrics = metrics;
   }
 
   public async request(
@@ -181,6 +187,9 @@ export class WithdrawalRequestService {
     const routedOrder = await this.#unitOfWork.execute((context) =>
       this.#orders.findByOrderRef(context, command.orderRef)
     );
+    this.#metrics.incrementCounter('withdrawal_requested_total', {
+      domain: 'withdrawal', outcome: 'accepted'
+    });
     return {
       outcome: 'ACCEPTED',
       order: routedOrder ?? order

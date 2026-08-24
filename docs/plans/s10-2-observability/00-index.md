@@ -1,6 +1,6 @@
 # S10-2 完整观测 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（观测层，无业务逻辑变更）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S10-2 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（观测层，无业务逻辑变更）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S10-2 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -47,6 +47,19 @@ Create：`packages/contracts/src/observability.ts` 增补（MetricName/Histogram
 ## 边界与不做
 
 - 不做 OTLP metrics 真实导出（生产实现同接口换底，届时独立授权）；不做仪表盘（Grafana 生产）；不做分布式追踪传播（既有 span 够用）。
+
+## 实施裁决记录（2026-08-19）
+
+1. post-money 插桩为**整体包裹**（execute 调用外层 try/catch）而非内部分块提取——内提取会切断 context/accountIds 等回调局部变量的作用域；外层包裹同样覆盖成功/拒绝双路径且时延含 UOW 开销（更真实）。
+2. 六域插桩落地为六个服务文件（提现申请/结算、换汇结算、代付提交/结算、过账内核）——域内组件零渗透。
+3. SafeLogContext 的 route 枚举同步扩展（ledger/payouts/operations 三新路由）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` + 全 workspace typecheck exit 0；`pnpm architecture:check` 0 违规（218 模块、227 依赖）。
+- unit 36 文件 273/273 PASS（含 S10OB 6 项：计数累加冲刷重置、属性往返、直方图 count/sum/min/max、六服务插桩源码覆盖断言、告警规则五字段完备、七个新日志事件白名单完备）。
+- 数据库回归 550/553（M06/M14/M16 已知环境边界项）；integration 132/133（registration-concurrency 已知负载敏感抖动）。
+- 交付物：contracts MetricsPort/12 计数器 + 2 直方图封闭枚举、LoggingMetrics、NOOP_METRICS、六服务可选注入插桩、7 个新 SafeLogEvent + logging-policy 条目、deploy/alert-rules.yml 六规则、S10OB 规格。
 
 ## 停止条件
 

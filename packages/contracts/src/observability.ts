@@ -1,5 +1,41 @@
 export type ApplicationServiceName = 'xht-platform' | 'xht-worker';
 
+export type MetricName =
+  | 'ledger_posting_total'
+  | 'ledger_posting_rejected_total'
+  | 'withdrawal_requested_total'
+  | 'withdrawal_settled_total'
+  | 'exchange_settled_total'
+  | 'payout_submitted_total'
+  | 'payout_succeeded_total'
+  | 'outbox_enqueued_total'
+  | 'outbox_delivered_total'
+  | 'inbox_duplicate_total'
+  | 'admin_auth_failed_total'
+  | 'admin_api_denied_total';
+
+export type HistogramName =
+  | 'ledger_posting_duration_ms'
+  | 'api_request_duration_ms';
+
+export interface MetricAttributes {
+  readonly domain?: string;
+  readonly outcome?: string;
+  readonly route?: 'http' | 'telegram';
+}
+
+export interface MetricsPort {
+  incrementCounter(
+    name: MetricName,
+    attributes?: MetricAttributes
+  ): void;
+  recordHistogram(
+    name: HistogramName,
+    valueMs: number,
+    attributes?: MetricAttributes
+  ): void;
+}
+
 export type SafeLogEvent =
   | 'app_configuration_loaded'
   | 'app_configuration_rejected'
@@ -9,7 +45,14 @@ export type SafeLogEvent =
   | 'process_stopped'
   | 'telegram_webhook_processed'
   | 'telegram_webhook_rejected'
-  | 'withdrawal_broadcast_unknown';
+  | 'withdrawal_broadcast_unknown'
+  | 'ledger_posting_rejected'
+  | 'payout_provider_unavailable'
+  | 'backup_completed'
+  | 'backup_failed'
+  | 'restore_validated'
+  | 'release_gate_passed'
+  | 'release_gate_blocked';
 
 export type SafeLogErrorCategory =
   | 'configuration_invalid'
@@ -31,7 +74,10 @@ export interface SafeLogContext {
     | 'configuration'
     | 'telemetry'
     | 'telegram.start'
-    | 'withdrawals';
+    | 'withdrawals'
+    | 'ledger'
+    | 'payouts'
+    | 'operations';
   readonly outcome?:
     | 'success'
     | 'rejected'

@@ -3,8 +3,10 @@ import type {
   ExchangeOrderSnapshot,
   LedgerAccountId,
   QuoteContractErrorCode,
-  Uid
+  Uid,
+  MetricsPort,
 } from '@xht/contracts';
+import { NOOP_METRICS } from '../../../infrastructure/telemetry/compose-metrics.js';
 import type { UnitOfWork } from '../../../infrastructure/database/unit-of-work.js';
 import type { LedgerAccountRepository } from '../../ledger/application/ledger.repository.js';
 import type { PostMoneyService } from '../../ledger/application/post-money.service.js';
@@ -36,18 +38,22 @@ export class ExchangeSettlementService {
   readonly #poster: PostMoneyService;
   readonly #outbox: OutboxRepository;
 
+  readonly #metrics: MetricsPort;
+
   constructor(
     unitOfWork: UnitOfWork,
     orders: ExchangeOrderRepository,
     accounts: LedgerAccountRepository,
     poster: PostMoneyService,
-    outbox: OutboxRepository
+    outbox: OutboxRepository,
+    metrics: MetricsPort = NOOP_METRICS
   ) {
     this.#unitOfWork = unitOfWork;
     this.#orders = orders;
     this.#accounts = accounts;
     this.#poster = poster;
     this.#outbox = outbox;
+    this.#metrics = metrics;
   }
 
   public async settle(
@@ -122,6 +128,9 @@ export class ExchangeSettlementService {
       }
       return { outcome: 'DENIED', reasonCode: 'EXCHANGE_COMMAND_INVALID' };
     }
+    this.#metrics.incrementCounter('exchange_settled_total', {
+      domain: 'exchange', outcome: 'settled'
+    });
     await this.#notify(current);
     return { outcome: 'SETTLED', order: current };
   }
