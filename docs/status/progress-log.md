@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S10-7 容量与性能基线实施完成
+
+- benchmark-kernel.mjs 三模式（过账 TPS/并发注册/读延迟）+ 环境元数据；实弹需 Docker（ENVIRONMENT_BOUNDARY）。
+- 基线文档：方法可重复 / 趋势表不预填（防合成数字被误读为生产参照）/ 三触发点降级预案。
+- 验证：build/architecture(218 模块)/docs 234/unit 297(含 S10CP 5 项)。
+
 ## 2026-08-19 — S10-6 发布门禁实施完成
 
 - scripts/release-gate.mjs：八门禁（build/typecheck/architecture/docs/unit/migration-pins/secret-scan/alert-rules）；fail-fast + BLOCKED 清单 + 无 --force 逃生口。
