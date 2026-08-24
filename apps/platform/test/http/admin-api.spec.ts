@@ -130,7 +130,12 @@ describe('S9-2 admin API base and RBAC middleware', () => {
     });
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({ token: 'raw-token-1' });
-    expect(audit.events).toHaveLength(0);
+    // login is now audited: brute-force attempts stay visible
+    expect(audit.events).toHaveLength(1);
+    expect(audit.events[0]).toMatchObject({
+      eventType: 'ADMIN_API_POST_AUTH_SESSION',
+      outcome: 'GRANTED'
+    });
   });
 
   it('S9RB02: unregistered paths and methods default to 404', async () => {

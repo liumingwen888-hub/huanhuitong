@@ -133,6 +133,19 @@ export class AdminApiRouter {
         body: request.body,
         params
       });
+      // public routes (login) audit their own outcome — brute-force
+      // attempts must stay visible in the trail
+      await this.#audit.record({
+        eventType: route.eventType,
+        actorType: 'ANONYMOUS',
+        actorRef: 'anonymous',
+        subjectRef: request.path,
+        outcome:
+          response.status >= 200 && response.status < 300
+            ? 'GRANTED'
+            : 'DENIED_LOGIN',
+        correlationId
+      });
       return response;
     }
     const token = request.bearerToken;
@@ -184,19 +197,37 @@ export class AdminApiRouter {
         return { status: 403, body: { code: 'ADMIN_API_ROLE_DENIED' } };
       }
     }
-    const response = await route.handler({
-      session: check.session,
-      body: request.body,
-      bearerToken: token,
-      params,
-      query: request.query ?? {}
-    });
+    let response: AdminApiResponse;
+    try {
+      response = await route.handler({
+        session: check.session,
+        body: request.body,
+        bearerToken: token,
+        params,
+        query: request.query ?? {}
+      });
+    } catch (error) {
+      await this.#audit.record({
+        eventType: route.eventType,
+        actorType: 'ADMIN',
+        actorRef: check.session.adminId,
+        subjectRef: request.path,
+        outcome: 'DENIED_HANDLER_ERROR',
+        correlationId
+      });
+      throw error;
+    }
     await this.#audit.record({
       eventType: route.eventType,
       actorType: 'ADMIN',
       actorRef: check.session.adminId,
       subjectRef: request.path,
-      outcome: 'GRANTED',
+      // the middleware granted access; a 4xx from the handler is a
+      // business denial, not a granted outcome
+      outcome:
+        response.status >= 200 && response.status < 300
+          ? 'GRANTED'
+          : `DENIED_STATUS_${response.status}`,
       correlationId
     });
     return response;

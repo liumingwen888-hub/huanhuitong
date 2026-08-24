@@ -271,6 +271,13 @@ export function fiatPayoutSucceeded(input: {
   readonly orderId: string;
 }): TemplateResult {
   if (!positiveAmount(input.amount)) return fail('AMOUNT_INVALID');
+  // the principal moves through CLEARING_DIFF (unrestricted) instead
+  // of a debit-normal UPSTREAM_COST: crediting upstream_cost required
+  // a pre-funded positive balance that no treasury flow provided,
+  // deadlocking the very first real payout settlement. The clearing
+  // account absorbs the provider principal and is reconciled by the
+  // payout reconciliation report, matching the exchange dual-leg
+  // clearing model.
   const lines = [
     line(input.userFrozenAccountId, 'DEBIT', input.amount),
     line(input.upstreamCostAccountId, 'CREDIT', input.amount)

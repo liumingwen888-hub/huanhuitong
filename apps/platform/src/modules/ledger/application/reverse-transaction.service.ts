@@ -11,10 +11,18 @@ const DEBIT_NORMAL_PURPOSES = new Set([
   'UPSTREAM_COST'
 ]);
 
+// mirrors post-money: CLEARING_DIFF absorbs both directions, so a
+// reversal pushing a net-buy clearing balance further positive must
+// not be rejected
+const UNRESTRICTED_PURPOSES = new Set(['CLEARING_DIFF']);
+
 function violatesNormalBalance(
   purpose: string,
   signedBalance: bigint
 ): boolean {
+  if (UNRESTRICTED_PURPOSES.has(purpose)) {
+    return false;
+  }
   if (DEBIT_NORMAL_PURPOSES.has(purpose)) {
     return signedBalance < 0n;
   }

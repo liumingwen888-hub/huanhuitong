@@ -96,7 +96,16 @@ export class PostMoneyService {
         if (account.status !== 'ACTIVE') {
           throw new LedgerError('LEDGER_ACCOUNT_STATUS_INVALID');
         }
-        const balance = await this.#accounts.accountBalance(context, accountId);
+        // the projection row is updated atomically by
+        // applyProjectionDelta in this same transaction and the
+        // account row is already FOR UPDATE locked — reading the
+        // projection is as authoritative as a full-entry SUM but
+        // O(1) instead of O(history), which matters because this
+        // check runs under the lock on the posting hot path
+        const balance = await this.#accounts.signedBalance(
+          context,
+          accountId
+        );
         const projected =
           BigInt(balance) + (netByAccount.get(accountId) ?? 0n);
         if (violatesNormalBalance(account.purpose, projected)) {

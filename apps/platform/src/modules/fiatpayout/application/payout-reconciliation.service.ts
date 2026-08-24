@@ -85,22 +85,38 @@ export class PayoutReconciliationService {
   > {
     const rows = await this.#unitOfWork.execute((context) =>
       context.executeSql<LinkageRow>(
-        `SELECT o.order_ref, o.status,
-           (SELECT count(*)::int FROM ledger_transactions t
-             WHERE t.idempotency_key LIKE 'FIAT_PAYOUT:'||o.order_ref||':FREEZE:%')
-             AS freezes,
-           (SELECT count(*)::int FROM ledger_transactions t
-             WHERE t.idempotency_key LIKE 'FIAT_PAYOUT:'||o.order_ref||':SETTLE:%')
-             AS settles,
-           (SELECT count(*)::int FROM ledger_transactions t
-             WHERE t.idempotency_key LIKE 'FIAT_PAYOUT:'||o.order_ref||':RELEASE:%')
-             AS releases,
-           (SELECT count(*)::int FROM ledger_transactions t
-             WHERE t.idempotency_key LIKE 'FIAT_PAYOUT:'||o.order_ref||':REVERSE:%')
-             AS reverses,
-           (o.settlement_ledger_transaction_id IS NOT NULL)
-             AS has_settlement_link
-         FROM payout_orders o`
+        `WITH tx_counts AS (
+           SELECT key,
+                  count(*) FILTER (
+                    WHERE position(':FREEZE:' in idempotency_key) > 0)::int
+                    AS freezes,
+                  count(*) FILTER (
+                    WHERE position(':SETTLE:' in idempotency_key) > 0)::int
+                    AS settles,
+                  count(*) FILTER (
+                    WHERE position(':RELEASE:' in idempotency_key) > 0)::int
+                    AS releases,
+                  count(*) FILTER (
+                    WHERE position(':REVERSE:' in idempotency_key) > 0)::int
+                    AS reverses
+             FROM (
+               SELECT idempotency_key,
+                      substring(idempotency_key
+                        from 'FIAT_PAYOUT:([^:]+):') AS key
+                 FROM ledger_transactions
+                WHERE idempotency_key LIKE 'FIAT_PAYOUT:%'
+             ) k
+            GROUP BY key
+         )
+         SELECT o.order_ref, o.status,
+                COALESCE(tc.freezes, 0) AS freezes,
+                COALESCE(tc.settles, 0) AS settles,
+                COALESCE(tc.releases, 0) AS releases,
+                COALESCE(tc.reverses, 0) AS reverses,
+                (o.settlement_ledger_transaction_id IS NOT NULL)
+                  AS has_settlement_link
+           FROM payout_orders o
+           LEFT JOIN tx_counts tc ON tc.key = o.order_ref`
       )
     );
     const discrepancies: PayoutLinkageDiscrepancy[] = [];

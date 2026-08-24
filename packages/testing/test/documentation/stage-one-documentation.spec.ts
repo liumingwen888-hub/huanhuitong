@@ -22,7 +22,7 @@ describe('stage one documentation handoff', () => {
     expect(activePlans).toContain('阶段 1');
     expect(current).toContain('阶段 1 代码 | VERIFIED');
     expect(current).toContain('当前生产部署授权：0');
-    expect(next).toMatch(/阶段 [2-9]|阶段 10/u);
+    expect(next).toMatch(/阶段 [2-9]|阶段 10|项目完成/u);
     expect(next).not.toContain('自动获得部署授权');
   });
 

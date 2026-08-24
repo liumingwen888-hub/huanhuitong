@@ -135,6 +135,19 @@ export class PostgresLedgerAccountRepository implements LedgerAccountRepository 
     return row === undefined ? null : snapshot(row);
   }
 
+  public async signedBalance(
+    context: TransactionContext,
+    accountId: LedgerAccountId
+  ): Promise<string> {
+    const result = await context.executeSql<{ balance: string }>(
+      `SELECT COALESCE(
+         (SELECT b.signed_balance::text FROM account_balances b
+           WHERE b.account_id = $1::uuid), '0') AS balance`,
+      [accountId]
+    );
+    return result.rows[0]?.balance ?? '0';
+  }
+
   public async accountBalance(
     context: TransactionContext,
     accountId: LedgerAccountId

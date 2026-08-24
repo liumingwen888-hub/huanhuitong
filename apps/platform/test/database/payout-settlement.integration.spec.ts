@@ -257,7 +257,7 @@ beforeEach(async () => {
     `INSERT INTO ledger_accounts (owner_uid, asset_code, purpose)
      VALUES (NULL, 'USDT-TRC20', 'UPSTREAM_COST')`
   );
-  await seedUpstreamFloat('100000000');
+
   provider = new FakeBankProvider();
   requestService = new PayoutRequestService(
     unitOfWork, orders, configs, ledgerAccounts,
@@ -290,8 +290,9 @@ describe.sequential('S8-6 payout settlement, release and reversal', () => {
     expect(settled.settlementLedgerTransactionId).not.toBeNull();
     expect(await signed(order.uid, 'USER_FROZEN')).toBe('0');
     expect(await signed(order.uid, 'USER_AVAILABLE')).toBe('-4998000');
-    expect(await signed(null, 'UPSTREAM_COST'))
-      .toBe((100000000 - 5000000).toString());
+    // principal routes through CLEARING_DIFF (unrestricted) — the
+    // upstream float is untouched, removing the funding deadlock
+    expect(await signed(null, 'CLEARING_DIFF')).toBe('-5000000');
     expect(await signed(null, 'FEE_INCOME')).toBe('-2000');
     const events = await cleanupPool.query<{ n: number }>(
       `SELECT count(*)::int AS n FROM outbox_messages
@@ -329,7 +330,7 @@ describe.sequential('S8-6 payout settlement, release and reversal', () => {
     expect((result as { order: PayoutOrderSnapshot }).order.status)
       .toBe('REVERSED');
     expect(await signed(order.uid, 'USER_AVAILABLE')).toBe('-10000000');
-    expect(await signed(null, 'UPSTREAM_COST')).toBe('100000000');
+    expect(await signed(null, 'CLEARING_DIFF')).toBe('0');
     expect(await signed(null, 'FEE_INCOME')).toBe('0');
     expect(await actionCount('REVERSE', order.orderRef)).toBe(1);
   });

@@ -83,7 +83,11 @@ export class DepositPostingService {
       detection.assetCode
     );
     const custodyAccountId = await this.#ensureCustody(detection.assetCode);
-    const orderId = `${network}:${detection.networkTxid}`;
+    // per-detection idempotency: a multi-output chain tx credits two
+    // deposit addresses and must post once per detection, not once
+    // per txid — a shared (network, txid) key silently dropped the
+    // second user's funds with no alert
+    const orderId = `${network}:${detection.networkTxid}:${detection.detectionId}`;
     const templateResult = depositConfirmed({
       custodyAccountId,
       userAvailableAccountId: userAccountId,

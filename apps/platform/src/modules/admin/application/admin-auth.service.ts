@@ -163,6 +163,10 @@ export class AdminAuthService {
     const totpOk =
       passwordOk && (await this.#verifyTotp(row, input.totpCode));
     if (!passwordOk || !totpOk) {
+      // elevation failures count toward lockout exactly like login
+      // failures — otherwise a stolen BASIC session gets unlimited
+      // brute-force attempts on this endpoint
+      await this.#registerFailure(row);
       return { outcome: 'DENIED', reasonCode: 'ADMIN_AUTH_INVALID' };
     }
     const elevatedUntil = new Date(
@@ -217,18 +221,21 @@ export class AdminAuthService {
   }
 
   async #registerFailure(row: CredentialRow): Promise<void> {
-    const attempts = row.failed_attempts + 1;
-    const locked = attempts >= LOCKOUT_THRESHOLD;
+    // atomic relative increment + RETURNING: a read-then-write
+    // absolute value lost updates under concurrent failures,
+    // letting parallel brute-force bypass the lockout threshold
     await this.#unitOfWork.execute((context) =>
-      context.executeSql(
+      context.executeSql<{ locked_now: boolean }>(
         `UPDATE admin_credentials
-            SET failed_attempts = $2,
-                locked_until = CASE WHEN $3
-                  THEN clock_timestamp() + interval '${LOCKOUT_MINUTES} minutes'
+            SET failed_attempts = failed_attempts + 1,
+                locked_until = CASE
+                  WHEN failed_attempts + 1 >= ${LOCKOUT_THRESHOLD}
+                    THEN clock_timestamp() + interval '${LOCKOUT_MINUTES} minutes'
                   ELSE locked_until END,
                 updated_at = clock_timestamp()
-          WHERE admin_id = $1::uuid`,
-        [row.admin_id, attempts, locked]
+          WHERE admin_id = $1::uuid
+          RETURNING (locked_until IS NOT NULL) AS locked_now`,
+        [row.admin_id]
       )
     );
   }

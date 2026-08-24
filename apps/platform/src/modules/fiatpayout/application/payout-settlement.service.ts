@@ -86,9 +86,13 @@ export class PayoutSettlementService {
       order.sourceAssetCode,
       'USER_AVAILABLE'
     );
+    // the principal leg flows through CLEARING_DIFF (unrestricted)
+    // rather than a debit-normal UPSTREAM_COST — crediting the latter
+    // required a pre-funded balance no treasury flow provides, which
+    // deadlocked the first real payout settlement
     const upstreamCostAccountId = await this.#ensurePlatformAccount(
       order.sourceAssetCode,
-      'UPSTREAM_COST'
+      'CLEARING_DIFF'
     );
     const feeIncomeAccountId = await this.#ensurePlatformAccount(
       order.sourceAssetCode,
@@ -196,9 +200,11 @@ export class PayoutSettlementService {
       order.sourceAssetCode,
       'USER_AVAILABLE'
     );
+    // mirrors the settlement leg: principal flows through
+    // CLEARING_DIFF so the reversal DR lands on the same account
     const upstreamCostAccountId = await this.#ensurePlatformAccount(
       order.sourceAssetCode,
-      'UPSTREAM_COST'
+      'CLEARING_DIFF'
     );
     const feeIncomeAccountId = await this.#ensurePlatformAccount(
       order.sourceAssetCode,
@@ -262,7 +268,7 @@ export class PayoutSettlementService {
 
   async #ensurePlatformAccount(
     assetCode: string,
-    purpose: 'UPSTREAM_COST' | 'FEE_INCOME'
+    purpose: 'UPSTREAM_COST' | 'FEE_INCOME' | 'CLEARING_DIFF'
   ): Promise<LedgerAccountId> {
     // owner_uid is NULL here and plain UNIQUE indexes never collide
     // on NULL — select first, insert only when absent (S6-6 lesson)

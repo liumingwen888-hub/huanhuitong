@@ -43,6 +43,10 @@ export interface LedgerAccountRepository {
     context: TransactionContext,
     accountId: LedgerAccountId
   ): Promise<LedgerAccountSnapshot | null>;
+  signedBalance(
+    context: Parameters<LedgerAccountRepository['accountBalance']>[0],
+    accountId: LedgerAccountId
+  ): Promise<string>;
   accountBalance(
     context: TransactionContext,
     accountId: LedgerAccountId
