@@ -1,6 +1,6 @@
 # S10-4 恢复演练 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（演练脚本与文档，无业务逻辑变更）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S10-4 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（演练脚本与文档，无业务逻辑变更）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S10-4 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -59,6 +59,13 @@ Create：`deploy/backup/pg-restore-drill.sh`、`apps/platform/test/unit/restore-
 ## 边界与不做
 
 - 不做 PITR 时间点恢复实弹（物理轨 WAL 重放需生产归档环境——S10-3 README 已说明）；不做自动故障切换（生产高可用独立授权）。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` exit 0；`pnpm architecture:check` 0 违规（218 模块）。
+- unit 38 文件 282/282 PASS（含 S10DR01-05：五状态机阶段顺序 + FAILED 保留、四表计数奇偶校验、借贷平衡 + 投影零漂移断言、Outbox 保留 + 零新 LEASED、清理默认销毁 + --keep + 失败保留）。
+- 交付物：`deploy/backup/pg-restore-drill.sh`（可执行，~140 行闭环）、README 演练章节（无重复副作用红线）、S10DR 规格。
+- 实弹演练需 Docker 守护进程 + 运行中的源数据库（ENVIRONMENT_BOUNDARY——结构验证已由 S10DR 覆盖；生产首灾时执行实弹并记录 RTO 实测数字）。
 
 ## 停止条件
 

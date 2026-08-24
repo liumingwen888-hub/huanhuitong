@@ -41,6 +41,20 @@ export PGHOST=... PGPORT=5432 PGUSER=... PGPASSWORD=...
 4. 跑三域对账（ledger/exchange/payout reconciliation）确认资金一致。
 5. 确认 `SAFE_TO_RESUME` 后逐步恢复服务（详见 S10-4 恢复演练 runbook）。
 
+## 恢复演练（S10-4）
+
+定期对真数据跑闭环演练——备份→恢复→对账→无副作用断言，全程脚本化：
+
+```bash
+export PGHOST=... PGPORT=5432 PGUSER=... PGPASSWORD=...
+./pg-restore-drill.sh            # 成功后自动清理
+./pg-restore-drill.sh --keep    # 保留现场供调查
+```
+
+通过输出 `RESTORE_DRILL_PASSED` + 证据摘要（四表计数/借贷平衡/投影零漂移/Outbox 保留数/零新租约）。任何断言失败停在当前阶段并**保留容器**（FAILED 分支不静默清理）。
+
+**无重复副作用红线**：恢复后的 Outbox 未投递消息原样保留（恢复不是重发器——留给正常投递循环）；恢复库无 worker 连接，durable_jobs 不出现新 LEASED。
+
 ## 生产部署清单（独立授权后）
 
 - [ ] cron 或 K8s CronJob 调度 `pg-backup.sh both`（每日）

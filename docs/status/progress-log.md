@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S10-4 恢复演练实施完成
+
+- pg-restore-drill.sh：RestoreRun 五状态机闭环（备份→容器恢复→四表奇偶→借贷平衡+投影零漂移→SAFE_TO_RESUME 双断言）；FAILED 保留现场 + --keep 逃生口。
+- 无重复副作用红线落地：Outbox 未投递原样保留（NOT resent）+ 恢复库零新 LEASED。
+- 验证：build/architecture(218 模块 0 违规)/unit 282(含 S10DR 5 项)；实弹需 Docker+源库（ENVIRONMENT_BOUNDARY）。
+
 ## 2026-08-19 — S10-4 恢复演练详细计划完成，等待外部复审
 
 - RestoreRun 五状态机（PLANNED→RESTORING→VALIDATING→RECONCILING→SAFE_TO_RESUME，FAILED 保留现场）；演练全脚本化。
