@@ -1,5 +1,10 @@
 # 进展日志
 
+## 2026-08-19 — S10-4 恢复演练详细计划完成，等待外部复审
+
+- RestoreRun 五状态机（PLANNED→RESTORING→VALIDATING→RECONCILING→SAFE_TO_RESUME，FAILED 保留现场）；演练全脚本化。
+- 核心断言：无重复副作用——Outbox 未投递原样保留 + durable_jobs 无新 LEASED（恢复不是重发器）。S10DR01-05 冻结。唯一下一步：等待用户外部复审。
+
 ## 2026-08-19 — S10-3 备份策略与脚本实施完成
 
 - pg-backup.sh 双轨（physical/logical/both，PG* 环境变量零明文，sha256+manifest）；pg-restore-check.sh（临时容器+关键表验证+清理 trap+RESTORE_CHECK_PASSED）。
