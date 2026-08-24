@@ -8,8 +8,20 @@ services:
       POSTGRES_USER: hht_owner
       POSTGRES_PASSWORD: ${POSTGRES_OWNER_PASSWORD:?required}
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    # WAL archiving — prerequisite of the physical backup track
+    command:
+      - postgres
+      - -c
+      - archive_mode=on
+      - -c
+      - wal_level=replica
+      - -c
+      - archive_command=test ! -f /wal_archive/%f && cp %p /wal_archive/%f
+      - -c
+      - archive_timeout=60
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - walarchive:/wal_archive
       - ../database/bootstrap:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U hht_owner -d hht"]
@@ -104,3 +116,4 @@ networks:
 
 volumes:
   pgdata:
+  walarchive:

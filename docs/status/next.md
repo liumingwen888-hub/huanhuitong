@@ -1,5 +1,5 @@
 # 下一步
 
-阶段 10 进行中（S10-1/S10-2 已实施 VERIFIED，2026-08-19）。S10-3"备份策略与脚本"详细计划 v1.0 已完成（`docs/plans/s10-3-backup/`），`READY v1.0 / WAITING_EXTERNAL_REVIEW`。
+阶段 10 进行中（阶段 1–9 VERIFIED，S10-1～S10-3 已实施 VERIFIED，2026-08-19）。
 
-复审重点："备份必须验证"红线（restore-check 是一等公民而非可选）、脚本零明文凭据（连接串走环境变量）、WAL 归档进 compose（物理轨前提）。复审通过后实施（无迁移）。
+下一步：**S10-4 恢复演练**详细计划——RestoreRun 状态机（PLANNED→RESTORING→VALIDATING→RECONCILING→SAFE_TO_RESUME）+ 自动化演练脚本（备份→破坏→恢复→三域对账→无重复副作用断言→销毁）。等待用户"继续下一步工作"启动。

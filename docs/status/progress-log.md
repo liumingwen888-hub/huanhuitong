@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S10-3 备份策略与脚本实施完成
+
+- pg-backup.sh 双轨（physical/logical/both，PG* 环境变量零明文，sha256+manifest）；pg-restore-check.sh（临时容器+关键表验证+清理 trap+RESTORE_CHECK_PASSED）。
+- compose 增 WAL 归档（archive_mode/wal_level=replica/archive_command/walarchive 卷）；README 运维手册（红线/双轨/RPO-RTO/恢复五步/生产清单）。
+- 验证：build/architecture(218 模块 0 违规)/unit 277(含 S10BK 4 项)；实弹演练属 S10-4。
+
 ## 2026-08-19 — S10-3 备份策略与脚本详细计划完成，等待外部复审
 
 - 双轨：物理（pg_basebackup+WAL 连续归档，PITR）+ 逻辑（pg_dump custom，跨版本/审计）；RPO 接近零 / RTO <30 分钟（合成验证流程）。

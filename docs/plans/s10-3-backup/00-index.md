@@ -1,6 +1,6 @@
 # S10-3 备份策略与脚本 详细计划索引
 
-计划版本：`v1.0`。风险级别：`L2`（备份脚本与配置，无业务逻辑变更）。计划状态：`READY v1.0 / WAITING_EXTERNAL_REVIEW`。S10-3 代码状态：`NOT_STARTED`。
+计划版本：`v1.0`。风险级别：`L2`（备份脚本与配置，无业务逻辑变更）。计划状态：`READY v1.0`（2026-08-19 用户外部复审通过）。S10-3 代码状态：`VERIFIED`（2026-08-19 实施完成；见下方实施验证）。
 
 ## 权威需求来源
 
@@ -59,6 +59,13 @@ Create：`deploy/backup/pg-backup.sh`、`deploy/backup/pg-restore-check.sh`、`d
 ## 边界与不做
 
 - 不做定时调度（生产 cron/K8s CronJob 独立配置——README 说明）；不做异地复制（生产存储策略独立授权）；实弹恢复演练属 S10-4。
+
+## 实施验证（2026-08-19，macOS/arm64 本地）
+
+- `pnpm build` exit 0；`pnpm architecture:check` 0 违规（218 模块）。
+- unit 37 文件 277/277 PASS（含 S10BK01-04：备份脚本 fail-fast/双轨分支/sha256/manifest/零明文凭据、restore-check 表验证/清理 trap/PASSED 输出、compose WAL 归档四要素、README 覆盖 RPO/RTO/红线/恢复步骤）。
+- 交付物：`deploy/backup/pg-backup.sh`（可执行）、`deploy/backup/pg-restore-check.sh`（可执行）、`deploy/backup/README.md`、compose WAL 归档（archive_mode/wal_level/archive_command/walarchive 卷）、S10BK 规格。
+- 实弹备份与恢复验证属 S10-4 恢复演练（ENVIRONMENT_BOUNDARY 需 Docker 守护进程 + 运行中的数据库）。
 
 ## 停止条件
 
