@@ -1,5 +1,11 @@
 # 进展日志
 
+## 2026-08-19 — S10-8 威胁模型与验收完成，阶段 10 代码 READY 等待用户验收——全部 10 个阶段实施完毕
+
+- S10PR01–S10PR10 生产就绪验收全 PASS：七合同复验（编排/观测/备份/演练/runbook/门禁/基线）+ 门禁结构 smoke + ENVIRONMENT_BOUNDARY 四项如实枚举 + 威胁模型四项增补。
+- 全量回归：build/architecture(218 模块 0 违规)/docs 235/unit 307/database 550-553（已知三件套）/integration 132-133（已知抖动）。
+- 项目全景：阶段 1–10 共 78 个实施任务全部 VERIFIED；V1–V14 十四个迁移；六条资金管线 + 运营平面 + 生产硬化三层完整。
+
 ## 2026-08-19 — S10-7 容量与性能基线实施完成
 
 - benchmark-kernel.mjs 三模式（过账 TPS/并发注册/读延迟）+ 环境元数据；实弹需 Docker（ENVIRONMENT_BOUNDARY）。
